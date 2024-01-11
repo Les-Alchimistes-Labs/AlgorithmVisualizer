@@ -150,10 +150,12 @@ fn merge_sort_join(v :&mut Vec<i64>,n_p: &mut usize, p_s :&mut Vec<usize>)
         p_v += 1;
    }
     let mut p = 0;
-    println!("s: {} {:?}",p_v,p_s[*n_p-1] );
-    while p_v < *n_p && p_s[p_v] + p < p_s[*n_p - 1]
+    if p_v < *n_p
+    {println!("{:?} ", p_s);}
+    println!("s: {} {} {:?}",p_v < *n_p && p_s[p_v] + p < p_s[*n_p - 1], p_v,p_s[*n_p-1] );
+    while p_v < *n_p && p_s[p_v - 1] + p < p_s[*n_p - 1]
     {
-        v2.push(v[p_s[p_v] + p ]);
+        v2.push(v[p_s[p_v - 1] + p ]);
         p += 1;
     }
     
@@ -169,9 +171,9 @@ fn main()
 
     env::set_var("RUST_BACKTRACE", "1"); 
     let mut v1: Vec<i64>= vec![1,2,3,4,5,6,7,8,9,10];
-    let mut v: Vec<i64>= vec![1,6,8,4,7,3,2,5,9,10];
+    let mut v: Vec<i64>= vec![1,6,8,4,7,3,2,5,9,10,-1];
 
-    let mut n : usize = 10;
+    let mut n : usize = 11;
     let mut n_p :usize = 2;
     let  mut p_s: Vec<usize> = vec![0,n];
     while merge_sort_cut(&mut n_p,&mut p_s)
