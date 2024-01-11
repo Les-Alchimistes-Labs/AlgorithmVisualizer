@@ -1,0 +1,14 @@
+# Jetbrains
+.idea/
+
+# Vim
+*.swp
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# Others
+.DS_Store
+Thumbs.db
