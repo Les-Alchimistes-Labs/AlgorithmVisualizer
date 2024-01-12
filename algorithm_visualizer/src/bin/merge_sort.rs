@@ -57,7 +57,7 @@ fn remove_m(va : usize,v : &mut Vec<usize> , n : &mut usize)
         println!("error");
     }
     *n = *n - 1;
-    println!("so vaut : {} {:?}",n, v); 
+    //println!("so vaut : {} {:?}",n, v); 
 }
 
 
@@ -96,7 +96,7 @@ fn merge_sort_sort(v :&mut Vec<i64>,n_p: &mut usize, p_s :&mut Vec<usize>)
     while p_v < *n_p
     {
         let diff = p_s[p_v] - p_s[p_v - 1];
-        println!("diff: {}", diff);
+        //println!("diff: {}", diff);
         if diff >= 2 && v[p_s[p_v - 1 ]] > v[p_s[p_v - 1] + 1]
         {
             (v[p_s[p_v - 1 ]],v[p_s[p_v - 1] + 1]) = 
@@ -150,9 +150,7 @@ fn merge_sort_join(v :&mut Vec<i64>,n_p: &mut usize, p_s :&mut Vec<usize>)
         p_v += 1;
    }
     let mut p = 0;
-    if p_v < *n_p
-    {println!("{:?} ", p_s);}
-    println!("s: {} {} {:?}",p_v < *n_p && p_s[p_v] + p < p_s[*n_p - 1], p_v,p_s[*n_p-1] );
+   //println!("s: {} {} {:?}",p_v < *n_p && p_s[p_v] + p < p_s[*n_p - 1], p_v,p_s[*n_p-1] );
     while p_v < *n_p && p_s[p_v - 1] + p < p_s[*n_p - 1]
     {
         v2.push(v[p_s[p_v - 1] + p ]);
@@ -180,8 +178,24 @@ fn main()
     {
     }
     merge_sort_sort(&mut v, &mut n_p,&mut p_s);
+    
+    // show in detail 
+    for i in 1..n_p {
+        //println!("i vaut : {} \n", p_s[i]);
+        let mut x = p_s[i - 1];
+        println!("diff2: {}",  p_s[i ] -  p_s[i -1]);
+        while x < p_s[i]
+        {
+            println!("v vaut : {}", v[x]);
+            x +=1;
+
+        }
+        println!("\n");
+    }
+    
+
     println!("so vaut : {:?}",v);
-    println!("res vaut : {} {:?}",n_p, p_s); 
+    //println!("res vaut : {} {:?}",n_p, p_s); 
     merge_sort_join(&mut v,&mut n_p,&mut p_s);
     merge_sort_join(&mut v,&mut n_p,&mut p_s);
     merge_sort_join(&mut v,&mut n_p,&mut p_s);
