@@ -19,44 +19,30 @@ fn dfs (g :&mut Graph,g2 :&mut Graph, p : usize, add : i64) -> (i8,i64)
         }
         else if g2.l[p][pv].1 + add <= g.l[p][pv].1
         {
-            break;
+                g2.l[p][pv].1 += add;
+                return (1,add);//to brake
         }
         else if g.l[p][pv].1 - g2.l[p][pv].1 > max
         {
-            gp = pv;
-            max = g.l[p][pv].1 - g2.l[p][pv].1;
+                gp = pv;
+                max = g.l[p][pv].1 - g2.l[p][pv].1;
         }
-
         pv += 1;
     }
-    pv = gp;
-    if g.l[p][pv].1 > g2.l[p][pv].1
-    {
-        if g2.l[p][pv].1 + add <= g.l[p][pv].1
+    let res = dfs( g, g2,pv,g.l[p][pv].1 - g2.l[p][pv].1);
+        if res.0 == 1
         {
-            g2.l[p][pv].1 += add;
-            return (1,add);//to brake
+            g2.l[p][pv].1 +=res.1;
+            return (1,res.1);
         }
-        else
-        {
-            let res = dfs(g,g2,pv,g.l[p][pv].1 - g2.l[p][pv].1);
-            if res.0 == 1
-            {
-                g2.l[p][pv].1 +=res.1;
-                return 1;
-            }
 
-        }
-    }
     (0,0)
-
-
 }
 
 
-fn maximum_flow(g : Graph, g2 : Graph)
+fn maximum_flow(g : &mut Graph,g2 :&mut Graph)
 {
-    dfs(g,g2,0,-1);
+    dfs( g, g2,0,-1);
 
 }
 
