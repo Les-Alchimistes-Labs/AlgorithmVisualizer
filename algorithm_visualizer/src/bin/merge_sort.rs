@@ -1,3 +1,0 @@
-fn merge_sort()
-{
-}
