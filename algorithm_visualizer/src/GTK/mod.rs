@@ -1,6 +1,6 @@
 pub mod file;
 pub mod edit;
-pub mod information;
+pub mod help;
 
 pub mod list;
 pub mod tree;

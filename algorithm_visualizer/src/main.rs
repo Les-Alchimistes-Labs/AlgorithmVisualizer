@@ -1,8 +1,9 @@
 use gtk::prelude::*;
+use std::sync::{Arc, Mutex};
 use gtk::{Box, Notebook, Orientation, Window, WindowType,Label};
-
 #[allow(non_snake_case)]
 pub mod GTK;
+pub mod lists;
 
 
 use crate::GTK::menu::create_menu_bar;
@@ -11,6 +12,9 @@ use crate::GTK::list::create_list_tab;
 fn main() {
 	// Initialiser l'application GTK
     gtk::init().expect("Failed to initialize GTK.");
+    let current_list = Arc::new(Mutex::<Vec<i64>>::new(vec![]));
+    let list_clone = current_list.clone();
+
     
     
     
@@ -32,11 +36,11 @@ fn main() {
     verti_box.pack_start(&menu_bar, false, false, 0);
     
     let notebook = Notebook::new();
-    let lists = create_list_tab();
+    let list_tab = create_list_tab(&list_clone);
     //let trees = create_list_tab();
     //let graphs = create_list_tab();
     
-    notebook.append_page(&lists,Some(&Label::new(Some("List"))));
+    notebook.append_page(&list_tab,Some(&Label::new(Some("List"))));
     
     
     verti_box.pack_end(&notebook, true, true, 0);
