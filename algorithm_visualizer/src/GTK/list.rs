@@ -5,7 +5,7 @@ use gtk::{ Grid, Notebook, Orientation, Paned, Button, Label, Entry,
 	ButtonsType};
 	
 use crate::lists::insertion_sort::insertion_sort;
-
+use crate::lists::counting_sort::counting_sort;
 
 
 
@@ -251,7 +251,35 @@ fn sort_the_list(current_list :&mut Vec<i64>,combo : &ComboBoxText)
 	if text2=="Insertion sort"
 	{
 		insertion_sort(current_list);
-		dbg!(current_list);
+		dbg!(&current_list);
 	}
+
+    if text2=="Counting sort"
+    {
+        let mut max: usize = 0;
+        for i in 0..current_list.len() 
+        {
+            if current_list[i] as usize > max
+            {
+                max = current_list[i] as usize;
+            }
+        }
+        for &i in current_list.iter()
+        {
+            if i < 0
+            {
+                let dialog = MessageDialog::new(None::<&Window>,
+                                         DialogFlags::MODAL,
+                                         MessageType::Info,
+                                         ButtonsType::Close,
+                                         "can't work with a negative number !");
+                dialog.run();
+                dialog.close();
+                return
+            }
+        }
+        counting_sort(current_list, max);
+        dbg!(current_list);
+    }
 		
 }
