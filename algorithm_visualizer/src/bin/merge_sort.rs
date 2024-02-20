@@ -1,4 +1,4 @@
-use std::env;
+
 
 fn insert_m(va : usize,v : &mut Vec<usize> , n : &mut usize)
 {
@@ -163,48 +163,36 @@ fn merge_sort_join(v :&mut Vec<i64>,n_p: &mut usize, p_s :&mut Vec<usize>)
 }
 
 
-
-fn main()
+pub fn test_merge()
 {
-
-    env::set_var("RUST_BACKTRACE", "1"); 
+    println!("merge sort:\n");
     //let v1: Vec<i64>= vec![1,2,3,4,5,6,7,8,9,10];
-    let mut v: Vec<i64>= vec![1,6,8,4,7,3,2,5,9,10,-1];
+    let mut v: Vec<Vec<i64>>= vec![
+        vec![1,6,8,4,7,3,2,5,9,10,-1],
+        vec![-1,1,2,3,4,5,6,7,8,9,10],
+        vec![10,9,8,7,6,5,4,3,2,1,-1],
+        vec![3,2,4,1]
+        ];
+    
 
-    let  n : usize = 11;
-    let mut n_p :usize = 2;
-    let  mut p_s: Vec<usize> = vec![0,n];
-    while merge_sort_cut(&mut n_p,&mut p_s)
+
+    for e in v.iter_mut()
     {
-    }
-    merge_sort_sort(&mut v, &mut n_p,&mut p_s);
-    
-    // show in detail 
-    for i in 1..n_p {
-        //println!("i vaut : {} \n", p_s[i]);
-        let mut x = p_s[i - 1];
-        //println!("diff2: {}",  p_s[i ] -  p_s[i -1]);
-        while x < p_s[i]
+        let  n : usize = e.len();
+        let mut n_p :usize = 2;
+        let  mut p_s: Vec<usize> = vec![0,n];
+        while merge_sort_cut(&mut n_p,&mut p_s)
         {
-            //println!("v vaut : {}", v[x]);
-            x +=1;
-
         }
-        //println!("\n");
+        merge_sort_sort(e, &mut n_p,&mut p_s);
+        println!("v1 vaut : {:?}", e);
+        while p_s.len() > 2
+        {
+            println!("p_s vaut : {:?}", p_s);
+            merge_sort_join(e,&mut n_p,&mut p_s);
+        }
+        println!("\n\n");
     }
-    
-
-    println!("so vaut : {:?}",v);
-    //println!("res vaut : {} {:?}",n_p, p_s); 
-    merge_sort_join(&mut v,&mut n_p,&mut p_s);
-    merge_sort_join(&mut v,&mut n_p,&mut p_s);
-    merge_sort_join(&mut v,&mut n_p,&mut p_s);
-    println!("sort vaut : {:?}",p_s);
-
-
-
-
-
     /* show in detail 
     for i in 1..n_p {
         //println!("i vaut : {} \n", p_s[i]);
@@ -219,4 +207,9 @@ fn main()
         //println!("\n");
     }
     */
+}
+
+fn main()
+{
+    test_merge();
 }
