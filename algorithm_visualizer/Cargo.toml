@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 gtk = "0.14.3"
 gio = "0.14.3"
+cairo-rs = "0.14.3"
