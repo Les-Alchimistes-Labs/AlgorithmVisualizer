@@ -99,6 +99,39 @@ println!("{:?}",g2.s);
 println!("{}",prim(&mut g1, &mut g2));
 println!("{:?}",g2.s);
 println!("{:?}",g2.l);
+
+println!("\n");
+
+let mut g1 : Graph = Graph {
+    s: vec![0,1,2,4,5], //sommet
+    l: vec![
+        vec![(2,10),(1,5)],
+        vec![(0,5),(2,3)],
+        vec![(0,10),(1,3)],
+        vec![(1,1),(1,9)],
+        vec![(2,9)]],  //lien
+    old_p : Vec::new(), // old pos sommet
+};
+let mut g2 : Graph = Graph {
+    s: vec![], //sommet
+    l: Vec::new(),  //lien
+    old_p : Vec::new(), // old pos sommet
+
+};
+let mut f = 0;
+
+while f <5
+{
+println!("{}",prim(&mut g1, &mut g2));
+println!("{:?}",g2.s);
+f+=1;
+}
+println!("{:?}",g2.s);
+println!("{:?}",g2.l);
+
+
+
+
 }
 
 
