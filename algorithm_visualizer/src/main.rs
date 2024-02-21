@@ -9,11 +9,14 @@ pub mod lists;
 use crate::GTK::menu::create_menu_bar;
 use crate::GTK::list::create_list_tab;
 static mut CURRENT_LIST :Vec<i64> = vec![];
-static mut NOTEBOOK: &Notebook = &Notebook::new();
+static mut NOTEBOOK: Option<&Arc<Mutex<Notebook>>>= None;
 
 fn main() {
 	// Initialiser l'application GTK
     gtk::init().expect("Failed to initialize GTK.");
+    
+    let notebook_draw = Arc::new(Mutex::new(Notebook::new()));
+    
 
     
     
@@ -38,9 +41,8 @@ fn main() {
     window.add(&verti_box);
     let menu_bar = create_menu_bar();
     verti_box.pack_start(&menu_bar, false, false, 0);
-    
     let notebook = Notebook::new();
-    let list_tab = create_list_tab();
+    let list_tab = create_list_tab(&notebook_draw);
     //let trees = create_list_tab();
     //let graphs = create_list_tab();
     

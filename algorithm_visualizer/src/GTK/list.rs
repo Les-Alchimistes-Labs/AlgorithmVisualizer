@@ -7,16 +7,16 @@ use gtk::{ Grid, Notebook, Orientation, Paned, Button, Label, Entry,
 	
 use crate::lists::insertion_sort::insertion_sort;
 use crate::CURRENT_LIST;
-use crate::NOTEBOOK;
 
 
 
 
-pub fn create_list_tab()->gtk::Paned
+
+pub fn create_list_tab(notebook :&Arc<Mutex<Notebook>>)->gtk::Paned
 {
 	let panel = Paned::new(Orientation::Horizontal);
 	let grid = Grid::new();
-	
+
 		 
 	let space = Label::new(Some("                               "));	
 	let choose = Label::new(Some("----|| sorting algorithm ||----"));
@@ -68,14 +68,13 @@ pub fn create_list_tab()->gtk::Paned
 	sort_button.connect_clicked(move |_| {sort_the_list(&combo);});
 	
     panel.pack1(&grid, true, true);
-    unsafe
-    {
-		panel.pack2(NOTEBOOK,true,true);
-	}
-		
     
+	let cloned_notebook = Arc::clone(notebook);
+	let arc_notebook  = &*cloned_notebook;
+	let borrowed_notebook = arc_notebook.lock().unwrap();
+	panel.pack2(&*borrowed_notebook,true,true);
+
     panel
-    
 }
 
 fn reset()
@@ -255,10 +254,11 @@ pub fn paint_list(pos :usize , old_pos : usize)
 	{
 		
 		let drawing = DrawingArea::new();
-		let drawing2 = DrawingArea::new();
 
-		(*NOTEBOOK).append_page(&drawing, Some(&Label::new(Some("steps"))));
-		(*NOTEBOOK).append_page(&drawing2, Some(&Label::new(Some("steps"))));
+		
+
+		//(*borrowed_notebook).append_page(&drawing, Some(&Label::new(Some("steps"))));
+
       
 
 	
