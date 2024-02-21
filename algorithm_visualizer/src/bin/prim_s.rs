@@ -126,9 +126,12 @@ fn prim_set(graph_e :&mut Graph,graph_prim :&mut Graph)
     graph_prim.histogram[0] = 1;
 }
 
+
+
+
 fn prim(ge :&mut Graph, gp :&mut Graph) ->u8
 {
-    if ge.old_p.len() == gp.old_p.len() + 1
+    if ge.s.len() == gp.old_p.len()
     {
         0
     }
@@ -160,6 +163,7 @@ fn prim(ge :&mut Graph, gp :&mut Graph) ->u8
         }
         else
         {
+            println!("this way");
             let mut p = gp.index;
             while p < gp.histogram.len() && gp.histogram[p] == 1
             {
@@ -172,6 +176,30 @@ fn prim(ge :&mut Graph, gp :&mut Graph) ->u8
             else
             {
                 gp.old_p.push(p);
+                if ge.l[p].len() != 0 
+                {
+                    let mut min = ge.l[p][0] ;
+                    let mut fo = false;
+                    let mut pos = 0;
+                    while pos < ge.l[p].len() 
+                        && gp.histogram[ge.l[p][pos].0] != 0
+                    {
+                        //println!("{}",e.0);
+                        if min.1 > ge.l[p][pos].1
+                        {
+                            //dbg!(e);
+                            min = ge.l[p][pos];
+                        }
+                        pos += 1;
+                    }
+                    //println!("{}",fo);
+                    if  pos == ge.l[p].len()
+                    {
+                    println!("this way");
+                    gp.l[p].push((min.0,min.1));
+                    gp.l[min.0].push((p,min.1));
+                    }
+                }
                 gp.index= p +1;
                 1
             }
@@ -229,7 +257,7 @@ fn main()
             vec![(4,1)],
             vec![(5,1)],
             vec![(3,1)],
-            vec![(1,1)],
+            vec![(2,1)],
         ],  //lien
         old_p : Vec::new(), // old pos sograph_primmet
         histogram : Vec::new(),
