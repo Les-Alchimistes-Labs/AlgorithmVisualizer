@@ -1,21 +1,23 @@
 use std::sync::{Arc, Mutex};
-use cairo::Context;
+use cairo::{ImageSurface, Format};
 use gtk::prelude::*;
 use gtk::{ Grid, Notebook, Orientation, Paned, Button, Label, Entry, 
 	ComboBoxText, Window, MessageDialog, DialogFlags, MessageType,
-	ButtonsType, DrawingArea, Widget };	
+	ButtonsType, DrawingArea, Widget ,Image};	
 	
 use crate::lists::insertion_sort::insertion_sort;
 use crate::CURRENT_LIST;
+use crate::NOTEBOOK;
 
 
 
 
 
-pub fn create_list_tab(notebook :&Arc<Mutex<Notebook>>)->gtk::Paned
+pub fn create_list_tab()->gtk::Paned
 {
 	let panel = Paned::new(Orientation::Horizontal);
 	let grid = Grid::new();
+	
 
 		 
 	let space = Label::new(Some("                               "));	
@@ -65,16 +67,31 @@ pub fn create_list_tab(notebook :&Arc<Mutex<Notebook>>)->gtk::Paned
 	
 	remove_button.connect_clicked(move |_| {remove_number(&remove_entry);});
 	
+	
 	sort_button.connect_clicked(move |_| {sort_the_list(&combo);});
 	
     panel.pack1(&grid, true, true);
-    
-	let cloned_notebook = Arc::clone(notebook);
-	let arc_notebook  = &*cloned_notebook;
-	let borrowed_notebook = arc_notebook.lock().unwrap();
-	panel.pack2(&*borrowed_notebook,true,true);
 
-    panel
+    unsafe
+    {
+		
+		let Some(result) = &NOTEBOOK else{panic!("not initialized ");};
+		let cloned_notebook = Arc::clone(&result);
+		let arc_notebook  = &*cloned_notebook;
+		let borrowed_notebook = arc_notebook.lock().unwrap();
+		panel.pack2(&*borrowed_notebook,true,true);
+		drop(borrowed_notebook);
+	
+		CURRENT_LIST.push(-1);
+		CURRENT_LIST.push(2);
+		CURRENT_LIST.push(35);
+		CURRENT_LIST.push(2);
+		CURRENT_LIST.push(1);
+	
+		paint_list(0,4);	
+
+		panel
+	}	
 }
 
 fn reset()
@@ -202,7 +219,6 @@ fn remove_number(entry :&Entry)
 			if number==CURRENT_LIST[i]
 			{
 				CURRENT_LIST.remove(i);
-				paint_list(CURRENT_LIST.len(),CURRENT_LIST.len());
 				dbg!(&CURRENT_LIST);
 				return
 			}
@@ -253,23 +269,22 @@ pub fn paint_list(pos :usize , old_pos : usize)
 	unsafe
 	{
 		
-		let drawing = DrawingArea::new();
-
-		
-
-		//(*borrowed_notebook).append_page(&drawing, Some(&Label::new(Some("steps"))));
-
-      
+		let surface = ImageSurface::create(Format::ARgb32, 740, 500).expect("Failed to create surface");
+		let cr = &Arc::new(Mutex::new(cairo::Context::new(&surface)));			
+		let cloned_cr = Arc::clone(cr);
+		let arc_cr  = &*cloned_cr;
+		let borrowed_cr = arc_cr.lock().unwrap();
+		borrowed_cr.clone().expect("REASON").set_source_rgb(0.0,0.0,0.0);
+		borrowed_cr.clone().expect("REASON").paint();
+		borrowed_cr.clone().expect("REASON").set_font_size(36.0);
+		borrowed_cr.clone().expect("REASON").move_to(185.0,100.0);
+		borrowed_cr.clone().expect("REASON").set_source_rgb(1.0,1.0,1.0);
+		borrowed_cr.clone().expect("REASON").show_text(&get_string());
+		drop(borrowed_cr);
 
 	
-		drawing.set_size_request(600, 600);
-		let width= 600.0;
-		let height = 600.0;
-		
-		drawing.connect_size_allocate(move |widget, _| {
-	    widget.queue_draw();
-		});
-		
+		let height = 500.0;
+		let width = 740.0;
 		let max_height = (height *0.7) as i32;
 		let min_width  = (width *0.1) as i32;
 		let max_width  = (width *0.9) as i32;
@@ -280,40 +295,83 @@ pub fn paint_list(pos :usize , old_pos : usize)
 			 {
 				 max_value=CURRENT_LIST[i];
 			 }
-		} 
+		}  
 		let nb_to_draw = CURRENT_LIST.len() as i32;
-		let bar_width  = (max_width - min_width - nb_to_draw +1)/nb_to_draw;
+		dbg!(&nb_to_draw);
+		let bar_width  = ((max_width-min_width)-(nb_to_draw +1))/nb_to_draw;
 		
 		for i in 0..nb_to_draw
 		{
-			let clone_pos = Arc::new(pos);
-			let clone_old_pos = Arc::new(old_pos);
-			let clone_height = Arc::new(height);
-			let clone_max_height = Arc::new(max_height);
-			let clone_min_width = Arc::new(min_width);
-			let clone_max_value = Arc::new(max_value);
-			let clone_bar_width = Arc::new(bar_width);
-			drawing.connect_draw(move|widget,cr|{
-			if i == *clone_pos as i32 
+			let cloned_cr = Arc::clone(cr);
+			let arc_cr  = &*cloned_cr;
+			let borrowed_cr = arc_cr.lock().unwrap();
+			if i == pos as i32 
 			{
-				cr.set_source_rgb(0.0,1.0,0.0);
+				borrowed_cr.clone().expect("REASON").set_source_rgb(0.0,1.0,0.0);
 			}
-			else if i == *clone_old_pos as i32
+			else if i == old_pos as i32
 			{	
-				cr.set_source_rgb(1.0,0.0,0.0);
+				borrowed_cr.clone().expect("REASON").set_source_rgb(1.0,0.0,0.0);
 			}	
 			else
 			{
-				cr.set_source_rgb(1.0,1.0,1.0);
+				borrowed_cr.clone().expect("REASON").set_source_rgb(1.0,1.0,1.0);
 			}
-			let begin_height = (*clone_height - ((CURRENT_LIST[i as usize]*100/ (*clone_max_value)) as f64) *  *clone_max_height as f64) as i32;
-			cr.rectangle((*clone_min_width+ *clone_bar_width*i +1)as f64,begin_height as f64,*clone_bar_width as f64,*clone_height -begin_height as f64);
-			cr.fill();
-			widget.draw(cr);
+			drop(borrowed_cr);
+			let begin_height = (height - ((CURRENT_LIST[i as usize]as f64/ max_value as f64) ) *  max_height as f64) as i32;
+			let cloned_cr = Arc::clone(cr);
+			let arc_cr  = &*cloned_cr;
+			let mut borrowed_cr = arc_cr.lock().unwrap();
+			if let Ok(ref mut ar) = *borrowed_cr {
+			    // Unwrap the Result and get a mutable reference to the cairo::Context
+			    ar.rectangle(
+			        (min_width + ((bar_width+1) * i)) as f64,
+			        (begin_height)as f64,
+			        bar_width as f64,
+			        height - begin_height as f64,
+			    );}
 			
-			Inhibit(false)	
-			});
+			drop(borrowed_cr);
+			let cloned_cr = Arc::clone(cr);
+			let arc_cr  = &*cloned_cr;
+			let mut borrowed_cr = arc_cr.lock().unwrap();
+			if let Ok(ref mut ar) = *borrowed_cr { ar.fill() ;}
+			drop(borrowed_cr);
 		}
+		let image = Image::from_surface(Some(&surface));
+		let Some(result) = &NOTEBOOK else{panic!("not initialized ");};
+		let cloned_notebook = Arc::clone(&result);
+		let arc_notebook  = &*cloned_notebook;
+		let borrowed_notebook = arc_notebook.lock().unwrap();
+		borrowed_notebook.append_page(&image,Some(&Label::new(Some("List"))));
+		borrowed_notebook.queue_draw();
+		gtk::main_iteration();
+		drop(borrowed_notebook);
+		
+		
+		drop(arc_notebook);
+		drop(cloned_notebook);
+		drop(result);
+		drop(image);
+
+	}
+}
+fn get_string()-> String
+{
+	unsafe
+	{
+		let mut result = String::new();
+		result.push('[');
+	
+		for i in 0..(CURRENT_LIST.len()-1)
+		{
+			result.push_str(&CURRENT_LIST[i].to_string());
+			result.push(',');
+			result.push(' ');
+		}
+		result.push_str(&CURRENT_LIST[CURRENT_LIST.len()-1].to_string());
+		result.push(']');
+		result
 	}
 }
 
