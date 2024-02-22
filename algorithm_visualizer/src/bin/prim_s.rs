@@ -2,7 +2,7 @@ struct Graph{
     s: Vec<i64>, //sommet
     l: Vec<Vec<(usize,i64)>>,  //lien
     old_p : Vec<usize>, // old pos sograph_primmet
-    histogram : Vec<usize>,
+    histogram : Vec<Option<i64>>,
     index : usize,
 }
 
@@ -118,12 +118,12 @@ fn prim_set(graph_e :&mut Graph,graph_prim :&mut Graph)
     {
         graph_prim.s.push(graph_e.s[p]);
         graph_prim.l.push(vec![]);
-        graph_prim.histogram.push(0);
+        graph_prim.histogram.push(Some(0));
         p += 1;
     }
 
     graph_prim.old_p.push(0);
-    graph_prim.histogram[0] = 1;
+    graph_prim.histogram[0] = Some(1);
 }
 
 
@@ -143,7 +143,7 @@ fn prim(ge :&mut Graph, gp :&mut Graph) ->u8
             for e in ge.l[*l].iter()
             {
                 //println!("{}",e.0);
-                if gp.histogram[e.0] == 0 && 
+                if gp.histogram[e.0].unwrap() == 0 && 
                     (min == None || min.unwrap().2 > e.1)
                 {
                     //dbg!(e);
@@ -155,7 +155,7 @@ fn prim(ge :&mut Graph, gp :&mut Graph) ->u8
         if min != None
         {
             let t = min.unwrap();
-            gp.histogram[t.1] = 1;
+            gp.histogram[t.1] = Some(1);
             gp.old_p.push(t.1);
             gp.l[t.1].push((t.0,t.2));
             gp.l[t.0].push((t.1,t.2));
@@ -165,7 +165,7 @@ fn prim(ge :&mut Graph, gp :&mut Graph) ->u8
         {
             println!("this way");
             let mut p = gp.index;
-            while p < gp.histogram.len() && gp.histogram[p] == 1
+            while p < gp.histogram.len() && gp.histogram[p].unwrap() == 1
             {
                 p += 1;
             }
@@ -182,7 +182,7 @@ fn prim(ge :&mut Graph, gp :&mut Graph) ->u8
                     let mut fo = false;
                     let mut pos = 0;
                     while pos < ge.l[p].len() 
-                        && gp.histogram[ge.l[p][pos].0] != 0
+                        && gp.histogram[ge.l[p][pos].0].unwrap() != 0
                     {
                         //println!("{}",e.0);
                         if min.1 > ge.l[p][pos].1
