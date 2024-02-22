@@ -8,6 +8,7 @@ use gtk::{ Grid, Notebook, Orientation, Paned, Button, Label, Entry,
 use crate::lists::insertion_sort::insertion_sort;
 use crate::CURRENT_LIST;
 use crate::NOTEBOOK;
+use crate::PANED;
 
 
 
@@ -16,6 +17,11 @@ use crate::NOTEBOOK;
 pub fn create_list_tab()->gtk::Paned
 {
 	let panel = Paned::new(Orientation::Horizontal);
+	let clone = panel.clone();
+	unsafe
+	{
+		PANED = Some(clone);
+	}
 	let grid = Grid::new();
 	
 
@@ -75,23 +81,21 @@ pub fn create_list_tab()->gtk::Paned
     unsafe
     {
 		
-		let Some(result) = &NOTEBOOK else{panic!("not initialized ");};
-		let cloned_notebook = Arc::clone(&result);
-		let arc_notebook  = &*cloned_notebook;
-		let borrowed_notebook = arc_notebook.lock().unwrap();
-		panel.pack2(&*borrowed_notebook,true,true);
-		drop(borrowed_notebook);
+		let Some(unpack) = &NOTEBOOK else { panic!("not initialized !") };
+		panel.pack2(unpack,true,true);
+
 	
-		CURRENT_LIST.push(-1);
-		CURRENT_LIST.push(2);
-		CURRENT_LIST.push(35);
-		CURRENT_LIST.push(2);
 		CURRENT_LIST.push(1);
+		CURRENT_LIST.push(5);
+		CURRENT_LIST.push(35);
+		CURRENT_LIST.push(12);
+		CURRENT_LIST.push(23);
 	
-		paint_list(0,4);	
+		paint_list(String::from("Insertion Sort"),0,4);
+	}	
 
 		panel
-	}	
+		
 }
 
 fn reset()
@@ -264,7 +268,7 @@ fn sort_the_list(combo : &ComboBoxText)
 	}		
 }
 
-pub fn paint_list(pos :usize , old_pos : usize)
+pub fn paint_list(op : String, pos :usize , old_pos : usize)
 {
 	unsafe
 	{
@@ -280,6 +284,8 @@ pub fn paint_list(pos :usize , old_pos : usize)
 		borrowed_cr.clone().expect("REASON").move_to(185.0,100.0);
 		borrowed_cr.clone().expect("REASON").set_source_rgb(1.0,1.0,1.0);
 		borrowed_cr.clone().expect("REASON").show_text(&get_string());
+		borrowed_cr.clone().expect("REASON").move_to(10.0,35.0);
+		borrowed_cr.clone().expect("REASON").show_text(&op);
 		drop(borrowed_cr);
 
 	
@@ -339,19 +345,16 @@ pub fn paint_list(pos :usize , old_pos : usize)
 			drop(borrowed_cr);
 		}
 		let image = Image::from_surface(Some(&surface));
-		let Some(result) = &NOTEBOOK else{panic!("not initialized ");};
-		let cloned_notebook = Arc::clone(&result);
-		let arc_notebook  = &*cloned_notebook;
-		let borrowed_notebook = arc_notebook.lock().unwrap();
-		borrowed_notebook.append_page(&image,Some(&Label::new(Some("List"))));
-		borrowed_notebook.queue_draw();
+		
+
+		let Some(notebook) = &NOTEBOOK else { panic!("not initialized !") };
+		notebook.append_page(&image,Some(&Label::new(Some("List"))));
+		notebook.queue_draw();
+		let clone = (*notebook).clone();
+		let Some(pane) = &PANED else { panic!("not initialized !") };
+		pane.pack2(notebook,true,true); 
+		
 		gtk::main_iteration();
-		drop(borrowed_notebook);
-		
-		
-		drop(arc_notebook);
-		drop(cloned_notebook);
-		drop(result);
 		drop(image);
 
 	}

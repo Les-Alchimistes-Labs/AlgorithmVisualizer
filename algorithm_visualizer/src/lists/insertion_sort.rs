@@ -15,7 +15,7 @@ pub fn insertion_sort()
 	        while j > 0 && CURRENT_LIST[j - 1] > CURRENT_LIST[j] 
 	        {
 	            CURRENT_LIST.swap(j, j - 1);
-	            paint_list( i , j);
+	            paint_list(String::from("Insertion Sort"), i , j);
 	            j -= 1;
 	        }
 	    }

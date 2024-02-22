@@ -1,6 +1,6 @@
 use gtk::prelude::*;
 use std::sync::{Arc, Mutex};
-use gtk::{Box, Notebook, Orientation, Window, WindowType, Label };
+use gtk::{Box, Notebook, Orientation, Window, WindowType, Label, Paned };
 #[allow(non_snake_case)]
 pub mod GTK;
 pub mod lists;
@@ -9,7 +9,9 @@ pub mod lists;
 use crate::GTK::menu::create_menu_bar;
 use crate::GTK::list::create_list_tab;
 static mut CURRENT_LIST :Vec<i64> = vec![];
-static mut NOTEBOOK: Option<Arc<Mutex<Notebook>>>= None;
+static mut NOTEBOOK: Option<Notebook>= None;
+static mut PANED: Option<Paned>= None;
+
 
 fn main() {
 	// Initialiser l'application GTK
@@ -20,7 +22,7 @@ fn main() {
     unsafe
     {
 		let mut init = Arc::new(Mutex::new(Notebook::new()));
-		NOTEBOOK = Some(Arc::clone(&init));
+		NOTEBOOK = Some(Notebook::new());
 	}
     
     
@@ -49,6 +51,7 @@ fn main() {
     let list_tab = create_list_tab();
     //let trees = create_list_tab();
     //let graphs = create_list_tab();
+    
     
     notebook.append_page(&list_tab,Some(&Label::new(Some("List"))));
     
