@@ -1,4 +1,8 @@
-
+struct List{
+    l: Vec<i64>,
+    n_p :usize,
+    p_s :Vec<usize>,
+}
 
 fn insert_m(va : usize,v : &mut Vec<usize> , n : &mut usize)
 {
@@ -60,8 +64,17 @@ fn remove_m(va : usize,v : &mut Vec<usize> , n : &mut usize)
     //println!("so vaut : {} {:?}",n, v); 
 }
 
+fn merge_sort_set(l: &mut List)
+{
 
-
+    l.n_p = 2;
+    l.p_s.push(0);
+    l.p_s.push(l.l.len());
+    while merge_sort_cut(&mut l.n_p,&mut l.p_s)
+    {
+    }
+merge_sort_sort(&mut l.l, &mut l.n_p,&mut l.p_s);
+}
 
 fn merge_sort_cut( n_p: &mut usize, p_s :&mut Vec<usize>) -> bool
 {
@@ -109,8 +122,11 @@ fn merge_sort_sort(v :&mut Vec<i64>,n_p: &mut usize, p_s :&mut Vec<usize>)
 
 
 
-fn merge_sort_join(v :&mut Vec<i64>,n_p: &mut usize, p_s :&mut Vec<usize>)
+fn merge_sort_join(li :&mut List) //v :&mut Vec<i64>,n_p: &mut usize, p_s :&mut Vec<usize>)
 {
+    let v = &li.l;
+    let mut n_p = &mut li.n_p;
+    let mut p_s = &mut li.p_s;
     let mut v2 :  Vec<i64> = Vec::new();
     let mut p_v = 1;
     while p_v + 1 < *n_p // check if next good
@@ -146,7 +162,7 @@ fn merge_sort_join(v :&mut Vec<i64>,n_p: &mut usize, p_s :&mut Vec<usize>)
             //println!("add p2: {}", v[p2]);
             p2 += 1;
         }
-        remove_m(p_s[p_v], p_s,n_p);
+        remove_m(p_s[p_v],&mut p_s,&mut n_p);
         p_v += 1;
    }
     let mut p = 0;
@@ -159,7 +175,7 @@ fn merge_sort_join(v :&mut Vec<i64>,n_p: &mut usize, p_s :&mut Vec<usize>)
     
     println!("v1 vaut : {:?}", v2);
 
-    *v = v2;
+    li.l = v2;
 }
 
 
@@ -178,18 +194,17 @@ pub fn test_merge()
 
     for e in v.iter_mut()
     {
-        let  n : usize = e.len();
-        let mut n_p :usize = 2;
-        let  mut p_s: Vec<usize> = vec![0,n];
-        while merge_sort_cut(&mut n_p,&mut p_s)
+        let mut l = List{
+            l : e.clone(),
+            n_p : 2,
+            p_s : vec![]
+        };
+        merge_sort_set(&mut l);
+       println!("v1 vaut : {:?}", e);
+        while l.p_s.len() > 2
         {
-        }
-        merge_sort_sort(e, &mut n_p,&mut p_s);
-        println!("v1 vaut : {:?}", e);
-        while p_s.len() > 2
-        {
-            println!("p_s vaut : {:?}", p_s);
-            merge_sort_join(e,&mut n_p,&mut p_s);
+            println!("p_s vaut : {:?}", l.p_s);
+            merge_sort_join(&mut l);
         }
         println!("\n\n");
     }

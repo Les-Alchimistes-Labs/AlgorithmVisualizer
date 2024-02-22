@@ -1,7 +1,7 @@
 struct Graph{
     s: Vec<i64>, //sommet
     l: Vec<Vec<(usize,i64)>>,  //lien
-    old_p : Vec<usize>, // old pos sograph_primmet
+    old_p : Vec<usize>, // old pos sommet
     histogram : Vec<Option<i64>>,
     index : usize,
 }
