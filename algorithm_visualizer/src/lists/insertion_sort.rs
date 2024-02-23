@@ -1,12 +1,22 @@
-pub fn insertion_sort(mut to_sort : &mut Vec<i64>)
+use crate::GTK::list::paint_list;
+use crate::CURRENT_LIST;
+
+
+pub fn insertion_sort()
 {
-	let len = to_sort.len();
-    
-    for i in 1..len {
-        let mut j = i;
-        while j > 0 && to_sort[j - 1] > to_sort[j] {
-            to_sort.swap(j, j - 1);
-            j -= 1;
-        }
-    }
+	unsafe
+	{
+		let len = CURRENT_LIST.len();
+	    
+	    for i in 1..len {
+	        let mut j = i;
+	        while j > 0 && CURRENT_LIST[j - 1] > CURRENT_LIST[j] 
+	        {
+	            CURRENT_LIST.swap(j, j - 1);
+	            paint_list(String::from("Insertion Sort"), i , j);
+	            j -= 1;
+	        }
+	    }
+	}
+	
 }

@@ -6,6 +6,7 @@ version = 3
 name = "algorithm_visualizer"
 version = "0.1.0"
 dependencies = [
+ "cairo-rs",
  "gio",
  "gtk",
 ]
