@@ -6,9 +6,11 @@ use gtk::{ Grid, Notebook, Orientation, Paned, Button, Label, Entry,
 	ButtonsType, DrawingArea, Widget ,Image};	
 	
 use crate::lists::insertion_sort::insertion_sort;
+use crate::lists::counting_sort::counting_sort;
 use crate::CURRENT_LIST;
 use crate::NOTEBOOK;
 use crate::PANED;
+#[allow(unused_must_use)]
 
 
 
@@ -86,12 +88,11 @@ pub fn create_list_tab()->gtk::Paned
 
 	
 		CURRENT_LIST.push(1);
-		CURRENT_LIST.push(5);
-		CURRENT_LIST.push(35);
-		CURRENT_LIST.push(12);
-		CURRENT_LIST.push(23);
+		CURRENT_LIST.push(1);
+		CURRENT_LIST.push(1);
+
 	
-		paint_list(String::from("Insertion Sort"),0,4);
+		paint_list(String::from("Test"),0,2);
 	}	
 
 		panel
@@ -265,6 +266,33 @@ fn sort_the_list(combo : &ComboBoxText)
 			insertion_sort();
 			dbg!(&CURRENT_LIST);
 		}
+		if text2=="Counting sort"
+		{
+        let mut max: usize = 0;
+        for i in 0..CURRENT_LIST.len()
+        {
+            if CURRENT_LIST[i] as usize > max
+            {
+                max = CURRENT_LIST[i] as usize;
+            }
+        }
+        for i in 0..CURRENT_LIST.len()
+        {
+            if CURRENT_LIST[i] < 0
+            {
+                let dialog = MessageDialog::new(None::<&Window>,
+                                         DialogFlags::MODAL,
+                                         MessageType::Info,
+                                         ButtonsType::Close,
+                                         "can't work with a negative number !");
+                dialog.run();
+                dialog.close();
+                return
+            }
+        }
+        counting_sort(max);
+        dbg!(&CURRENT_LIST);
+		}
 	}		
 }
 
@@ -350,9 +378,9 @@ pub fn paint_list(op : String, pos :usize , old_pos : usize)
 		let Some(notebook) = &NOTEBOOK else { panic!("not initialized !") };
 		notebook.append_page(&image,Some(&Label::new(Some("List"))));
 		notebook.queue_draw();
-		let clone = (*notebook).clone();
 		let Some(pane) = &PANED else { panic!("not initialized !") };
-		pane.pack2(notebook,true,true); 
+		
+		pane.pack2(&image,true,true); 
 		
 		gtk::main_iteration();
 		drop(image);

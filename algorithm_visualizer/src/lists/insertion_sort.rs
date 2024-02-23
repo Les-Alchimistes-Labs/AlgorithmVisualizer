@@ -1,6 +1,4 @@
 use crate::GTK::list::paint_list;
-use std::sync::{Arc, Mutex};
-use gtk::Notebook;
 use crate::CURRENT_LIST;
 
 

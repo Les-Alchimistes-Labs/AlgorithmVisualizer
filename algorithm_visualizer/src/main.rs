@@ -15,13 +15,9 @@ static mut PANED: Option<Paned>= None;
 
 fn main() {
 	// Initialiser l'application GTK
-    gtk::init().expect("Failed to initialize GTK.");
-    
-    let notebook_draw = Arc::new(Mutex::new(Notebook::new()));
-    
+    gtk::init().expect("Failed to initialize GTK.");  
     unsafe
     {
-		let mut init = Arc::new(Mutex::new(Notebook::new()));
 		NOTEBOOK = Some(Notebook::new());
 	}
     
