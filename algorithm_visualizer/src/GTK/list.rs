@@ -1,9 +1,9 @@
 use std::sync::{Arc, Mutex};
 use cairo::{ImageSurface, Format};
 use gtk::prelude::*;
-use gtk::{ Grid, Notebook, Orientation, Paned, Button, Label, Entry, 
+use gtk::{ Grid, Orientation, Paned, Button, Label, Entry, 
 	ComboBoxText, Window, MessageDialog, DialogFlags, MessageType,
-	ButtonsType, DrawingArea, Widget ,Image};	
+	ButtonsType,Image};	
 	
 use crate::lists::insertion_sort::insertion_sort;
 use crate::lists::counting_sort::counting_sort;
@@ -87,9 +87,13 @@ pub fn create_list_tab()->gtk::Paned
 		panel.pack2(unpack,true,true);
 
 	
+		CURRENT_LIST.push(3);
+		CURRENT_LIST.push(2);
+		CURRENT_LIST.push(7);
+		CURRENT_LIST.push(25);
+		CURRENT_LIST.push(12);
 		CURRENT_LIST.push(1);
-		CURRENT_LIST.push(1);
-		CURRENT_LIST.push(1);
+		
 
 	
 		paint_list(String::from("Test"),0,2);
@@ -268,30 +272,30 @@ fn sort_the_list(combo : &ComboBoxText)
 		}
 		if text2=="Counting sort"
 		{
-        let mut max: usize = 0;
-        for i in 0..CURRENT_LIST.len()
-        {
-            if CURRENT_LIST[i] as usize > max
-            {
-                max = CURRENT_LIST[i] as usize;
-            }
-        }
-        for i in 0..CURRENT_LIST.len()
-        {
-            if CURRENT_LIST[i] < 0
-            {
-                let dialog = MessageDialog::new(None::<&Window>,
-                                         DialogFlags::MODAL,
-                                         MessageType::Info,
-                                         ButtonsType::Close,
-                                         "can't work with a negative number !");
-                dialog.run();
-                dialog.close();
-                return
-            }
-        }
-        counting_sort(max);
-        dbg!(&CURRENT_LIST);
+	        let mut max: usize = 0;
+	        for i in 0..CURRENT_LIST.len()
+	        {
+	            if CURRENT_LIST[i] as usize > max
+	            {
+	                max = CURRENT_LIST[i] as usize;
+	            }
+	        }
+	        for i in 0..CURRENT_LIST.len()
+	        {
+	            if CURRENT_LIST[i] < 0
+	            {
+	                let dialog = MessageDialog::new(None::<&Window>,
+	                                         DialogFlags::MODAL,
+	                                         MessageType::Info,
+	                                         ButtonsType::Close,
+	                                     "can't work with a negative number !");
+	                dialog.run();
+	                dialog.close();
+	                return
+	            }
+	        }
+	        counting_sort(max);
+	        dbg!(&CURRENT_LIST);
 		}
 	}		
 }
@@ -307,13 +311,13 @@ pub fn paint_list(op : String, pos :usize , old_pos : usize)
 		let arc_cr  = &*cloned_cr;
 		let borrowed_cr = arc_cr.lock().unwrap();
 		borrowed_cr.clone().expect("REASON").set_source_rgb(0.0,0.0,0.0);
-		borrowed_cr.clone().expect("REASON").paint();
+		let _ = borrowed_cr.clone().expect("REASON").paint();
 		borrowed_cr.clone().expect("REASON").set_font_size(36.0);
 		borrowed_cr.clone().expect("REASON").move_to(185.0,100.0);
 		borrowed_cr.clone().expect("REASON").set_source_rgb(1.0,1.0,1.0);
-		borrowed_cr.clone().expect("REASON").show_text(&get_string());
+		let _ = borrowed_cr.clone().expect("REASON").show_text(&get_string());
 		borrowed_cr.clone().expect("REASON").move_to(10.0,35.0);
-		borrowed_cr.clone().expect("REASON").show_text(&op);
+		let _ = borrowed_cr.clone().expect("REASON").show_text(&op);
 		drop(borrowed_cr);
 
 	
@@ -341,15 +345,15 @@ pub fn paint_list(op : String, pos :usize , old_pos : usize)
 			let borrowed_cr = arc_cr.lock().unwrap();
 			if i == pos as i32 
 			{
-				borrowed_cr.clone().expect("REASON").set_source_rgb(0.0,1.0,0.0);
+				let _ = borrowed_cr.clone().expect("REASON").set_source_rgb(0.0,1.0,0.0);
 			}
 			else if i == old_pos as i32
 			{	
-				borrowed_cr.clone().expect("REASON").set_source_rgb(1.0,0.0,0.0);
+				let _ = borrowed_cr.clone().expect("REASON").set_source_rgb(1.0,0.0,0.0);
 			}	
 			else
 			{
-				borrowed_cr.clone().expect("REASON").set_source_rgb(1.0,1.0,1.0);
+				let _ = borrowed_cr.clone().expect("REASON").set_source_rgb(1.0,1.0,1.0);
 			}
 			drop(borrowed_cr);
 			let begin_height = (height - ((CURRENT_LIST[i as usize]as f64/ max_value as f64) ) *  max_height as f64) as i32;
@@ -369,24 +373,30 @@ pub fn paint_list(op : String, pos :usize , old_pos : usize)
 			let cloned_cr = Arc::clone(cr);
 			let arc_cr  = &*cloned_cr;
 			let mut borrowed_cr = arc_cr.lock().unwrap();
-			if let Ok(ref mut ar) = *borrowed_cr { ar.fill() ;}
+			if let Ok(ref mut ar) = *borrowed_cr { let _ = ar.fill() ;}
 			drop(borrowed_cr);
 		}
 		let image = Image::from_surface(Some(&surface));
 		
+
 
 		let Some(notebook) = &NOTEBOOK else { panic!("not initialized !") };
 		notebook.append_page(&image,Some(&Label::new(Some("List"))));
 		notebook.queue_draw();
 		let Some(pane) = &PANED else { panic!("not initialized !") };
 		
+
+		
 		pane.pack2(&image,true,true); 
 		
 		gtk::main_iteration();
-		drop(image);
 
 	}
 }
+
+
+
+
 fn get_string()-> String
 {
 	unsafe
@@ -405,4 +415,7 @@ fn get_string()-> String
 		result
 	}
 }
+
+
+
 

@@ -1,7 +1,6 @@
 use gtk::prelude::*;
 use crate::GTK::file::*;
-use crate::GTK::edit::*;
-use crate::GTK::help::*;
+
 
 pub fn create_menu_bar() -> gtk::MenuBar 
 {
@@ -43,6 +42,9 @@ fn file_menu_create() -> gtk::MenuItem {
     
     
     // CONNECTER LES BOUTONS
+    list_open.connect_activate(|_| {
+        show_file_chooser_dialog();
+    });
     
     
     

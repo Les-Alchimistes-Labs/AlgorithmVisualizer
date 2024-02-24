@@ -1,5 +1,4 @@
 use gtk::prelude::*;
-use std::sync::{Arc, Mutex};
 use gtk::{Box, Notebook, Orientation, Window, WindowType, Label, Paned };
 #[allow(non_snake_case)]
 pub mod GTK;
@@ -56,4 +55,9 @@ fn main() {
     
     window.show_all();
     gtk::main();
+    
+    window.connect_delete_event(|_, _| {
+        gtk::main_quit();
+        Inhibit(false)
+    });
 }
