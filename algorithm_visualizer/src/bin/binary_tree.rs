@@ -87,6 +87,24 @@ pub fn parcours_profondeur(btree: &mut Option<Box<Btree>>, mut result: String) -
     result.clone()
 }
 
+pub fn parcours_largeur(btree: &mut Option<Box<Btree>>, mut result: String) -> String{
+    let mut queue = vec![];
+    queue.push(btree.clone());
+    while !queue.is_empty(){
+        let mut current = queue.remove(0);
+        if current.is_none(){
+            continue;
+        }else{
+            result.push_str(&current.as_ref().unwrap().key.to_string());
+            result.push_str(" ");
+            queue.push(current.as_mut().unwrap().left.clone());
+            queue.push(current.as_mut().unwrap().right.clone());
+        }
+
+    }
+    result
+}
+
 fn main() {
     let mut btree = Some(Box::new(Btree::new(10, None, None)));
 
@@ -102,11 +120,13 @@ fn main() {
     println!("Insert (node : 14) : {}", parcours_profondeur(&mut btree, String::new()));
     insert(&mut btree, 22);
     println!("Insert (node : 22): {}", parcours_profondeur(&mut btree, String::new()));
+    println!("BFS : {}", parcours_largeur(&mut btree, String::new()));
 
     delete(&mut btree, 7);
     println!("Delete (node : 7) : {}", parcours_profondeur(&mut btree, String::new()));
     delete(&mut btree, 20);
-    println!("Delete (node : 20) : {}", parcours_profondeur(&mut btree, String::new()))
+    println!("Delete (node : 20) : {}", parcours_profondeur(&mut btree, String::new()));
+    println!("BFS : {}", parcours_largeur(&mut btree, String::new()));
 }
 
 #[cfg(test)]
