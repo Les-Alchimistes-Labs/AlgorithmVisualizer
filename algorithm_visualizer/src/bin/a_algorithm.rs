@@ -78,14 +78,14 @@ pub fn a_algorithm(g: Graph, start: i32, end: i32) -> Vec<i32> {
 
 
 
-
 fn main() {
-    let _g: Graph = Graph::new(0, vec![vec![0, 1, 0, 0],
-                                       vec![0, 0, 1, 0],
-                                       vec![0, 0, 0, 1],
-                                       vec![0, 1, 0, 0]], 4);
+    let _g: Graph = Graph::new(0, vec![vec![0, 1, 1, 0, 0],
+                                       vec![1, 0, 1, 1, 0],
+                                       vec![0, 0, 0, 1, 1],
+                                       vec![0, 1, 0, 0, 1],
+                                       vec![0, 0, 0, 1, 0]], 5);
     let start = 0;
-    let end = 3;
+    let end = 4;
     let result = a_algorithm(_g, start, end);
     println!("The shortest path from {} to {} is : {:?}", start, end, result);
 }
