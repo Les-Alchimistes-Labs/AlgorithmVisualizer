@@ -179,7 +179,7 @@ fn prim(ge :&mut Graph, gp :&mut Graph) ->u8
                 if ge.l[p].len() != 0 
                 {
                     let mut min = ge.l[p][0] ;
-                    let mut fo = false;
+                    //let mut fo = false;
                     let mut pos = 0;
                     while pos < ge.l[p].len() 
                         && gp.histogram[ge.l[p][pos].0].unwrap() != 0
