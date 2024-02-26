@@ -1,5 +1,5 @@
 
-fn greedy_best_first(tab :&mut Vec<Vec<u8>>, pass: &mut Vec<Vec<u8>>,
+fn _greedy_best_first(tab :&mut Vec<Vec<u8>>, pass: &mut Vec<Vec<u8>>,
     now :&mut Vec<(usize,usize)>,targetx: usize, targety: usize) -> i8
 {
     let mut v2 : Vec<(usize,usize)> = Vec::new();
