@@ -57,146 +57,64 @@ if now.len() == 0
 
 */
 
-
-struct Graph{
-    s: Vec<i64>, //sommet
-    l: Vec<Vec<(usize,i64)>>,  //lien
-    _old_p : Vec<usize>, // old pos sommet
-    histogram : Vec<Option<i64>>,
-    _index : usize,
-}
-
-
-
 fn set_greedy(g :&mut Graph)
 {
-    g.histogram.push(Some(0));// set x
-    g.histogram.push(Some(0));// set y
-    g.histogram.push(Some(0));// set sizex
-    g.histogram.push(Some(0));// set sizex
-    
-    for _i in 4..(g.s.len()+4)
+    for _i in 0..g.s.len()
     {
         let a : Option<i64> = None;
         g.histogram.push(a);
     }
-    g.histogram[4] = Some(0); 
+    g.histogram[0] = Some(0); 
 }
 
 
-fn greedy_graph(g :&mut Graph,x :usize,y :usize ) -> bool
+fn greedy(g :&mut Graph ) -> bool
 {
         let mut end = true;
-        while g.histogram[g._index] != None
+        for e in 0..g.s.len()
         {
-            let mut cx = x - g.histogram[0] ;
-            let mut cy = y - g.histogram[1] ;
-            let sx =  g.histogram[2];
-            let sy =  g.histogram[3]
-            if (cx == 0 && cy == 0)
+            dbg!(e);
+            if g.histogram[e] != None
             {
-                return 1;
-            }
-            else if cx == 0
-            {
-                if g.histogram[sy*(y-1) + x  +4] == None
+                let val =  g.histogram[e].unwrap();
+                for i in g.l[e].iter()
                 {
-                    g.histogram[sy*(y-1) + x  +4] = Some(sy*(y) + x  +4);
-                }
- 
-                else if g.histogram[sy*(y+1) + x  +4] == None
-                {
-                    g.histogram[sy*(y+1) + x  +4] = Some(sy*(y) + x  +4);
-                }
-                else
-                {
-                    g._index = g.histogram[sy*y + x  +4].unwrap();
-                }
-
-            }
-            else if cy == 0
-            {
-                if g.histogram[sy*y + (x - 1)  +4] == None
-                {
-                    g.histogram[sy*y + (x - 1)  +4] = Some(sy*(y) + x  +4);
-                }
-                else if g.histogram[sy*y + (x +1)  +4] == None
-                {
-                    g.histogram[sy*y + (x +1)  +4] = Some(sy*(y) + x  +4);
-                }
-                else
-                {
-                    g._index = g.histogram[sy*y + x  +4].unwrap();
-                }
-
-            }
-            else if cx > 0 && cy > 0 
-            {
-                if g.histogram[sy*(y+1) + x  +4] == None
-                {
-                     g.histogram[sy*(y+1) + x  +4] = Some(sy*(y) + x  +4);
-                }
-                else if g.histogram[sy*y + (x +1)  +4] == None
-                {
-                    g.histogram[sy*y + (x +1)  +4] = Some(sy*(y) + x  +4);
-                }
-                else
-                {
-                    g._index = g.histogram[sy*y + x  +4].unwrap();
-                }
-            }
-            else if cx < 0 && cy < 0 
-            {
-                if g.histogram[sy*(y-1) + x  +4] == None
-                {
-                     g.histogram[sy*(y-1) + x  +4] = Some(sy*(y) + x  +4);
-                }
-                else if g.histogram[sy*y + (x -1)  +4] == None
-                {
-                    g.histogram[sy*y + (x -1)  +4] = Some(sy*(y) + x  +4);
-                }
-                else
-                {
-                    g._index = g.histogram[sy*y + x  +4].unwrap();
-                }
-            }
-            else if cx > 0 && cy < 0 
-            {
-                if g.histogram[sy*(y-1) + x  +4] == None
-                {
-                     g.histogram[sy*(y-1) + x  +4] = Some(sy*(y) + x  +4);
-                }
-                else if g.histogram[sy*y + (x +1)  +4] == None
-                {
-                    g.histogram[sy*y + (x +1)  +4] = Some(sy*(y) + x  +4);
-                }
-                else
-                {
-                    g._index = g.histogram[sy*y + x  +4].unwrap();
-                }
-            }
-            else 
-            {
-                if g.histogram[sy*(y+1) + x  +4] == None
-                {
-                     g.histogram[sy*(y+1) + x  +4] = Some(sy*(y) + x  +4);
-                }
-                else if g.histogram[sy*y + (x -1)  +4] == None
-                {
-                    g.histogram[sy*y + (x -1)  +4] = Some(sy*(y) + x  +4);
-                }
-                else
-                {
-                    g._index = g.histogram[sy*y + x  +4].unwrap();
+                    if  g.histogram[i.0] == None || 
+                        g.histogram[i.0].unwrap() > val + i.1
+                    {
+                        //println!("{:?}",val + i.1);
+                        end = false;
+                        g.histogram[i.0] = Some(val + i.1);
+                        //dbg!(g.histogram[i.0]);
+                    }
                 }
             }
         }
-        false
+    end
 }
-
 
 
 fn main()
 {
-    
+      let mut g1 : Graph = Graph {
+        s: vec![0,1,2,3,4,5], //sograph_primmet
+        l: vec![
+            vec![(1,10),(5,8)],
+            vec![(3,2)],
+            vec![(1,1)],
+            vec![(2,-2)],
+            vec![(3,-1),(1,-4)],
+            vec![(4,1)],
+        ],  //lien
+        _old_p : Vec::new(), // old pos sograph_primmet
+        histogram : Vec::new(),
+        _index : 0,
+    };
+    set_greedy(&mut g1);
+
+    while !greedy(&mut g1)
+    {
+    }
+        println!("histogram is {:?}",g1.histogram);
 }
+
