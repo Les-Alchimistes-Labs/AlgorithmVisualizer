@@ -1,5 +1,5 @@
 use gtk::prelude::*;
-use gtk::{Box, Notebook, Orientation, Window, WindowType, Label, Paned };
+use gtk::{Box, Notebook, Orientation, Window, WindowType, Label};
 #[allow(non_snake_case)]
 pub mod GTK;
 pub mod lists;
@@ -7,18 +7,13 @@ pub mod lists;
 
 use crate::GTK::menu::create_menu_bar;
 use crate::GTK::list::create_list_tab;
+use crate::GTK::tree::create_tree_tab;
 static mut CURRENT_LIST :Vec<i64> = vec![];
-static mut NOTEBOOK: Option<Notebook>= None;
-static mut PANED: Option<Paned>= None;
 
 
 fn main() {
 	// Initialiser l'application GTK
     gtk::init().expect("Failed to initialize GTK.");  
-    unsafe
-    {
-		NOTEBOOK = Some(Notebook::new());
-	}
     
     
     
@@ -44,11 +39,12 @@ fn main() {
     verti_box.pack_start(&menu_bar, false, false, 0);
     let notebook = Notebook::new();
     let list_tab = create_list_tab();
-    //let trees = create_list_tab();
+    let trees = create_tree_tab();
     //let graphs = create_list_tab();
     
     
     notebook.append_page(&list_tab,Some(&Label::new(Some("List"))));
+    notebook.append_page(&trees,Some(&Label::new(Some("Tree"))));
     
     
     verti_box.pack_end(&notebook, true, true, 0);
@@ -56,8 +52,7 @@ fn main() {
     window.show_all();
     gtk::main();
     
-    window.connect_delete_event(|_, _| {
+    window.connect_destroy(|_| {
         gtk::main_quit();
-        Inhibit(false)
     });
 }

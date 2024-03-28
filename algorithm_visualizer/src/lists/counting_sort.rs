@@ -1,7 +1,7 @@
 use crate::GTK::list::paint_list;
 use crate::CURRENT_LIST;
-
-pub fn counting_sort(max : usize)
+use gtk::Notebook;
+pub fn counting_sort(notebook : &mut Notebook ,max : usize)
 {
 	unsafe
 	{
@@ -15,8 +15,9 @@ pub fn counting_sort(max : usize)
 	    {
 	        for _k in 0..j
 	        {
+				paint_list(notebook,String::from("Counting Sort"),index,CURRENT_LIST[index] as usize);
 	            CURRENT_LIST[index] = i as i64;
-	            paint_list(String::from("Counting Sort"),CURRENT_LIST[index] as usize,i);
+	            paint_list(notebook,String::from("Counting Sort"),index,CURRENT_LIST[index] as usize);
 	            index +=1;
 	        }
 	    }

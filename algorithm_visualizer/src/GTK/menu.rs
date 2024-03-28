@@ -43,7 +43,7 @@ fn file_menu_create() -> gtk::MenuItem {
     
     // CONNECTER LES BOUTONS
     list_open.connect_activate(|_| {
-        show_file_chooser_dialog();
+        open_list();
     });
     
     

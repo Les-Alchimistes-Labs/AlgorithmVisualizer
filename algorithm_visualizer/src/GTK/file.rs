@@ -4,7 +4,7 @@ use gtk::{FileChooserAction, FileChooserDialog, FileFilter, ResponseType, Window
 	, MessageDialog, DialogFlags, MessageType, ButtonsType};
 use crate::CURRENT_LIST;
 
-pub fn show_file_chooser_dialog() {
+pub fn open_list() {
     // Create a file chooser dialog
     let file_chooser = FileChooserDialog::new(
         Some("Open List"),
