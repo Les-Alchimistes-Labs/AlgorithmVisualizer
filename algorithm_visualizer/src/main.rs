@@ -1,14 +1,38 @@
 use gtk::prelude::*;
-use gtk::{Box, Notebook, Orientation, Window, WindowType, Label};
+use gtk::{ Notebook, Orientation, Window, WindowType, Label};
 #[allow(non_snake_case)]
+
 pub mod GTK;
 pub mod lists;
+pub mod tree;
 
 
 use crate::GTK::menu::create_menu_bar;
 use crate::GTK::list::create_list_tab;
 use crate::GTK::tree::create_tree_tab;
+
+#[derive(PartialEq)]
+#[derive(Debug, Clone)]
+pub struct Btree {
+    key: i32,
+    left: Option<Box<Btree>>,
+    right: Option<Box<Btree>>,
+}
+
+impl Btree {
+    fn new(key: i32, left: Option<Box<Btree>>, right: Option<Box<Btree>>) -> Self {
+        Btree { key, left, right }
+    }
+}
+
 static mut CURRENT_LIST :Vec<i64> = vec![];
+static mut BTREE :Option<Box<Btree>> = None;
+
+
+
+
+
+
 
 
 fn main() {
@@ -33,7 +57,7 @@ fn main() {
         //settings.set_property_gtk_application_prefer_dark_theme(true);
     //}
     
-    let verti_box = Box::new(Orientation::Vertical, 0);
+    let verti_box = gtk::Box::new(Orientation::Vertical, 0);
     window.add(&verti_box);
     let menu_bar = create_menu_bar();
     verti_box.pack_start(&menu_bar, false, false, 0);

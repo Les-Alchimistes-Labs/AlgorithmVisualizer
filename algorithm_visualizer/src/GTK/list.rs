@@ -40,10 +40,13 @@ pub fn create_list_tab()->gtk::Paned
     let edit_label_1 =  Label::new(Some("                       "));
     let edit_label =  Label::new(Some("----|| edit list ||----"));
     let edit_label_2=  Label::new(Some("                       "));
+    
+    
     let add_button = Button::with_label("add");
     let remove_button = Button::with_label("remove");
     let reset_button =  Button::with_label("reset");
     let sort_button =  Button::with_label("sort the list");
+    let refresh_button= Button::with_label("refresh");
     let sort_1=  Label::new(Some("                       "));
     let sort_2=  Label::new(Some("                       "));
     
@@ -423,7 +426,7 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 		let boxe = Grid::new();
 
 		boxe.attach(&image,0,0,1,1);
-		notebook.append_page(&boxe,Some(&Label::new(Some("List"))));
+		notebook.append_page(&boxe,Some(&Label::new(Some(&op))));
 		notebook.show_all();
 		drop(boxe);
 		notebook.queue_draw();
@@ -475,6 +478,11 @@ pub fn refresh(notebook : &mut Notebook)
 {
 	unsafe
 	{
+		let n_pages = notebook.n_pages();
+		for _i in 0..n_pages
+		{
+			notebook.remove_page(Some(0));
+		}
 		paint_list(notebook,String::from("Refresh"),CURRENT_LIST.len(),CURRENT_LIST.len());
 	}
 }
