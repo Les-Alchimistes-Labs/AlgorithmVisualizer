@@ -7,6 +7,7 @@ name = "algorithm_visualizer"
 version = "0.1.0"
 dependencies = [
  "cairo-rs",
+ "gdk-pixbuf",
  "gio",
  "gtk",
 ]

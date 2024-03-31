@@ -5,30 +5,36 @@ use crate::BTREE;
 
 
 
-fn delete_bis(btree: &mut Box<Btree>,notebook: &mut Notebook, key: i32) -> Option<Box<Btree>> {
+fn delete_bis(btree: &mut Box<Btree>,notebook: &mut Notebook, key: i32) -> (Option<Box<Btree>>,bool) {
     if key > btree.key 
     {
 		if btree.right == None 
 		{
-			return None;
+			paint_tree(notebook,btree.key,btree.key);
+			return (None,false);
 		}
 		else
 		{
 			if btree.right.as_mut().unwrap().right == None && btree.right.as_mut().unwrap().left ==None && btree.right.as_mut().unwrap().key == key 
 			{
+				paint_tree(notebook,btree.right.as_mut().unwrap().key,btree.key);
 				btree.right = None;
-				return Some(Box::new(Btree::new(1,None,None)))
+				paint_tree(notebook,btree.key,btree.key);
+				return (Some(btree.clone()),true)
 			}
 			else
 			{
-				let tmp = delete_bis(btree.right.as_mut().unwrap(),notebook, key);
-				if tmp == None 
+				paint_tree(notebook,btree.right.as_mut().unwrap().key,btree.key);
+				let (t,b) = delete_bis(btree.right.as_mut().unwrap(),notebook, key);
+				paint_tree(notebook,btree.key,btree.right.as_mut().unwrap().key);
+				if !b
 				{
-					return None;
+					paint_tree(notebook,btree.key,btree.key);
+					return (None,false);
 				}
 				else
 				{
-					btree.right = tmp;
+					btree.right = t;
 				}
 			} 
 		}
@@ -37,18 +43,32 @@ fn delete_bis(btree: &mut Box<Btree>,notebook: &mut Notebook, key: i32) -> Optio
     {
 		if btree.left == None
 		{
-			return None;
+			paint_tree(notebook,btree.key,btree.key);
+			return (None,false);
 		} 
         else
         {
-			let tmp = delete_bis(btree.left.as_mut().unwrap(),notebook, key);
-			if tmp == None 
+			if btree.left.as_mut().unwrap().right == None && btree.left.as_mut().unwrap().left ==None && btree.left.as_mut().unwrap().key == key 
 			{
-				return None;
+				paint_tree(notebook,btree.left.as_mut().unwrap().key,btree.key);
+				btree.left = None;
+				paint_tree(notebook,btree.key,btree.key);
+				return (Some(btree.clone()),true)
 			}
 			else
 			{
-				btree.left =tmp;
+				paint_tree(notebook,btree.left.as_mut().unwrap().key,btree.key);
+				let (t,b) = delete_bis(btree.left.as_mut().unwrap(),notebook, key);
+				paint_tree(notebook,btree.key,btree.left.as_mut().unwrap().key);
+				if !b
+				{
+					paint_tree(notebook,btree.key,btree.key);
+					return (None,false);
+				}
+				else
+				{
+					btree.left =t;
+				}
 			} 
 		}
     } 
@@ -56,44 +76,53 @@ fn delete_bis(btree: &mut Box<Btree>,notebook: &mut Notebook, key: i32) -> Optio
     {
         if btree.left.is_none() && btree.right.is_none() 
         {
-            return None;
+			paint_tree(notebook,btree.key,btree.key);
+            return(None,false) ;
         } 
         else if btree.left.is_none() 
         {
             if let Some(left_child) = btree.right.take() {
+				paint_tree(notebook,btree.right.as_mut().unwrap().key,btree.key);
 			    *btree = left_child;
-			    return Some(btree.clone());
+			    paint_tree(notebook,btree.right.as_mut().unwrap().key,btree.key);
+			    return (Some(btree.clone()),true);
 			} else {
-			    return None;
+				paint_tree(notebook,btree.key,btree.key);
+			    return (None,false);
 			}
         } 
         else if btree.right.is_none()
         {
             if let Some(left_child) = btree.left.take() {
+				paint_tree(notebook,btree.left.as_mut().unwrap().key,btree.key);
 			    *btree = left_child;
-			    return Some(btree.clone());
+			    paint_tree(notebook,btree.left.as_mut().unwrap().key,btree.key);
+			    return (Some(btree.clone()),true);
 			} else {
-			    return None;
+				paint_tree(notebook,btree.key,btree.key);
+			    return (None,false);
 			}
 
         } 
         else 
         {
             let y = max(btree.left.clone());
+            paint_tree(notebook,btree.left.as_mut().unwrap().key,btree.key);
             btree.key = y;
-            btree.left = delete_bis(btree.left.as_mut().unwrap(),notebook, y);
+            let (t,b) =delete_bis(btree.left.as_mut().unwrap(),notebook, y);
+            btree.left = t;
         }
     }
-    Some(btree.clone())
+    (Some(btree.clone()),true)
 }
 
-pub fn delete(notebook :&mut Notebook, key: i32) -> Option<Box<Btree>> {
+pub fn delete(notebook :&mut Notebook, key: i32) -> (Option<Box<Btree>>,bool) {
     unsafe
     {
 		
 	    if BTREE ==None 
 	    {
-	        None
+	        (None,false)
 	    } 
 	    else 
 	    {
@@ -101,7 +130,7 @@ pub fn delete(notebook :&mut Notebook, key: i32) -> Option<Box<Btree>> {
 			 BTREE.clone().unwrap().right == None
 			{
 				BTREE = None;
-				return Some(Box::new(Btree::new(1,None,None)));
+				(None,true)
 			}
 			else
 			{			

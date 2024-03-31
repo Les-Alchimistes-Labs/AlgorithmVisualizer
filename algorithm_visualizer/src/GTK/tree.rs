@@ -1,9 +1,16 @@
 use gtk::prelude::*;
 use gtk::{Grid, Paned ,Orientation, ComboBoxText, Button, Notebook, Entry, Label
-	, Window, MessageDialog, DialogFlags, MessageType, ButtonsType  };
-use std::collections::VecDeque;
+	, Window, MessageDialog, DialogFlags, MessageType, ButtonsType,Image  };
 
 use std::cell::RefCell;
+use std::process::Command;
+
+use gdk_pixbuf::Pixbuf;
+
+use std::fs::File;
+use std::io::Write;
+use std::path::PathBuf;
+use std::env;
 
 use crate::BTREE;
 use	crate::Btree;
@@ -52,8 +59,6 @@ pub fn create_tree_tab() -> gtk::Paned
     let remove_entry = Entry::new();
     remove_entry.set_placeholder_text(Some("remove a node"));
     let refresh1=  Label::new(Some("                       "));
-	let search_entry = Entry::new();
-    search_entry.set_placeholder_text(Some("search a node"));
     let refresh_button= Button::with_label("refresh");
     
     
@@ -73,8 +78,7 @@ pub fn create_tree_tab() -> gtk::Paned
     grid.attach(&reset_button,0,9,2,2);
     grid.attach(&sort_1,0,10,2,1);
     grid.attach(&sort_2,0,11,2,1);
-    grid.attach(&search_button,1,13,1,1);
-    grid.attach(&search_entry,0,13,1,1);
+    grid.attach(&search_button,0,13,2,1);
     grid.attach(&refresh1,0,15,2,1);
     grid.attach(&refresh_button,0,16,2,1);
     
@@ -129,46 +133,73 @@ pub fn create_tree_tab() -> gtk::Paned
 	
 } 
 
-pub fn dot(btree : Btree) -> String {
-        let mut fake = 1;
-        let mut dot_string = String::from("graph {\n");
-        dot_string.push_str("graph [ordering=\"out\"]\n");
 
-        let mut queue = VecDeque::new();
-        if let Some(ref node) = btree.left {
-            queue.push_back(node.clone()); // Cloning the left child
-            dot_string.push_str(&format!("{:p}[label=\"{}\"]\n", node, node.key));
-        }
 
-        if let Some(ref node) = btree.right {
-            queue.push_back(node.clone()); // Cloning the right child
-            dot_string.push_str(&format!("{:p}[label=\"{}\"]\n", node, node.key));
-        }
-
-        while let Some(node) = queue.pop_front() {
-            if let Some(ref left_child) = node.left {
-                queue.push_back(left_child.clone()); // Cloning the left child
-                dot_string.push_str(&format!("{:p}[label=\"{}\"]\n", left_child, left_child.key));
-                dot_string.push_str(&format!("   {:p} -- {:p}\n", node, left_child));
-            } else {
-                dot_string.push_str(&format!("{}[color=\"white\" label=\"\"]\n", fake));
-                dot_string.push_str(&format!("   {:p} -- {}[color=\"white\"]\n", node, fake));
-                fake += 1;
-            }
-
-            if let Some(ref right_child) = node.right {
-                queue.push_back(right_child.clone()); // Cloning the right child
-                dot_string.push_str(&format!("{:p}[label=\"{}\"]\n", right_child, right_child.key));
-                dot_string.push_str(&format!("   {:p} -- {:p}\n", node, right_child));
-            } else {
-                dot_string.push_str(&format!("{}[color=\"white\" label=\"\"]\n", fake));
-                dot_string.push_str(&format!("   {:p} -- {}[color=\"white\"]\n", node, fake));
-                fake += 1;
-            }
-        }
-
-        dot_string.push_str("}");
-        dot_string
+pub fn dot(current : i32 ,old :i32 ) -> String 
+{
+	let mut result = String::from("digraph tree {\n");
+	unsafe
+	{
+		if BTREE !=None
+		{
+			let mut tmp = String::new();
+			tmp = parcours_profondeur(&mut BTREE,tmp);
+			for s in tmp.split_whitespace()
+			{
+				result.push('n');
+				result.push_str(&get_string(s.parse().unwrap()));
+				result.push_str(&format!(" [label=\"{}\"",s));
+				if current.to_string() == s 
+				{
+					result.push_str(", style = filled , color = green]\n");
+				}
+				else if old.to_string() == s 
+				{
+					result.push_str(", style = filled , color = red]\n");
+				}
+				else
+				{
+					result.push_str("]\n");
+				}
+			}
+			let mut queue = vec![];
+			queue.push(BTREE.as_mut().unwrap());
+			while queue.len() != 0
+			{
+				let node = queue.remove(0);
+				if node.left != None 
+				{
+					let nb = node.left.as_mut().unwrap().key;
+					result.push_str(&format!("n{}->n{}\n",get_string(node.key), get_string(nb)));
+					queue.push(node.left.as_mut().unwrap());
+				}
+				if node.right != None 
+				{
+					let nb = node.right.as_mut().unwrap().key;
+					result.push_str(&format!("n{}->n{}\n",get_string(node.key), get_string(nb)));
+					queue.push(node.right.as_mut().unwrap());
+				}
+			}
+		}
+	}	
+	result.push('}');
+	println!("{}",&result);
+	result 
+}
+pub fn get_string(nb :i32) -> String
+{
+	let mut result = String::new();
+	if nb < 0 
+	{
+		result.push('_');
+		let tmp = nb *-1;
+		result.push_str(&tmp.to_string())
+	}
+	else
+	{
+		result.push_str(&nb.to_string());
+	}
+	result
 }
 
 
@@ -224,17 +255,39 @@ pub fn add_node(notebook :&mut Notebook, entry : &Entry)
 		{
 			number*=-1;
 		}
+		let mut tmp = String::new();
+		tmp = parcours_profondeur(&mut BTREE, tmp);
+		for n in tmp.split_whitespace()
+		{
+			if n == &number.to_string()
+			{
+				let dialog = MessageDialog::new(None::<&Window>,
+											 DialogFlags::MODAL,
+											 MessageType::Info,
+											 ButtonsType::Close,
+											 "already in the tree !");
+				dialog.run();
+				dialog.close();
+				return
+			}
+		}
+		
+		let n_pages = notebook.n_pages();
+		for _i in 0..n_pages
+		{
+			notebook.remove_page(Some(0));
+		}
 		insert(notebook,number);
-		paint_tree(notebook,number,number);
+		paint_tree(notebook,number,number)
 	}
 	
 }
 pub fn remove_node(notebook :&mut Notebook, entry : &Entry)
 {
-	  unsafe
-	  {
-		  let text = entry.text().to_string(); 
-	    if text.is_empty() {
+	unsafe
+	{
+		let text = entry.text().to_string(); 
+		if text.is_empty() {
 			let dialog = MessageDialog::new(None::<&Window>,
 											 DialogFlags::MODAL,
 											 MessageType::Info,
@@ -243,12 +296,12 @@ pub fn remove_node(notebook :&mut Notebook, entry : &Entry)
 			dialog.run();
 			dialog.close();
 			return        
-	    }
-	    let mut is_negative = false;
-	    let mut copy = text.clone();
-	    entry.set_text("");
-	    if copy.remove(0) =='-'
-	    {
+		}
+		let mut is_negative = false;
+		let mut copy = text.clone();
+		entry.set_text("");
+		if copy.remove(0) =='-'
+		{
 			is_negative =true;
 		}
 		let mut to_parse = if is_negative{copy} else {text};
@@ -281,9 +334,14 @@ pub fn remove_node(notebook :&mut Notebook, entry : &Entry)
 		{
 			number*=-1;
 		}
-		let btree = delete(notebook,number);
+		let n_pages = notebook.n_pages();
+		for _i in 0..n_pages
+		{
+			notebook.remove_page(Some(0));
+		}
+		let (t,b) = delete(notebook,number);
 		dbg!(&BTREE);
-		if btree == None
+		if !b
 		{
 			let dialog = MessageDialog::new(None::<&Window>,
 											 DialogFlags::MODAL,
@@ -294,11 +352,7 @@ pub fn remove_node(notebook :&mut Notebook, entry : &Entry)
 			dialog.close();
 			return
 		}
-		else
-		{
-			paint_tree(notebook,number,number);
-		}
-	  }
+	}
 }
 
 
@@ -321,11 +375,108 @@ pub fn search(notebook :&mut Notebook, combo : &ComboBoxText)
 {
 	
 }
+
 pub fn refresh(notebook :&mut Notebook)
 {
-	
+	unsafe
+	{
+		if BTREE != None 
+		{	
+			let n_pages = notebook.n_pages();
+			for _i in 0..n_pages
+			{
+				notebook.remove_page(Some(0));
+			}
+			paint_tree(notebook,BTREE.as_mut().unwrap().key,BTREE.as_mut().unwrap().key);
+		}
+	}
 }
-pub fn paint_tree(notebook :&mut Notebook, current :i32 , old : i32)
+
+pub fn save_dot_tmp(current : i32 ,old :i32 ) 
 {
+	let content = dot(current,old);
+	let location = "algorithm_visualizer/src/save/tmp/tree.dot";
+	let mut path = get_absolute("algorithm_visualizer");
+	path.push_str(location);
+	let output = PathBuf::from(path);
 	
+	let mut file = File::create(output).expect("failed to create file");
+    file.write_all(content.as_bytes()).expect("failed to write to file");
 }
+
+
+pub fn save_png_tmp()
+{
+	let location = "algorithm_visualizer/src/save/tmp/tree.dot";
+	let mut path = get_absolute("algorithm_visualizer");
+	path.push_str(location);
+	
+	
+	let output =  "/algorithm_visualizer/src/save/tmp/tree.png";
+	let mut path_out = get_absolute("algorithm_visualizer");
+	path_out.push_str(output);
+	
+	
+	let _com = Command::new("dot")
+                        .arg("-Tpng")
+                        .arg(path)
+                        .arg("-o")
+                        .arg(path_out.clone())
+                        .output()
+                        .expect("failed to execute process");
+}
+
+pub fn paint_tree(notebook :&mut Notebook, current :i32 , old : i32)  
+{
+	save_dot_tmp(current,old);
+	save_png_tmp();
+	let output =  "/algorithm_visualizer/src/save/tmp/tree.png";
+	let mut path_out = get_absolute("algorithm_visualizer");
+	path_out.push_str(output);
+	
+	let pixbuf = Pixbuf::from_file(path_out);
+	
+	let image = Image::from_pixbuf(Some(&pixbuf.unwrap())); 
+		
+	let boxe = Grid::new();
+
+	boxe.attach(&image,0,0,1,1);
+	notebook.append_page(&boxe,Some(&Label::new(Some("tree"))));
+	notebook.show_all();
+	drop(boxe);
+	notebook.queue_draw();
+	
+	gtk::main_iteration();
+}
+
+pub fn get_absolute(root: &str) ->String
+{
+	 let path = env::current_dir().unwrap().to_string_lossy().to_string();
+	 let mut words = vec![];
+	 let mut result = String::new();
+	 let mut word = String::new();
+	 for c in path.chars()
+	 {
+		 if c =='/'
+		 {
+			 if word==root.to_string()
+			 {
+				break
+			 } 
+			 words.push(word.clone());
+			 word = String::new();
+		 }
+		 else
+		 {
+			 word.push(c);
+		 }
+	 }
+	for i in words
+	{
+		result.push_str(&i);
+		result.push('/');
+	}
+
+	 result 
+}
+

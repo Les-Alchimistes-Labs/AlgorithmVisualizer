@@ -1,0 +1,15 @@
+digraph tree {
+n0 [label="0", style = filled , color = green]
+n4 [label="4", style = filled , color = red]
+n2 [label="2"]
+n1 [label="1"]
+n3 [label="3"]
+n5 [label="5"]
+n7 [label="7"]
+n0->n4
+n4->n2
+n4->n5
+n2->n1
+n2->n3
+n5->n7
+}

@@ -55,7 +55,6 @@ pub fn create_list_tab()->gtk::Paned
     let remove_entry = Entry::new();
     remove_entry.set_placeholder_text(Some("remove a number"));
     let refresh1=  Label::new(Some("                       "));
-    let refresh_button= Button::with_label("refresh");
     
     
     grid.attach(&space_1,0,0,2,1);
@@ -381,7 +380,14 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 				 }
 			}  
 			let bar_width  = ((max_width-min_width)-(nb_to_draw +1))/nb_to_draw;
-			
+			let mut min = 1;
+			for i in 0..CURRENT_LIST.len()
+			{
+				 if CURRENT_LIST[i]< min 
+				 {
+					 min = CURRENT_LIST[i];
+				 }
+			}			
 			for i in 0..nb_to_draw
 			{
 				let cloned_cr = Arc::clone(cr);
@@ -400,7 +406,7 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 					let _ = borrowed_cr.clone().expect("REASON").set_source_rgb(1.0,1.0,1.0);
 				}
 				drop(borrowed_cr);
-				let begin_height = (height - ((CURRENT_LIST[i as usize]as f64/ max_value as f64) ) *  max_height as f64) as i32;
+				let begin_height = (height - (((CURRENT_LIST[i as usize] + min*-1 +1)  as f64/ (max_value +min*-1 +1) as f64) ) *  max_height as f64) as i32;
 				let cloned_cr = Arc::clone(cr);
 				let arc_cr  = &*cloned_cr;
 				let mut borrowed_cr = arc_cr.lock().unwrap();
@@ -436,17 +442,6 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 	}
 }
 
-//fn save_image(surface: ImageSurface, file_path: &str)
-//{
-	//let mut clone = surface.clone();
-	//let data = clone.data().unwrap();
-	//let file = File::create(file_path).expect("fail");
-	//let buf_writer = BufWriter::new(file); 
-	//let mut encoder = png::Encoder::new(buf_writer,740,500);
-	//encoder.set(png::ColorType::RGBA).set(png::BitDepth::Eight);
-	//let mut writer = encoder.write_header().unwrap();
-	//writer.write_image_data(&data).expect("fail");   
-//}
 
 fn get_string()-> String
 {
