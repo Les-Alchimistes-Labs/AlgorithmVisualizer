@@ -77,31 +77,6 @@ pub fn save_list_img()
 	//}	
 }
 
-fn get_string()-> String
-{
-	unsafe
-	{
-		if CURRENT_LIST.len()>0 
-		{		
-			let mut result = String::new();
-			result.push('[');
-		
-			for i in 0..(CURRENT_LIST.len()-1)
-			{
-				result.push_str(&CURRENT_LIST[i].to_string());
-				result.push(',');
-				result.push(' ');
-			}
-			result.push_str(&CURRENT_LIST[CURRENT_LIST.len()-1].to_string());
-			result.push(']');
-			result
-		}	
-		else
-		{
-			String::from("[ ]")
-		}
-	}	
-}
 pub fn save_tree_dot() 
 {
 	let content = dot();
@@ -144,6 +119,7 @@ pub fn dot() -> String
 		{
 			let mut tmp = String::new();
 			tmp = parcours_profondeur(&mut BTREE,tmp);
+			result.push_str(&format!("//{}\n",&tmp));
 			for s in tmp.split_whitespace()
 			{
 				result.push('n');

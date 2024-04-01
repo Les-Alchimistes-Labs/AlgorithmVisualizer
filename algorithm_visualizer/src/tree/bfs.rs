@@ -9,14 +9,13 @@ pub fn parcours_largeur(btree: &mut Option<Box<Btree>>, mut result: String,noteb
         let mut current = queue.remove(0);
         if current.is_none(){
             continue;
-        }else{
-			paint_tree(notebook,current.as_mut().unwrap().key,current.as_mut().unwrap().key);
+        } else {
+			paint_tree("BFS",notebook,current.as_mut().unwrap().key,current.as_mut().unwrap().key);
             result.push_str(&current.as_ref().unwrap().key.to_string());
             result.push_str(" ");
             queue.push(current.as_mut().unwrap().left.clone());
             queue.push(current.as_mut().unwrap().right.clone());
         }
-
     }
     result
 }

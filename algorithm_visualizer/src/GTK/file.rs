@@ -3,6 +3,8 @@ use std::fs::read_to_string;
 use gtk::{FileChooserAction, FileChooserDialog, FileFilter, ResponseType, Window
 	, MessageDialog, DialogFlags, MessageType, ButtonsType};
 use crate::CURRENT_LIST;
+use crate::BTREE;
+use crate::tree::insert::*;
 
 pub fn open_list() {
     // Create a file chooser dialog
@@ -38,8 +40,7 @@ pub fn open_list() {
 						{
 							// Convert PathBuf to String using to_string_lossy()
 							let path_string: String = path_buf.to_string_lossy().into_owned();
-							opened_list(path_string);
-				            
+							opened_list(path_string);   
 				        }
 				        None => 
 				        {
@@ -73,7 +74,7 @@ fn opened_list(a :String)
 			{
 				unsafe
 				{
-				CURRENT_LIST.push(parsed_i64);
+					CURRENT_LIST.push(parsed_i64);
 				}
 				
 			}
@@ -97,5 +98,107 @@ fn opened_list(a :String)
 	unsafe
 	{		
 		dbg!(&CURRENT_LIST);
+	}
+}
+
+pub fn open_tree() {
+    // Create a file chooser dialog
+    let file_chooser = FileChooserDialog::new(
+        Some("Open tree"),
+        None::<&Window>,      
+        FileChooserAction::Open,
+    );
+    file_chooser.add_buttons(&[
+            ("Cancel", ResponseType::Cancel),
+            ("Open", ResponseType::Ok),
+        ]);
+
+    // Add filters to the file chooser dialog
+    let filter = FileFilter::new();
+    filter.add_pattern("*.dot");
+    filter.set_name(Some("DOT files"));
+    file_chooser.add_filter(&filter);
+
+    // Connect the "response" signal of the file chooser dialog
+    file_chooser.connect_response(move |dialog, response| 
+    {
+        match response 
+        {
+            ResponseType::Ok => 
+            {
+                if let Some(file) = dialog.file() 
+                {
+					let path = file.path();
+                    match path
+                    {
+						Some(path_buf) => 
+						{
+							// Convert PathBuf to String using to_string_lossy()
+							let path_string: String = path_buf.to_string_lossy().into_owned();
+							opened_tree(path_string);
+				            
+				        }
+				        None => 
+				        {
+				            println!("No path provided");
+				        }
+					}
+				}
+			}
+			_ => {}
+		}
+			dialog.close();
+		}
+	);
+    // Run the file chooser dialog
+    file_chooser.run();
+}
+
+fn opened_tree(a :String)
+{
+	unsafe
+	{
+		let tmp = read_to_string(a);
+		BTREE =None;	
+	    let  strings =  tmp.unwrap();
+	    for line in strings.lines()
+	    {
+			let mut tmp = line.clone().to_string();
+			let c =tmp.remove(0);
+			if c =='/'
+			{
+				if tmp.remove(0) == '/'
+				{
+					for number in tmp.split_whitespace()
+					{
+						match number.parse::<i32>()
+						{
+							Ok(parsed) => {  create(parsed) },
+							
+							Err(_e) => {
+							BTREE=None;
+							let dialog = MessageDialog::new(None::<&Window>,
+														DialogFlags::MODAL,
+														MessageType::Info,
+														ButtonsType::Close,
+													"not a correct binary tree");
+							dialog.run();
+							dialog.close();
+							return }
+						}
+					}
+					dbg!(&BTREE);
+					return;
+				}
+			}
+		}
+		let dialog = MessageDialog::new(None::<&Window>,
+														DialogFlags::MODAL,
+														MessageType::Info,
+														ButtonsType::Close,
+													"the tree doesn't contain a prefix search comment");
+							dialog.run();
+							dialog.close();
+							return	
 	}
 }

@@ -145,6 +145,7 @@ pub fn dot(current : i32 ,old :i32 ) -> String
 		{
 			let mut tmp = String::new();
 			tmp = parcours_profondeur(&mut BTREE,tmp);
+			result.push_str(&format!("//{}\n",&tmp));
 			for s in tmp.split_whitespace()
 			{
 				result.push('n');
@@ -279,7 +280,7 @@ pub fn add_node(notebook :&mut Notebook, entry : &Entry)
 			notebook.remove_page(Some(0));
 		}
 		insert(notebook,number);
-		paint_tree(notebook,number,number)
+		paint_tree("Add",notebook,number,number)
 	}
 	
 }
@@ -368,7 +369,7 @@ pub fn reset(notebook :&mut Notebook)
 		}
 		BTREE = None;
 		dbg!(&BTREE);
-		paint_tree(notebook,1,1);
+		paint_tree("reset",notebook,1,1);
 	}
 	
 }
@@ -450,7 +451,7 @@ pub fn refresh(notebook :&mut Notebook)
 			{
 				notebook.remove_page(Some(0));
 			}
-			paint_tree(notebook,BTREE.as_mut().unwrap().key,BTREE.as_mut().unwrap().key);
+			paint_tree("refresh",notebook,BTREE.as_mut().unwrap().key,BTREE.as_mut().unwrap().key);
 		}
 	}
 }
@@ -489,7 +490,7 @@ pub fn save_png_tmp()
                         .expect("failed to execute process");
 }
 
-pub fn paint_tree(notebook :&mut Notebook, current :i32 , old : i32)  
+pub fn paint_tree(op :&str,notebook :&mut Notebook, current :i32 , old : i32)  
 {
 	save_dot_tmp(current,old);
 	save_png_tmp();
@@ -504,7 +505,7 @@ pub fn paint_tree(notebook :&mut Notebook, current :i32 , old : i32)
 	let boxe = Grid::new();
 
 	boxe.attach(&image,0,0,1,1);
-	notebook.append_page(&boxe,Some(&Label::new(Some("tree"))));
+	notebook.append_page(&boxe,Some(&Label::new(Some(op))));
 	notebook.show_all();
 	notebook.set_current_page(Some(notebook.n_pages()-1));
 	drop(boxe);

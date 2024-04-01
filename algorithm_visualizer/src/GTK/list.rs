@@ -3,7 +3,9 @@ use cairo::{ImageSurface, Format};
 use gtk::prelude::*;
 use gtk::{ Grid, Orientation, Paned, Button, Label, Entry, 
 	ComboBoxText, Window, MessageDialog, DialogFlags, MessageType,
-	ButtonsType,Image, Notebook};	
+	ButtonsType,Image, Notebook};
+	
+use std::env;	
 	
 
 use std::cell::RefCell;
@@ -431,6 +433,7 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 		let boxe = Grid::new();
 
 		boxe.attach(&image,0,0,1,1);
+		//surface.write_to_png()
 		
 		
 		notebook.append_page(&boxe,Some(&Label::new(Some(&op))));
@@ -445,6 +448,15 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 		
 	}
 }
+
+//pub fn save_png(image : ImageSurface)
+//{
+	//let pixbuf = image.get_pixbuf();
+	//let filename = get_absolute("algorithm_visualizer");
+	//filename.push_str("algorithm_visualizer/src/save/tmp/tree.dot");
+	
+	//pixbuf.savev(&filename, gdk_pixbuf::PixbufFormat::Png, &[]);
+//}
 
 
 fn get_string()-> String
@@ -484,6 +496,37 @@ pub fn refresh(notebook : &mut Notebook)
 		}
 		paint_list(notebook,String::from("Refresh"),CURRENT_LIST.len(),CURRENT_LIST.len());
 	}
+}
+
+pub fn get_absolute(root: &str) ->String
+{
+	 let path = env::current_dir().unwrap().to_string_lossy().to_string();
+	 let mut words = vec![];
+	 let mut result = String::new();
+	 let mut word = String::new();
+	 for c in path.chars()
+	 {
+		 if c =='/'
+		 {
+			 if word==root.to_string()
+			 {
+				break
+			 } 
+			 words.push(word.clone());
+			 word = String::new();
+		 }
+		 else
+		 {
+			 word.push(c);
+		 }
+	 }
+	for i in words
+	{
+		result.push_str(&i);
+		result.push('/');
+	}
+
+	 result 
 }
 
 

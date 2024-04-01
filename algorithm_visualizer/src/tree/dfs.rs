@@ -24,7 +24,7 @@ pub fn dfs_pre(btree: &mut Option<Box<Btree>>, mut result: String, notebook :&mu
     if !btree.is_none() {
         result.push_str(&btree.as_ref().unwrap().key.to_string());
         result.push_str(" ");
-		paint_tree(notebook,btree.as_mut().unwrap().key,btree.as_mut().unwrap().key);
+		paint_tree("prefix",notebook,btree.as_mut().unwrap().key,btree.as_mut().unwrap().key);
         result = dfs_pre(&mut btree.clone().as_mut().unwrap().left, result,notebook);
         result = dfs_pre(&mut btree.clone().as_mut().unwrap().right, result,notebook);
     }
@@ -40,7 +40,7 @@ pub fn dfs_in(btree: &mut Option<Box<Btree>>, mut result: String, notebook :&mut
         result.push_str(&btree.as_ref().unwrap().key.to_string());
         result.push_str(" ");
         result = dfs_in(&mut btree.clone().as_mut().unwrap().left, result,notebook);
-		paint_tree(notebook,btree.as_mut().unwrap().key,btree.as_mut().unwrap().key);
+		paint_tree("infix",notebook,btree.as_mut().unwrap().key,btree.as_mut().unwrap().key);
         result = dfs_in(&mut btree.clone().as_mut().unwrap().right, result,notebook);
     }
     result.clone()
@@ -55,7 +55,7 @@ pub fn dfs_suf(btree: &mut Option<Box<Btree>>, mut result: String, notebook :&mu
         result.push_str(" ");
         result = dfs_suf(&mut btree.as_mut().unwrap().left, result,notebook);
         result = dfs_suf(&mut btree.as_mut().unwrap().right, result,notebook);
-        paint_tree(notebook,btree.as_mut().unwrap().key,btree.as_mut().unwrap().key);
+        paint_tree("suffix",notebook,btree.as_mut().unwrap().key,btree.as_mut().unwrap().key);
 
     }
     result.clone()

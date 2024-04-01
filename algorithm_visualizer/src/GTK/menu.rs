@@ -24,9 +24,11 @@ fn file_menu_create() -> gtk::MenuItem {
     let result = gtk::MenuItem::with_label("File");
 
     // Créer des éléments de menu pour le menu "File"
-    let list_open = gtk::MenuItem::with_label("Open list");
-    let tree_open = gtk::MenuItem::with_label("Open graph");
-    let graph_open = gtk::MenuItem::with_label("Open tree");
+    let open = gtk::MenuItem::with_label("Open");
+    let sub_open = gtk::Menu::new();
+    let list_open = gtk::MenuItem::with_label("list");
+    let tree_open = gtk::MenuItem::with_label("tree");
+    let graph_open = gtk::MenuItem::with_label("graph");
     let item_quit = gtk::MenuItem::with_label("Quit");
 
     
@@ -35,10 +37,12 @@ fn file_menu_create() -> gtk::MenuItem {
     let menu_items = gtk::Menu::new();
 
     // Ajouter les éléments de menu au sous-menu
-    menu_items.append(&list_open);
-    menu_items.append(&tree_open);
-    menu_items.append(&graph_open);
+    sub_open.append(&list_open);
+    sub_open.append(&tree_open);
+    sub_open.append(&graph_open);
+    menu_items.append(&open);
     menu_items.append(&item_quit);
+    open.set_submenu(Some(&sub_open));
 
     // Configurer le menu "File" avec le sous-menu
     result.set_submenu(Some(&menu_items));
@@ -47,6 +51,9 @@ fn file_menu_create() -> gtk::MenuItem {
     // CONNECTER LES BOUTONS
     list_open.connect_activate(|_| {
         open_list();
+    });
+    tree_open.connect_activate(|_| {
+        open_tree();
     });
     
     
