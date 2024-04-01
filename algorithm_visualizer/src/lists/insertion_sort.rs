@@ -1,6 +1,8 @@
 use crate::GTK::list::paint_list;
 use crate::CURRENT_LIST;
 use gtk::Notebook;
+
+
 pub fn insertion_sort(notebook : &mut Notebook )
 {
 	unsafe

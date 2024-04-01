@@ -109,7 +109,7 @@ fn delete_bis(btree: &mut Box<Btree>,notebook: &mut Notebook, key: i32) -> (Opti
             let y = max(btree.left.clone());
             paint_tree(notebook,btree.left.as_mut().unwrap().key,btree.key);
             btree.key = y;
-            let (t,b) =delete_bis(btree.left.as_mut().unwrap(),notebook, y);
+            let (t,_b) =delete_bis(btree.left.as_mut().unwrap(),notebook, y);
             btree.left = t;
         }
     }

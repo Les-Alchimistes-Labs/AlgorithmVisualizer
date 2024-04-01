@@ -3,17 +3,15 @@ use std::io::Write;
 use std::path::PathBuf;
 use std::env;
 use std::process::Command;
-use std::sync::{Arc, Mutex};
 
 
 use crate::CURRENT_LIST;
 use crate::BTREE;
 
-use cairo::{ImageSurface, Format};
-
 
 
 use crate::tree::dfs::parcours_profondeur;
+
 
 pub fn get_absolute(root: &str) ->String
 {

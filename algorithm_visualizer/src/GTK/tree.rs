@@ -13,10 +13,10 @@ use std::path::PathBuf;
 use std::env;
 
 use crate::BTREE;
-use	crate::Btree;
 use crate::tree::insert::insert;
 use crate::tree::remove::delete;
-use crate::tree::dfs::parcours_profondeur;
+use crate::tree::dfs::*;
+
 use crate::tree::bfs::parcours_largeur;
 
 
@@ -38,7 +38,9 @@ pub fn create_tree_tab() -> gtk::Paned
 	let space_1 = Label::new(Some("                               "));
 	
 	let combo = ComboBoxText::new();
-	combo.append_text("depth-first search");
+	combo.append_text("depth-first search (prefix)");
+	combo.append_text("depth-first search (infix)");
+	combo.append_text("depth-first search (suffix)");
     combo.append_text("breadth-first search");
     
     let edit_label_1 =  Label::new(Some("                       "));
@@ -59,7 +61,6 @@ pub fn create_tree_tab() -> gtk::Paned
     let remove_entry = Entry::new();
     remove_entry.set_placeholder_text(Some("remove a node"));
     let refresh1=  Label::new(Some("                       "));
-    let refresh_button= Button::with_label("refresh");
     
     
     
@@ -339,7 +340,7 @@ pub fn remove_node(notebook :&mut Notebook, entry : &Entry)
 		{
 			notebook.remove_page(Some(0));
 		}
-		let (t,b) = delete(notebook,number);
+		let (_t,b) = delete(notebook,number);
 		dbg!(&BTREE);
 		if !b
 		{
@@ -373,7 +374,69 @@ pub fn reset(notebook :&mut Notebook)
 }
 pub fn search(notebook :&mut Notebook, combo : &ComboBoxText)
 {
-	
+	 unsafe 
+	 {
+		let raw =  (*combo).active_text();
+		let text = Some(raw);
+		let text2 = match text 
+		{
+			Some(Some(string)) => string.to_string(),
+			_ => String::new(), 
+		};
+		if text2 ==""
+		{
+			let dialog = MessageDialog::new(None::<&Window>,
+											 DialogFlags::MODAL,
+											 MessageType::Info,
+											 ButtonsType::Close,
+											 "no sorting algorithm selected !");
+			dialog.run();
+			dialog.close();
+			return
+		}
+		if text2 == "depth-first search (prefix)" 
+		{
+			let n_pages = notebook.n_pages();
+			for _i in 0..n_pages
+			{
+				notebook.remove_page(Some(0));
+			}
+			let mut _tmp = String::new();
+			_tmp = dfs_pre(&mut BTREE,_tmp,notebook);
+		}
+		if text2 == "depth-first search (infix)" 
+		{
+			let n_pages = notebook.n_pages();
+			for _i in 0..n_pages
+			{
+				notebook.remove_page(Some(0));
+			}
+			let mut _tmp = String::new();
+			_tmp = dfs_in(&mut BTREE,_tmp,notebook);
+		}
+		if text2 == "depth-first search (suffix)" 
+		{
+			let n_pages = notebook.n_pages();
+			for _i in 0..n_pages
+			{
+				notebook.remove_page(Some(0));
+			}
+			let mut _tmp = String::new();
+			_tmp = dfs_suf(&mut BTREE,_tmp,notebook);
+		}
+		
+		
+		if text2 == "breadth-first search"
+		{
+			let n_pages = notebook.n_pages();
+			for _i in 0..n_pages
+			{
+				notebook.remove_page(Some(0));
+			}
+			let mut _tmp = String::new();
+			_tmp = parcours_largeur(&mut BTREE,_tmp,notebook);
+		}
+	 }
 }
 
 pub fn refresh(notebook :&mut Notebook)
@@ -443,6 +506,7 @@ pub fn paint_tree(notebook :&mut Notebook, current :i32 , old : i32)
 	boxe.attach(&image,0,0,1,1);
 	notebook.append_page(&boxe,Some(&Label::new(Some("tree"))));
 	notebook.show_all();
+	notebook.set_current_page(Some(notebook.n_pages()-1));
 	drop(boxe);
 	notebook.queue_draw();
 	

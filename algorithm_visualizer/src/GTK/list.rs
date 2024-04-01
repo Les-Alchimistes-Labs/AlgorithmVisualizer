@@ -8,7 +8,6 @@ use gtk::{ Grid, Orientation, Paned, Button, Label, Entry,
 
 use std::cell::RefCell;
 
-
 use crate::lists::insertion_sort::insertion_sort;
 use crate::lists::counting_sort::counting_sort;
 use crate::CURRENT_LIST;
@@ -432,13 +431,18 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 		let boxe = Grid::new();
 
 		boxe.attach(&image,0,0,1,1);
+		
+		
 		notebook.append_page(&boxe,Some(&Label::new(Some(&op))));
-		notebook.show_all();
+		
+		notebook.show_all();				
+		notebook.set_current_page(Some(notebook.n_pages()-1));
+		
 		drop(boxe);
 		notebook.queue_draw();
 		
 		gtk::main_iteration();
-
+		
 	}
 }
 
