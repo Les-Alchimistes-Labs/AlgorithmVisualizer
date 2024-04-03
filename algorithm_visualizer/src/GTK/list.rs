@@ -11,7 +11,9 @@ use std::env;
 use std::cell::RefCell;
 
 use crate::lists::insertion_sort::insertion_sort;
+use crate::lists::merge_sort::merge_sort;
 use crate::lists::counting_sort::counting_sort;
+
 use crate::CURRENT_LIST;
 #[allow(unused_must_use)]
 
@@ -324,6 +326,10 @@ fn sort_the_list(notebook :&mut Notebook,combo : &ComboBoxText)
 	            }
 	        }
 	        counting_sort(notebook,max);
+		}
+		if text2 =="Merge sort"
+		{
+			merge_sort(notebook);
 		}
 	}		
 }
