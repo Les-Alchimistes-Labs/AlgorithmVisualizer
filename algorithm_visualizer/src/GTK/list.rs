@@ -299,6 +299,12 @@ fn sort_the_list(notebook :&mut Notebook,combo : &ComboBoxText)
 		}
 		if text2=="Insertion sort"
 		{
+			let n_pages = notebook.n_pages();
+			for _i in 0..n_pages
+			{
+				notebook.remove_page(Some(0));
+			}
+			let mut _tmp = String::new();
 			insertion_sort(notebook);
 		}
 		if text2=="Counting sort"
@@ -325,10 +331,22 @@ fn sort_the_list(notebook :&mut Notebook,combo : &ComboBoxText)
 	                return
 	            }
 	        }
+	        let n_pages = notebook.n_pages();
+			for _i in 0..n_pages
+			{
+				notebook.remove_page(Some(0));
+			}
+			let mut _tmp = String::new();
 	        counting_sort(notebook,max);
 		}
 		if text2 =="Merge sort"
 		{
+			let n_pages = notebook.n_pages();
+			for _i in 0..n_pages
+			{
+				notebook.remove_page(Some(0));
+			}
+			let mut _tmp = String::new();
 			merge_sort(notebook);
 		}
 	}		
