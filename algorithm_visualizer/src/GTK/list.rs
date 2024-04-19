@@ -3,14 +3,17 @@ use cairo::{ImageSurface, Format};
 use gtk::prelude::*;
 use gtk::{ Grid, Orientation, Paned, Button, Label, Entry, 
 	ComboBoxText, Window, MessageDialog, DialogFlags, MessageType,
-	ButtonsType,Image, Notebook};	
+	ButtonsType,Image, Notebook};
+	
+use std::env;	
 	
 
 use std::cell::RefCell;
 
-
 use crate::lists::insertion_sort::insertion_sort;
+use crate::lists::merge_sort::merge_sort;
 use crate::lists::counting_sort::counting_sort;
+
 use crate::CURRENT_LIST;
 #[allow(unused_must_use)]
 
@@ -40,10 +43,13 @@ pub fn create_list_tab()->gtk::Paned
     let edit_label_1 =  Label::new(Some("                       "));
     let edit_label =  Label::new(Some("----|| edit list ||----"));
     let edit_label_2=  Label::new(Some("                       "));
+    
+    
     let add_button = Button::with_label("add");
     let remove_button = Button::with_label("remove");
     let reset_button =  Button::with_label("reset");
     let sort_button =  Button::with_label("sort the list");
+    let refresh_button= Button::with_label("refresh");
     let sort_1=  Label::new(Some("                       "));
     let sort_2=  Label::new(Some("                       "));
     
@@ -52,7 +58,6 @@ pub fn create_list_tab()->gtk::Paned
     let remove_entry = Entry::new();
     remove_entry.set_placeholder_text(Some("remove a number"));
     let refresh1=  Label::new(Some("                       "));
-    let refresh_button= Button::with_label("refresh");
     
     
     grid.attach(&space_1,0,0,2,1);
@@ -294,6 +299,12 @@ fn sort_the_list(notebook :&mut Notebook,combo : &ComboBoxText)
 		}
 		if text2=="Insertion sort"
 		{
+			let n_pages = notebook.n_pages();
+			for _i in 0..n_pages
+			{
+				notebook.remove_page(Some(0));
+			}
+			let mut _tmp = String::new();
 			insertion_sort(notebook);
 		}
 		if text2=="Counting sort"
@@ -320,7 +331,23 @@ fn sort_the_list(notebook :&mut Notebook,combo : &ComboBoxText)
 	                return
 	            }
 	        }
+	        let n_pages = notebook.n_pages();
+			for _i in 0..n_pages
+			{
+				notebook.remove_page(Some(0));
+			}
+			let mut _tmp = String::new();
 	        counting_sort(notebook,max);
+		}
+		if text2 =="Merge sort"
+		{
+			let n_pages = notebook.n_pages();
+			for _i in 0..n_pages
+			{
+				notebook.remove_page(Some(0));
+			}
+			let mut _tmp = String::new();
+			merge_sort(notebook);
 		}
 	}		
 }
@@ -378,7 +405,14 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 				 }
 			}  
 			let bar_width  = ((max_width-min_width)-(nb_to_draw +1))/nb_to_draw;
-			
+			let mut min = 1;
+			for i in 0..CURRENT_LIST.len()
+			{
+				 if CURRENT_LIST[i]< min 
+				 {
+					 min = CURRENT_LIST[i];
+				 }
+			}			
 			for i in 0..nb_to_draw
 			{
 				let cloned_cr = Arc::clone(cr);
@@ -397,7 +431,7 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 					let _ = borrowed_cr.clone().expect("REASON").set_source_rgb(1.0,1.0,1.0);
 				}
 				drop(borrowed_cr);
-				let begin_height = (height - ((CURRENT_LIST[i as usize]as f64/ max_value as f64) ) *  max_height as f64) as i32;
+				let begin_height = (height - (((CURRENT_LIST[i as usize] + min*-1 +1)  as f64/ (max_value +min*-1 +1) as f64) ) *  max_height as f64) as i32;
 				let cloned_cr = Arc::clone(cr);
 				let arc_cr  = &*cloned_cr;
 				let mut borrowed_cr = arc_cr.lock().unwrap();
@@ -423,27 +457,31 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 		let boxe = Grid::new();
 
 		boxe.attach(&image,0,0,1,1);
-		notebook.append_page(&boxe,Some(&Label::new(Some("List"))));
-		notebook.show_all();
+		//surface.write_to_png()
+		
+		
+		notebook.append_page(&boxe,Some(&Label::new(Some(&op))));
+		
+		notebook.show_all();				
+		notebook.set_current_page(Some(notebook.n_pages()-1));
+		
 		drop(boxe);
 		notebook.queue_draw();
 		
 		gtk::main_iteration();
-
+		
 	}
 }
 
-//fn save_image(surface: ImageSurface, file_path: &str)
+//pub fn save_png(image : ImageSurface)
 //{
-	//let mut clone = surface.clone();
-	//let data = clone.data().unwrap();
-	//let file = File::create(file_path).expect("fail");
-	//let buf_writer = BufWriter::new(file); 
-	//let mut encoder = png::Encoder::new(buf_writer,740,500);
-	//encoder.set(png::ColorType::RGBA).set(png::BitDepth::Eight);
-	//let mut writer = encoder.write_header().unwrap();
-	//writer.write_image_data(&data).expect("fail");   
+	//let pixbuf = image.get_pixbuf();
+	//let filename = get_absolute("algorithm_visualizer");
+	//filename.push_str("algorithm_visualizer/src/save/tmp/tree.dot");
+	
+	//pixbuf.savev(&filename, gdk_pixbuf::PixbufFormat::Png, &[]);
 //}
+
 
 fn get_string()-> String
 {
@@ -475,8 +513,44 @@ pub fn refresh(notebook : &mut Notebook)
 {
 	unsafe
 	{
+		let n_pages = notebook.n_pages();
+		for _i in 0..n_pages
+		{
+			notebook.remove_page(Some(0));
+		}
 		paint_list(notebook,String::from("Refresh"),CURRENT_LIST.len(),CURRENT_LIST.len());
 	}
+}
+
+pub fn get_absolute(root: &str) ->String
+{
+	 let path = env::current_dir().unwrap().to_string_lossy().to_string();
+	 let mut words = vec![];
+	 let mut result = String::new();
+	 let mut word = String::new();
+	 for c in path.chars()
+	 {
+		 if c =='/'
+		 {
+			 if word==root.to_string()
+			 {
+				break
+			 } 
+			 words.push(word.clone());
+			 word = String::new();
+		 }
+		 else
+		 {
+			 word.push(c);
+		 }
+	 }
+	for i in words
+	{
+		result.push_str(&i);
+		result.push('/');
+	}
+
+	 result 
 }
 
 
