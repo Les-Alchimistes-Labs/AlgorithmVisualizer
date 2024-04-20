@@ -1,5 +1,5 @@
 use gtk::prelude::*;
-use gtk::{ Notebook, Orientation, Window, WindowType, Label};
+use gtk::{ Notebook, Orientation, Window, WindowType, Label, Button, Image, HeaderBar};
 #[allow(non_snake_case)]
 
 pub mod GTK;
@@ -72,6 +72,19 @@ fn main() {
     
     
     verti_box.pack_end(&notebook, true, true, 0);
+    let close_image = Image::from_icon_name(Some("window-close"), gtk::IconSize::Button.into());
+    
+	let header_bar = HeaderBar::new();
+	let label =  Label::new(Some("Algorithm Visualizer"));
+	header_bar.pack_start(&label);
+    header_bar.set_show_close_button(false); 
+    let close_button = Button::new();
+    close_button.connect_clicked(|_| {
+        gtk::main_quit();
+    });
+    close_button.set_image(Some(&close_image));
+    header_bar.pack_end(&close_button);
+    window.set_titlebar(Some(&header_bar));
     
     window.show_all();
     gtk::main();

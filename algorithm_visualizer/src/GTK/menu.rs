@@ -1,6 +1,7 @@
 use gtk::prelude::*;
 use crate::GTK::file::*;
 use crate::GTK::edit::*;
+use crate::GTK::help::*;
 
 
 pub fn create_menu_bar() -> gtk::MenuBar 
@@ -68,11 +69,11 @@ fn edition_menu_create() -> gtk::MenuItem {
     
     let as_image = gtk::MenuItem::with_label("Save as image");
     let menu_img = gtk::Menu::new();
-    let img_list = gtk::MenuItem::with_label("List");
+    //let img_list = gtk::MenuItem::with_label("List");
     let img_tree = gtk::MenuItem::with_label("Tree");
     let img_graph = gtk::MenuItem::with_label("Graph");
     
-    menu_img.append(&img_list);
+    //menu_img.append(&img_list);
     menu_img.append(&img_tree);
     menu_img.append(&img_graph);
     as_image.set_submenu(Some(&menu_img));
@@ -106,9 +107,9 @@ fn edition_menu_create() -> gtk::MenuItem {
 	txt_list.connect_activate(|_| {
        save_list_text();
     });
-    img_list.connect_activate(|_| {
-       save_list_img();
-    });
+    ////img_list.connect_activate(|_| {
+       //save_list_img();
+    //});
     
     txt_tree.connect_activate(|_| {
        save_tree_dot();
@@ -151,7 +152,18 @@ fn help_menu_create() -> gtk::MenuItem {
     // Configurer le menu "Help" avec le sous-menu
     result.set_submenu(Some(&menu_items));
 
-	 // CONNECTER LES BOUTONS
+	Hlist.connect_activate(|_| {
+       list_info();
+    });
+    Htree.connect_activate(|_| {
+       tree_info();
+    });
+    Hgraph.connect_activate(|_| {
+       graph_info();
+    });
+    item_credits.connect_activate(|_| {
+       credits();
+    });
 
     result
 }

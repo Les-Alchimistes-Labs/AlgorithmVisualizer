@@ -61,6 +61,7 @@ pub fn create_tree_tab() -> gtk::Paned
     let remove_entry = Entry::new();
     remove_entry.set_placeholder_text(Some("remove a node"));
     let refresh1=  Label::new(Some("                       "));
+    let info = Button::with_label("information");
     
     
     
@@ -69,24 +70,33 @@ pub fn create_tree_tab() -> gtk::Paned
     grid.attach(&choose,0,1,2,1);
     grid.attach(&space,0,2,2,1);
     grid.attach(&combo,0,3,2,1);
-    grid.attach(&edit_label_1,0,4,2,1);
-    grid.attach(&edit_label,0,5,2,1);
-    grid.attach(&edit_label_2,0,6,2,1);
-    grid.attach(&add_entry,0,7,1,1);
-    grid.attach(&add_button,1,7,1,1);
-    grid.attach(&remove_entry,0,8,1,1);
-    grid.attach(&remove_button,1,8,1,1);
-    grid.attach(&reset_button,0,9,2,2);
-    grid.attach(&sort_1,0,10,2,1);
-    grid.attach(&sort_2,0,11,2,1);
-    grid.attach(&search_button,0,13,2,1);
+    grid.attach(&info,0,4,2,1);
+    grid.attach(&edit_label_1,0,5,2,1);
+    grid.attach(&edit_label,0,6,2,1);
+    grid.attach(&edit_label_2,0,7,2,1);
+    grid.attach(&add_entry,0,8,1,1);
+    grid.attach(&add_button,1,8,1,1);
+    grid.attach(&remove_entry,0,9,1,1);
+    grid.attach(&remove_button,1,9,1,1);
+    grid.attach(&reset_button,0,10,2,2);
+    grid.attach(&sort_1,0,12,2,1);
+    grid.attach(&sort_2,0,13,2,1);
+    grid.attach(&search_button,0,14,2,1);
     grid.attach(&refresh1,0,15,2,1);
     grid.attach(&refresh_button,0,16,2,1);
     
     grid.set_size_request(200, -1);
        
 							
-     
+    let combo_ref = RefCell::new(combo);
+    {
+        let combo_ref_clone = combo_ref.clone();
+        info.connect_clicked(move |_| {
+            let mut combo_mut = combo_ref_clone.borrow_mut();
+            information(&mut combo_mut);
+        });
+    }
+    
 	{
         let notebook_ref_clone = notebook_ref.clone();
         add_button.connect_clicked(move |_| {
@@ -116,9 +126,11 @@ pub fn create_tree_tab() -> gtk::Paned
 	
 	{
         let notebook_ref_clone = notebook_ref.clone();
+        let combo_ref_clone = combo_ref.clone();
         search_button.connect_clicked(move |_| {
             let mut notebook_mut = notebook_ref_clone.borrow_mut();
-            search(&mut notebook_mut,&combo);
+            let mut combo_mut = combo_ref_clone.borrow_mut();
+            search(&mut notebook_mut,&mut combo_mut);
         });
     }
     {
@@ -133,6 +145,63 @@ pub fn create_tree_tab() -> gtk::Paned
     panel
 	
 } 
+fn information(combo : &mut ComboBoxText)
+{
+	let raw = (*combo).active_text();
+	let text = Some(raw);
+	let text2 = match text 
+	{
+		Some(Some(string)) => string.to_string(),
+		_ => String::new(), 
+	};
+	let to_show;
+	let title;
+											 
+
+	match text2.as_str() 
+	{
+		"depth-first search (prefix)"=> 
+		{
+			title ="DFS prefix";
+			to_show = "depth-first search prefix";
+		
+		
+		},
+		"depth-first search (infix)"    => 
+		{
+			title ="DFS infix";
+			to_show = "Merge sort is a algorithm that split the list in half recursively until there's 2 or less number and then merge then in sorted order";
+		
+
+		},
+		"depth-first search (suffix)" => 
+		{
+			title= "DFS suffix";
+			to_show = "Counting sort is a algorithm that uses a list to count the occurence of every number and then use it to evaluate the starting index for every number and0 update the list";
+		},
+		"breadth-first search" => 
+		{
+			title= "BFS";
+			to_show = "Counting sort is a algorithm that uses a list to count the occurence of every number and then use it to evaluate the starting index for every number and0 update the list";
+		},
+		_ => 
+		{
+			title = "error";
+			to_show = "no sorting algorithm selected !";
+		},
+	}
+	let dialog = MessageDialog::new(None::<&Window>,
+											 DialogFlags::MODAL,
+											 MessageType::Info,
+											 ButtonsType::Close,
+											 to_show);
+											 
+	dialog.set_title(title);
+	
+	dialog.run();
+	dialog.close();
+	return
+}
 
 
 
