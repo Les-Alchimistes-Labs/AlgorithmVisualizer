@@ -16,12 +16,11 @@ pub fn list_info()
 											 \n\n\tRefresh: remove every tabs and show the current state of the list
 											 \nIn the right part:
 											 \n\tto see as an animation : select a tab and press left or right arrow on your \n\tkeyboard");
-			dialog.set_title("List tab information");
-			dialog.run();
-			dialog.close();
-			return     
+	dialog.set_title("List tab information");
+	dialog.run();
+	dialog.close();
+	return     
 }
-
 
 pub fn tree_info()
 {
@@ -38,10 +37,10 @@ pub fn tree_info()
 											 \n\n\tRefresh: remove every tabs and show the current state of the tree
 											 \nIn the right part:
 											 \n\tto see as an animation : select a tab and press left or right arrow on your \n\tkeyboard");
-			dialog.set_title("Tree tab information");
-			dialog.run();
-			dialog.close();
-			return     
+	dialog.set_title("Tree tab information");
+	dialog.run();
+	dialog.close();
+	return     
 }
 
 pub fn graph_info()
@@ -52,10 +51,10 @@ pub fn graph_info()
 											 MessageType::Info,
 											 ButtonsType::Close,
 											 "nothing for now");
-			dialog.set_title("Graph tab information");
-			dialog.run();
-			dialog.close();
-			return 
+	dialog.set_title("Graph tab information");
+	dialog.run();
+	dialog.close();
+	return 
 }
 
 
@@ -71,9 +70,8 @@ pub fn credits()
 											 \n\t- Jayson Vanmarcke
 											 \n\t- Olivier Bensemhoun
 											 \n\t- Sacha Layani");
-			dialog.set_title("credits");
-			dialog.run();
-			dialog.close();
-			return
-	
+	dialog.set_title("credits");
+	dialog.run();
+	dialog.close();
+	return	
 }

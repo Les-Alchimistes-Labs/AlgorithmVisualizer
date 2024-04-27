@@ -4,11 +4,8 @@ use std::path::PathBuf;
 use std::env;
 use std::process::Command;
 
-
 use crate::CURRENT_LIST;
 use crate::BTREE;
-
-
 
 use crate::tree::dfs::parcours_profondeur;
 
@@ -21,26 +18,25 @@ pub fn get_absolute(root: &str) ->String
 	 let mut word = String::new();
 	 for c in path.chars()
 	 {
-		 if c =='/'
-		 {
-			 if word==root.to_string()
-			 {
+		if c =='/'
+		{
+			if word==root.to_string()
+			{
 				break
-			 } 
-			 words.push(word.clone());
-			 word = String::new();
-		 }
-		 else
-		 {
-			 word.push(c);
-		 }
+			} 
+			words.push(word.clone());
+			word = String::new();
+		}
+		else
+		{
+			word.push(c);
+		}
 	 }
-	for i in words
-	{
+	 for i in words
+	 {
 		result.push_str(&i);
 		result.push('/');
-	}
-
+	 }
 	 result 
 }
 
@@ -62,19 +58,6 @@ pub fn save_list_text()
 		let mut file = File::create(output).expect("failed to create file");
 	    file.write_all(content.as_bytes()).expect("failed to write to file");
 	}
-}
-pub fn save_list_img() 
-{
-	//unsafe
-	//{
-		//let location = "algorithm_visualizer/src/save/image/list.png";
-		//let mut path = get_absolute("algorithm_visualizer");
-		//path.push_str(location);
-		//let output = PathBuf::from(path);
-	
-		//let mut file = File::create(output).expect("failed to create file");
-	    //file.write_all(&data).expect("failed to write to file");
-	//}	
 }
 
 pub fn save_tree_dot() 

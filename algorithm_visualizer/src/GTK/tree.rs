@@ -29,10 +29,7 @@ pub fn create_tree_tab() -> gtk::Paned
 	panel.pack1(&grid,false,false);
 	panel.pack2(&notebook,true,true);
 	let notebook_ref = RefCell::new(notebook);
-	
-	//boutton : reset /add /remove/ search
-	//3 entry : add/ remove/ search 
-	// combo box : 
+
 	let space = Label::new(Some("                               "));	
 	let choose = Label::new(Some("----|| searching algorithm ||---"));
 	let space_1 = Label::new(Some("                               "));
@@ -61,10 +58,7 @@ pub fn create_tree_tab() -> gtk::Paned
     let remove_entry = Entry::new();
     remove_entry.set_placeholder_text(Some("remove a node"));
     let refresh1=  Label::new(Some("                       "));
-    let info = Button::with_label("information");
-    
-    
-    
+    let info = Button::with_label("information"); 
      
     grid.attach(&space_1,0,0,2,1);
     grid.attach(&choose,0,1,2,1);
@@ -86,8 +80,7 @@ pub fn create_tree_tab() -> gtk::Paned
     grid.attach(&refresh_button,0,16,2,1);
     
     grid.set_size_request(200, -1);
-       
-							
+       						
     let combo_ref = RefCell::new(combo);
     {
         let combo_ref_clone = combo_ref.clone();
@@ -133,6 +126,7 @@ pub fn create_tree_tab() -> gtk::Paned
             search(&mut notebook_mut,&mut combo_mut);
         });
     }
+    
     {
         let notebook_ref_clone = notebook_ref.clone();
         refresh_button.connect_clicked(move |_| {
@@ -141,9 +135,7 @@ pub fn create_tree_tab() -> gtk::Paned
         });
     }
 	
-    
     panel
-	
 } 
 fn information(combo : &mut ComboBoxText)
 {
@@ -156,7 +148,6 @@ fn information(combo : &mut ComboBoxText)
 	};
 	let to_show;
 	let title;
-											 
 
 	match text2.as_str() 
 	{
@@ -202,8 +193,6 @@ fn information(combo : &mut ComboBoxText)
 	dialog.close();
 	return
 }
-
-
 
 pub fn dot(current : i32 ,old :i32 ) -> String 
 {
@@ -254,7 +243,6 @@ pub fn dot(current : i32 ,old :i32 ) -> String
 		}
 	}	
 	result.push('}');
-	println!("{}",&result);
 	result 
 }
 pub fn get_string(nb :i32) -> String
@@ -272,7 +260,6 @@ pub fn get_string(nb :i32) -> String
 	}
 	result
 }
-
 
 pub fn add_node(notebook :&mut Notebook, entry : &Entry)
 {
@@ -342,7 +329,6 @@ pub fn add_node(notebook :&mut Notebook, entry : &Entry)
 				return
 			}
 		}
-		
 		let n_pages = notebook.n_pages();
 		for _i in 0..n_pages
 		{
@@ -351,7 +337,6 @@ pub fn add_node(notebook :&mut Notebook, entry : &Entry)
 		insert(notebook,number);
 		paint_tree("Add",notebook,number,number)
 	}
-	
 }
 pub fn remove_node(notebook :&mut Notebook, entry : &Entry)
 {
@@ -426,7 +411,6 @@ pub fn remove_node(notebook :&mut Notebook, entry : &Entry)
 	}
 }
 
-
 pub fn reset(notebook :&mut Notebook)
 {
 	unsafe 
@@ -440,7 +424,6 @@ pub fn reset(notebook :&mut Notebook)
 		dbg!(&BTREE);
 		paint_tree("reset",notebook,1,1);
 	}
-	
 }
 pub fn search(notebook :&mut Notebook, combo : &ComboBoxText)
 {
@@ -494,8 +477,6 @@ pub fn search(notebook :&mut Notebook, combo : &ComboBoxText)
 			let mut _tmp = String::new();
 			_tmp = dfs_suf(&mut BTREE,_tmp,notebook);
 		}
-		
-		
 		if text2 == "breadth-first search"
 		{
 			let n_pages = notebook.n_pages();
@@ -506,6 +487,7 @@ pub fn search(notebook :&mut Notebook, combo : &ComboBoxText)
 			let mut _tmp = String::new();
 			_tmp = parcours_largeur(&mut BTREE,_tmp,notebook);
 		}
+		dbg!(&BTREE);
 	 }
 }
 

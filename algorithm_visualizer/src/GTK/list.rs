@@ -20,8 +20,6 @@ use crate::CURRENT_LIST;
 
 
 
-
-
 pub fn create_list_tab()->gtk::Paned
 {
 	let panel = Paned::new(Orientation::Horizontal);
@@ -519,12 +517,8 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 		
 		let boxe = Grid::new();
 
-		boxe.attach(&image,0,0,1,1);
-		//surface.write_to_png()
-		
-		
-		notebook.append_page(&boxe,Some(&Label::new(Some(&op))));
-		
+		boxe.attach(&image,0,0,1,1);	
+		notebook.append_page(&boxe,Some(&Label::new(Some(&op))));	
 		notebook.show_all();				
 		notebook.set_current_page(Some(notebook.n_pages()-1));
 		
@@ -535,15 +529,6 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 		
 	}
 }
-
-//pub fn save_png(image : ImageSurface)
-//{
-	//let pixbuf = image.get_pixbuf();
-	//let filename = get_absolute("algorithm_visualizer");
-	//filename.push_str("algorithm_visualizer/src/save/tmp/tree.dot");
-	
-	//pixbuf.savev(&filename, gdk_pixbuf::PixbufFormat::Png, &[]);
-//}
 
 
 fn get_string()-> String

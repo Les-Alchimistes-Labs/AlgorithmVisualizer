@@ -7,7 +7,6 @@ use crate::BTREE;
 use crate::tree::insert::*;
 
 pub fn open_list() {
-    // Create a file chooser dialog
     let file_chooser = FileChooserDialog::new(
         Some("Open List"),
         None::<&Window>,      
@@ -18,13 +17,11 @@ pub fn open_list() {
             ("Open", ResponseType::Ok),
         ]);
 
-    // Add filters to the file chooser dialog
     let filter = FileFilter::new();
     filter.add_pattern("*.txt");
     filter.set_name(Some("Text files"));
     file_chooser.add_filter(&filter);
 
-    // Connect the "response" signal of the file chooser dialog
     file_chooser.connect_response(move |dialog, response| 
     {
         match response 
@@ -38,7 +35,6 @@ pub fn open_list() {
                     {
 						Some(path_buf) => 
 						{
-							// Convert PathBuf to String using to_string_lossy()
 							let path_string: String = path_buf.to_string_lossy().into_owned();
 							opened_list(path_string);   
 				        }
@@ -54,7 +50,6 @@ pub fn open_list() {
 			dialog.close();
 		}
 	);
-    // Run the file chooser dialog
     file_chooser.run();
 }
 fn opened_list(a :String)
@@ -101,8 +96,8 @@ fn opened_list(a :String)
 	}
 }
 
-pub fn open_tree() {
-    // Create a file chooser dialog
+pub fn open_tree() 
+{
     let file_chooser = FileChooserDialog::new(
         Some("Open tree"),
         None::<&Window>,      
@@ -113,13 +108,11 @@ pub fn open_tree() {
             ("Open", ResponseType::Ok),
         ]);
 
-    // Add filters to the file chooser dialog
     let filter = FileFilter::new();
     filter.add_pattern("*.dot");
     filter.set_name(Some("DOT files"));
     file_chooser.add_filter(&filter);
 
-    // Connect the "response" signal of the file chooser dialog
     file_chooser.connect_response(move |dialog, response| 
     {
         match response 
@@ -133,7 +126,6 @@ pub fn open_tree() {
                     {
 						Some(path_buf) => 
 						{
-							// Convert PathBuf to String using to_string_lossy()
 							let path_string: String = path_buf.to_string_lossy().into_owned();
 							opened_tree(path_string);
 				            
@@ -150,7 +142,6 @@ pub fn open_tree() {
 			dialog.close();
 		}
 	);
-    // Run the file chooser dialog
     file_chooser.run();
 }
 
@@ -197,8 +188,8 @@ fn opened_tree(a :String)
 														MessageType::Info,
 														ButtonsType::Close,
 													"the tree doesn't contain a prefix search comment");
-							dialog.run();
-							dialog.close();
-							return	
+		dialog.run();
+		dialog.close();
+		return	
 	}
 }

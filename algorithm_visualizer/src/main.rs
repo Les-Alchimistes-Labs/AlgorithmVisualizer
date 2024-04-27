@@ -10,6 +10,7 @@ pub mod tree;
 use crate::GTK::menu::create_menu_bar;
 use crate::GTK::list::create_list_tab;
 use crate::GTK::tree::create_tree_tab;
+use crate::GTK::graph::create_directed_graph_tab;
 
 #[derive(PartialEq)]
 #[derive(Debug, Clone)]
@@ -42,16 +43,11 @@ fn main() {
     
     
     
-    
-    
-    
-    
-    
     //=============gtk=============//
     
     let window = Window::new(WindowType::Toplevel);
     window.set_title("Algorithm Visualizer");
-    window.set_default_size(1000, 600);
+    window.set_default_size(1400, 900);
     
      //if let Some(settings) = window.get_settings() {
         //settings.set_property_gtk_application_prefer_dark_theme(true);
@@ -64,11 +60,12 @@ fn main() {
     let notebook = Notebook::new();
     let list_tab = create_list_tab();
     let trees = create_tree_tab();
-    //let graphs = create_list_tab();
+    let graphs_directed = create_directed_graph_tab();
     
     
     notebook.append_page(&list_tab,Some(&Label::new(Some("List"))));
     notebook.append_page(&trees,Some(&Label::new(Some("Tree"))));
+    notebook.append_page(&graphs_directed,Some(&Label::new(Some("directed Graphs"))));
     
     
     verti_box.pack_end(&notebook, true, true, 0);
