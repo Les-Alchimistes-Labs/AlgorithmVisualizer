@@ -4,6 +4,6 @@ pub mod help;
 
 pub mod list;
 pub mod tree;
-pub mod graph;
+pub mod graphs;
 
 pub mod menu; 

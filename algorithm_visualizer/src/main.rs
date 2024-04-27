@@ -10,7 +10,10 @@ pub mod tree;
 use crate::GTK::menu::create_menu_bar;
 use crate::GTK::list::create_list_tab;
 use crate::GTK::tree::create_tree_tab;
-use crate::GTK::graph::create_directed_graph_tab;
+use crate::GTK::graphs::digraph::get_d_paned;
+use crate::GTK::graphs::digraph_c::get_d_paned_cost;
+//use crate::GTK::graphs::graph::get_paned;
+//use crate::GTK::graphs::graph_c::get_paned_cost;
 
 #[derive(PartialEq)]
 #[derive(Debug, Clone)]
@@ -49,9 +52,9 @@ fn main() {
     window.set_title("Algorithm Visualizer");
     window.set_default_size(1400, 900);
     
-     //if let Some(settings) = window.get_settings() {
-        //settings.set_property_gtk_application_prefer_dark_theme(true);
-    //}
+     if let Some(settings) = window.settings() {
+        let _a = settings.set_property("gtk_application_prefer_dark_theme",&true);
+    }
     
     let verti_box = gtk::Box::new(Orientation::Vertical, 0);
     window.add(&verti_box);
@@ -66,6 +69,7 @@ fn main() {
     notebook.append_page(&list_tab,Some(&Label::new(Some("List"))));
     notebook.append_page(&trees,Some(&Label::new(Some("Tree"))));
     notebook.append_page(&graphs_directed,Some(&Label::new(Some("directed Graphs"))));
+    //notebook.append_page(&graphs_directed,Some(&Label::new(Some("undirected Graphs"))));
     
     
     verti_box.pack_end(&notebook, true, true, 0);
@@ -90,3 +94,23 @@ fn main() {
         gtk::main_quit();
     });
 }
+pub fn create_directed_graph_tab() -> gtk::Notebook
+{
+	let notebook = Notebook::new() ;
+	let with_cost = get_d_paned_cost();
+	let no_cost = get_d_paned();
+	
+	notebook.append_page(&with_cost,Some(&Label::new(Some("with cost"))));
+	notebook.append_page(&no_cost,Some(&Label::new(Some("without cost"))));
+	notebook
+}
+//pub fn create__graph_tab() -> gtk::Notebook
+//{
+	//let notebook = Notebook::new() ;
+	//let with_cost = get_paned_cost();
+	//let no_cost = get_paned();
+	
+	//notebook.append_page(&with_cost,Some(&Label::new(Some("with cost"))));
+	//notebook.append_page(&no_cost,Some(&Label::new(Some("without cost"))));
+	//notebook
+//}
