@@ -15,6 +15,7 @@ use std::env;
 use crate::UGRAPH;
 use crate::uGraph;
 use crate::graph::dfs::dfs_ugraph;
+use crate::graph::bfs::bfs_ugraph;
 
 pub fn get_paned() -> gtk::Paned
 {
@@ -175,15 +176,24 @@ pub fn get_paned() -> gtk::Paned
             search(&mut combo_mut,&mut notebook_mut,&starting_point);
         });
     }
+    {
+        let notebook_ref_clone = notebook_ref.clone();
+        refresh_button.connect_clicked(move |_| {
+            let mut notebook_mut = notebook_ref_clone.borrow_mut();
+            refresh(&mut notebook_mut);
+        });
+    }
+    {
+        let combo_ref_clone = combo_ref.clone();
+        info.connect_clicked(move |_| {
+            let mut combo_mut = combo_ref_clone.borrow_mut();
+            information(&mut combo_mut);
+        });
+    }
     
     
 	//info
-	//refresh
-	//search
 	
-	
-	
-    
 	paned.pack1(&grid,false,false);
 	paned
 	
@@ -820,7 +830,7 @@ pub fn search(algo :&mut ComboBoxText , notebook : &mut Notebook, entry :&Entry)
 			else
 			{
 				let g = UGRAPH.clone().unwrap();
-				let mut M = vec![false ; g.order as usize];
+				let mut m = vec![false ; g.order as usize];
 				if number1>=g.order
 				{
 					let dialog = MessageDialog::new(None::<&Window>,
@@ -839,8 +849,104 @@ pub fn search(algo :&mut ComboBoxText , notebook : &mut Notebook, entry :&Entry)
 					notebook.remove_page(Some(0));
 				}
 				paint_ugraph("dfs",notebook,number1,-1);
-				dfs_ugraph(number1,&mut M,true,notebook);
+				dfs_ugraph(number1,&mut m,true,notebook);
+			}
+		}
+		if text2 == "breadth-first search"
+		{
+			if UGRAPH ==None 
+			{
+				let dialog = MessageDialog::new(None::<&Window>,
+											 DialogFlags::MODAL,
+											 MessageType::Info,
+											 ButtonsType::Close,
+											 "empty graph !");
+				dialog.run();
+				dialog.close();
+				return
+			}
+			else
+			{
+				let g = UGRAPH.clone().unwrap();
+				if number1>=g.order
+				{
+					let dialog = MessageDialog::new(None::<&Window>,
+											 DialogFlags::MODAL,
+											 MessageType::Info,
+											 ButtonsType::Close,
+											 "doesn't exist !");
+				
+					dialog.run();
+					dialog.close();
+					return
+				}
+				let n_pages = notebook.n_pages();
+				for _i in 0..n_pages
+				{
+					notebook.remove_page(Some(0));
+				}
+				bfs_ugraph(number1,notebook);
 			}
 		}
 	}
+}
+
+pub fn refresh(notebook :&mut Notebook)
+{
+	unsafe
+	{
+		if UGRAPH != None 
+		{	
+			let n_pages = notebook.n_pages();
+			for _i in 0..n_pages
+			{
+				notebook.remove_page(Some(0));
+			}
+			paint_ugraph("refresh",notebook,-1,-1);
+		}
+	}
+}
+fn information(combo : &mut ComboBoxText)
+{
+	let raw = (*combo).active_text();
+	let text = Some(raw);
+	let text2 = match text 
+	{
+		Some(Some(string)) => string.to_string(),
+		_ => String::new(), 
+	};
+	let to_show;
+	let title;
+
+	match text2.as_str() 
+	{
+		"depth-first search"=> 
+		{
+			title ="DFS";
+			to_show = "depth-first search is a recusive searching algorithm that go into the root then in his smallest neighbor until every node in the component is reached once";
+		
+		
+		},
+		"breadth-first search" => 
+		{
+			title= "BFS";
+			to_show = "breadth-first search is a iterative algorithm that go through every vertices from the source and propagate in every direction";
+		},
+		_ => 
+		{
+			title = "error";
+			to_show = "no seraching algorithm selected !";
+		},
+	}
+	let dialog = MessageDialog::new(None::<&Window>,
+											 DialogFlags::MODAL,
+											 MessageType::Info,
+											 ButtonsType::Close,
+											 to_show);
+											 
+	dialog.set_title(title);
+	
+	dialog.run();
+	dialog.close();
+	return
 }
