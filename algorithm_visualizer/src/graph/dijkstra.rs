@@ -6,7 +6,7 @@ use std::{
     hash::{Hash, Hasher},
 };
 
-pub fn dijkstra(src: &Vertex<'_>, adjlist: &HashMap<&Vertex<'_>, Vec<(&Vertex<'_>,usize)>>)
+fn dijkstra(src: &Vertex<'_>, adjlist: &HashMap<&Vertex<'_>, Vec<(&Vertex<'_>,usize)>>)
 {
     src.dist.set(0);
     //Fill the binary heap, verticees with the smallest distance go first

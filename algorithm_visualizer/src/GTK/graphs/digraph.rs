@@ -50,15 +50,12 @@ pub fn get_d_paned() -> gtk::Paned
     let remove_button = Button::with_label("remove");
     
     let vertices =Label::new(Some("--|Vertices|--"));
-    let add_vertice = Label::new(Some("Add:"));
-    let add_v_entry =Entry::new();
+
     let add_v_button =Button::with_label("add");
-    let remove_vertice = Label::new(Some("Remove:"));
-    let remove_v_entry = Entry::new();
     let remove_v_button = Button::with_label("remove");
     
     let reset_button =  Button::with_label("reset");
-    let sort_button =  Button::with_label("sort the list");
+    let sort_button =  Button::with_label("search");
     let refresh_button= Button::with_label("refresh");
     
     let space_0  = Label::new(Some("                       "));
@@ -74,9 +71,6 @@ pub fn get_d_paned() -> gtk::Paned
     let space_10 = Label::new(Some("                       "));
     let space_11 = Label::new(Some("                       "));
     let space_12 = Label::new(Some("                       "));
-    let space_13 = Label::new(Some("                       "));
-    let space_14 = Label::new(Some("                       "));
-    let space_15 = Label::new(Some("                       "));
     
     grid.attach(&space_0           ,0,0,2,1);
     grid.attach(&choose            ,0,1,2,1);
@@ -109,27 +103,18 @@ pub fn get_d_paned() -> gtk::Paned
     grid.attach(&space_8           ,0,19,2,1);
     grid.attach(&vertices          ,0,20,2,1);
     grid.attach(&space_9           ,0,21,2,1);
-    grid.attach(&add_vertice       ,0,22,2,1);
-    grid.attach(&space_10          ,0,23,2,1);
-    grid.attach(&add_v_entry       ,0,24,1,1);
-    grid.attach(&add_v_button      ,1,24,1,1);
-    grid.attach(&space_11		   ,0,25,2,1);
-    grid.attach(&remove_vertice    ,0,26,2,1);
-    grid.attach(&space_12          ,0,27,2,1);
-    grid.attach(&remove_v_entry    ,0,28,1,1); 
-    grid.attach(&remove_v_button   ,1,28,1,1); 
+    grid.attach(&add_v_button      ,0,24,1,1);
+    grid.attach(&remove_v_button   ,1,24,1,1); 
     
-    grid.attach(&space_13          ,0,29,2,1);
+    grid.attach(&space_10          ,0,29,2,1);
     grid.attach(&reset_button      ,0,30,2,1);
     
-    grid.attach(&space_14          ,0,31,2,1);
-    grid.attach(&space_15          ,0,32,2,1);
+    grid.attach(&space_11          ,0,31,2,1);
+    grid.attach(&space_12          ,0,32,2,1);
     grid.attach(&sort_button       ,1,33,1,1);
     
     grid.attach(&refresh_button    ,0,33,1,1);
-    
-    
-    
+
     grid.set_size_request(200, -1);
     
 	

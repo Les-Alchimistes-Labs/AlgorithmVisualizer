@@ -154,31 +154,31 @@ fn information(combo : &mut ComboBoxText)
 		"depth-first search (prefix)"=> 
 		{
 			title ="DFS prefix";
-			to_show = "depth-first search prefix";
+			to_show = "depth-first search prefix is a recusive searching algorithm that go into the root then the the left child and finishes with the right child";
 		
 		
 		},
 		"depth-first search (infix)"    => 
 		{
 			title ="DFS infix";
-			to_show = "Merge sort is a algorithm that split the list in half recursively until there's 2 or less number and then merge then in sorted order";
+			to_show = "depth-first search infix is a recusive searching algorithm that go into the left child then the root and finishes with the right child";
 		
 
 		},
 		"depth-first search (suffix)" => 
 		{
 			title= "DFS suffix";
-			to_show = "Counting sort is a algorithm that uses a list to count the occurence of every number and then use it to evaluate the starting index for every number and0 update the list";
+			to_show = "depth-first search suffix is a recusive searching algorithm that go into the left child then the right child and finishes with the root ";
 		},
 		"breadth-first search" => 
 		{
 			title= "BFS";
-			to_show = "Counting sort is a algorithm that uses a list to count the occurence of every number and then use it to evaluate the starting index for every number and0 update the list";
+			to_show = "breadth-first search is a iterative algorithm that go through every node in the hierarchical order";
 		},
 		_ => 
 		{
 			title = "error";
-			to_show = "no sorting algorithm selected !";
+			to_show = "no seraching algorithm selected !";
 		},
 	}
 	let dialog = MessageDialog::new(None::<&Window>,

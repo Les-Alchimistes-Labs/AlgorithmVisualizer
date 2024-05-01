@@ -419,7 +419,9 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 {
 	unsafe
 	{
-		let surface = ImageSurface::create(Format::ARgb32, 740, 500).expect("Failed to create surface");
+	    let height = 797.0;
+		let width = 1160.0;
+		let surface = ImageSurface::create(Format::ARgb32, width as i32, height as i32).expect("Failed to create surface");
 		let cr = &Arc::new(Mutex::new(cairo::Context::new(&surface)));			
 		let cloned_cr = Arc::clone(cr);
 		let arc_cr  = &*cloned_cr;
@@ -441,15 +443,13 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 			txtw =borrowed_cr.clone().expect("REASON").text_extents(string);
 		}
 
-		borrowed_cr.clone().expect("REASON").move_to(370.0-txtw.unwrap().width/2.0,100.0);
+		borrowed_cr.clone().expect("REASON").move_to(width/2.0 -txtw.unwrap().width/2.0,100.0);
 		
 		let _ = borrowed_cr.clone().expect("REASON").show_text(string);
 		
 		drop(borrowed_cr);
 
 	
-		let height = 500.0;
-		let width = 740.0;
 		let max_height = (height *0.7) as i32;
 		let min_width  = (width *0.1) as i32;
 		let max_width  = (width *0.9) as i32;

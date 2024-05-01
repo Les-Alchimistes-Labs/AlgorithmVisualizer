@@ -1,10 +1,12 @@
 use gtk::prelude::*;
 use gtk::{ Notebook, Orientation, Window, WindowType, Label, Button, Image, HeaderBar};
-#[allow(non_snake_case)]
+use std::collections::HashMap;
 
+#[allow(non_snake_case)]
 pub mod GTK;
 pub mod lists;
 pub mod tree;
+pub mod graph;
 
 
 use crate::GTK::menu::create_menu_bar;
@@ -12,11 +14,13 @@ use crate::GTK::list::create_list_tab;
 use crate::GTK::tree::create_tree_tab;
 use crate::GTK::graphs::digraph::get_d_paned;
 use crate::GTK::graphs::digraph_c::get_d_paned_cost;
-//use crate::GTK::graphs::graph::get_paned;
-//use crate::GTK::graphs::graph_c::get_paned_cost;
+use crate::GTK::graphs::graph::get_paned;
+use crate::GTK::graphs::graph_c::get_paned_cost;
 
 #[derive(PartialEq)]
 #[derive(Debug, Clone)]
+
+
 pub struct Btree {
     key: i32,
     left: Option<Box<Btree>>,
@@ -29,21 +33,60 @@ impl Btree {
     }
 }
 
+#[derive(PartialEq)]
+#[derive(Debug, Clone)]
+#[allow(non_camel_case_types)]
+pub struct uGraph
+{
+	adjlists :Vec<Vec<i32>>,
+	order:i32,
+}
+impl uGraph
+{
+	fn new(order : i32) -> Self
+	{
+		uGraph
+		{
+			adjlists : vec![vec![] ; order as usize],
+			order,
+		}
+	}
+}		
+
+
+#[derive(PartialEq)]
+#[derive(Debug, Clone)]
+#[allow(non_camel_case_types)]
+pub struct ucGraph
+{
+	adjlists :Vec<Vec<i32>>,
+	order:i32,
+	costs : HashMap<(i32,i32),i32>,
+}
+impl ucGraph
+{
+	fn new(order : i32) -> Self
+	{
+		ucGraph
+		{
+			adjlists : vec![vec![] ; order as usize],
+			order,
+			costs: HashMap::new(),
+		}
+	}
+}
+
+
+
 static mut CURRENT_LIST :Vec<i64> = vec![];
 static mut BTREE :Option<Box<Btree>> = None;
+static mut UGRAPH : Option<uGraph> = None;
+static mut UCGRAPH : Option<ucGraph> = None;
 
 
-
-
-
-
-
-
-fn main() {
-	// Initialiser l'application GTK
+fn main() 
+{
     gtk::init().expect("Failed to initialize GTK.");  
-    
-    
     
     
     //=============gtk=============//
@@ -64,12 +107,13 @@ fn main() {
     let list_tab = create_list_tab();
     let trees = create_tree_tab();
     let graphs_directed = create_directed_graph_tab();
+    let graphs = create_graph_tab();
     
     
     notebook.append_page(&list_tab,Some(&Label::new(Some("List"))));
     notebook.append_page(&trees,Some(&Label::new(Some("Tree"))));
     notebook.append_page(&graphs_directed,Some(&Label::new(Some("directed Graphs"))));
-    //notebook.append_page(&graphs_directed,Some(&Label::new(Some("undirected Graphs"))));
+    notebook.append_page(&graphs,Some(&Label::new(Some("undirected Graphs"))));
     
     
     verti_box.pack_end(&notebook, true, true, 0);
@@ -104,13 +148,13 @@ pub fn create_directed_graph_tab() -> gtk::Notebook
 	notebook.append_page(&no_cost,Some(&Label::new(Some("without cost"))));
 	notebook
 }
-//pub fn create__graph_tab() -> gtk::Notebook
-//{
-	//let notebook = Notebook::new() ;
-	//let with_cost = get_paned_cost();
-	//let no_cost = get_paned();
+pub fn create_graph_tab() -> gtk::Notebook
+{
+	let notebook = Notebook::new() ;
+	let with_cost = get_paned_cost();
+	let no_cost = get_paned();
 	
-	//notebook.append_page(&with_cost,Some(&Label::new(Some("with cost"))));
-	//notebook.append_page(&no_cost,Some(&Label::new(Some("without cost"))));
-	//notebook
-//}
+	notebook.append_page(&with_cost,Some(&Label::new(Some("with cost"))));
+	notebook.append_page(&no_cost,Some(&Label::new(Some("without cost"))));
+	notebook
+}
