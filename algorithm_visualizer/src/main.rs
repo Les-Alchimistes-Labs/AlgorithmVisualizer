@@ -75,6 +75,48 @@ impl ucGraph
 		}
 	}
 }
+#[derive(PartialEq)]
+#[derive(Debug, Clone)]
+#[allow(non_camel_case_types)]
+pub struct diGraph
+{
+	adjlists :Vec<Vec<i32>>,
+	order:i32,
+}
+impl diGraph
+{
+	fn new(order : i32) -> Self
+	{
+		diGraph
+		{
+			adjlists : vec![vec![] ; order as usize],
+			order,
+		}
+	}
+}		
+
+
+#[derive(PartialEq)]
+#[derive(Debug, Clone)]
+#[allow(non_camel_case_types)]
+pub struct dicGraph
+{
+	adjlists :Vec<Vec<i32>>,
+	order:i32,
+	costs : HashMap<(i32,i32),i32>,
+}
+impl dicGraph
+{
+	fn new(order : i32) -> Self
+	{
+		dicGraph
+		{
+			adjlists : vec![vec![] ; order as usize],
+			order,
+			costs: HashMap::new(),
+		}
+	}
+}
 
 
 
@@ -82,6 +124,8 @@ static mut CURRENT_LIST :Vec<i64> = vec![];
 static mut BTREE :Option<Box<Btree>> = None;
 static mut UGRAPH : Option<uGraph> = None;
 static mut UCGRAPH : Option<ucGraph> = None;
+static mut DIGRAPH :Option<diGraph> = None;
+static mut DICGRAPH : Option<dicGraph> = None;
 
 
 fn main() 

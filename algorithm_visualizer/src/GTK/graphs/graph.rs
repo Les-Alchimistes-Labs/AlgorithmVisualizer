@@ -192,7 +192,6 @@ pub fn get_paned() -> gtk::Paned
     }
     
     
-	//info
 	
 	paned.pack1(&grid,false,false);
 	paned
