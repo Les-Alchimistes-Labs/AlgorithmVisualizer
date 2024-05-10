@@ -19,7 +19,7 @@ use crate::graph::bfs::bfs_ugraph;
 
 pub fn get_paned() -> gtk::Paned
 {
-		let paned = Paned::new(Orientation::Horizontal);
+	let paned = Paned::new(Orientation::Horizontal);
 	let grid = Grid::new();
 	let notebook = Notebook::new();
 	paned.pack2(&notebook,true,true);
@@ -202,21 +202,21 @@ fn add_vertice(notebook :&mut Notebook)
 {
 	unsafe 
 	{
-		let order;
 		if UGRAPH ==None 
 		{
 			UGRAPH = Some(uGraph::new(1));
-			order = 1;
+			paint_ugraph("Add vertice",notebook,vec![2],vec![]);
 		}
 		else
 		{
 			let mut g = UGRAPH.clone().unwrap();
 			g.order+=1;
-			order = g.order;
 			g.adjlists.push(vec![]);
+			let mut colors = vec![0;g.order as usize];
+			colors[g.order as usize -1] = 2;
 			UGRAPH = Some(g);
+			paint_ugraph("Add vertice",notebook,colors,vec![]);
 		}
-		paint_ugraph("Add vertice",notebook,order-1,-1);
 	}
 }
 
@@ -230,7 +230,7 @@ fn reset(notebook :&mut Notebook)
 			notebook.remove_page(Some(0));
 		}
 		UGRAPH = None;
-		paint_ugraph("Reset",notebook, -1,-1);
+		paint_ugraph("Reset",notebook, vec![],vec![]);
 	}
 }
 
@@ -263,7 +263,7 @@ fn remove_vertice(notebook :&mut Notebook)
 			}
 		}  
 		UGRAPH = Some(g);                 
-		paint_ugraph("remove vertice",notebook, -1,-1);
+		paint_ugraph("remove vertice",notebook, vec![],vec![]);
 	 }
 }
 
@@ -422,8 +422,11 @@ fn add_edge(start: &Entry, end: &Entry,notebook :&mut Notebook)
 		g.adjlists[number as usize ].push(number1);
 		g.adjlists[number as usize].sort();
 		g.adjlists[number1 as usize].sort();
-		UGRAPH = Some(g);
-		paint_ugraph("add edge",notebook,-1,-1);	
+		let mut colors = vec![0;g.order as usize];
+		colors[number1 as usize] =2; 
+		colors[number as usize] =2; 
+		UGRAPH = Some(g);	
+		paint_ugraph("add edge",notebook,colors,vec![(number1,number)]);	
 		
 	}
 }
@@ -590,17 +593,17 @@ fn remove_edge(start : &Entry,end : &Entry,notebook :&mut Notebook )
 			}
 		}
 		UGRAPH = Some(g);
-		paint_ugraph("remove edge",notebook,-1,-1);
+		paint_ugraph("remove edge",notebook,vec![],vec![]);
 	}
 }
-fn dot(current :i32 , old : i32) -> String
+fn dot(colors: Vec<i32>, edges :Vec<(i32,i32)>) -> String
 {
 	let mut result = String::from("graph ugraph {\n");
 	unsafe
 	{
 		if UGRAPH != None
 		{
-
+			dbg!(&colors);
 			let mut g = UGRAPH.clone().unwrap();
 			let order = g.order;
 			for i in 0..order
@@ -608,11 +611,11 @@ fn dot(current :i32 , old : i32) -> String
 				result.push('n');
 				result.push_str(&i.to_string());
 				result.push_str(&format!(" [label=\"{}\"",&i.to_string()));
-				if i == current
+				if colors[i as usize] == 2
 				{
 					result.push_str(", style = filled , color = green ]\n");
 				}
-				else if i == old
+				else if colors[i as usize] == 1
 				{
 					result.push_str(", style = filled , color = red ]\n");
 				}
@@ -632,6 +635,13 @@ fn dot(current :i32 , old : i32) -> String
 					result.push_str(" -- ");
 					result.push_str("n");
 					result.push_str(&tmp.to_string());
+					for k in 0..edges.len()
+					{
+						if edges[k] ==(i,tmp)||edges[k]==(tmp,i)
+						{
+							result.push_str(" [color = red]");
+						}
+					}
 					result.push('\n');
 					for k in 0..(g.adjlists[tmp as usize].len())
 					{
@@ -680,9 +690,9 @@ pub fn get_absolute(root: &str) ->String
 
 	 result 
 }
-pub fn save_dot_tmp(current : i32 ,old :i32 ) 
+pub fn save_dot_tmp(colors: Vec<i32>, edges :Vec<(i32,i32)>) 
 {
-	let content = dot(current,old);
+	let content = dot(colors,edges);
 	let location = "algorithm_visualizer/src/save/tmp/ugraph.dot";
 	let mut path = get_absolute("algorithm_visualizer");
 	path.push_str(location);
@@ -713,9 +723,9 @@ pub fn save_png_tmp()
                         .expect("failed to execute process");
 }
 
-pub fn paint_ugraph(op :&str,notebook :&mut Notebook, current :i32 , old : i32)  
+pub fn paint_ugraph(op :&str,notebook :&mut Notebook, colors: Vec<i32>, edges :Vec<(i32,i32)>)  
 {
-	save_dot_tmp(current,old);
+	save_dot_tmp(colors,edges);
 	save_png_tmp();
 	let output =  "/algorithm_visualizer/src/save/tmp/ugraph.png";
 	let mut path_out = get_absolute("algorithm_visualizer");
@@ -847,7 +857,9 @@ pub fn search(algo :&mut ComboBoxText , notebook : &mut Notebook, entry :&Entry)
 				{
 					notebook.remove_page(Some(0));
 				}
-				paint_ugraph("dfs",notebook,number1,-1);
+				let mut colors = vec![0;g.order as usize] ;
+				colors[number1 as usize]= 2;
+				paint_ugraph("dfs",notebook,colors,vec![]);
 				dfs_ugraph(number1,&mut m,true,notebook);
 			}
 		}
@@ -901,7 +913,7 @@ pub fn refresh(notebook :&mut Notebook)
 			{
 				notebook.remove_page(Some(0));
 			}
-			paint_ugraph("refresh",notebook,-1,-1);
+			paint_ugraph("refresh",notebook,vec![],vec![]);
 		}
 	}
 }

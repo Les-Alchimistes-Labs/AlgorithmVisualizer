@@ -1,9 +1,7 @@
 use crate::GTK::graphs::graph::paint_ugraph;
 use crate::GTK::graphs::digraph::paint_digraph;
 use crate::UGRAPH;
-use	crate::UCGRAPH;
 use crate::DIGRAPH;
-use	crate::DICGRAPH;
 use gtk::Notebook;
 
 pub fn dfs_ugraph(x:i32,m:&mut Vec<bool>, mark :bool,notebook : &mut Notebook)
@@ -15,8 +13,18 @@ pub fn dfs_ugraph(x:i32,m:&mut Vec<bool>, mark :bool,notebook : &mut Notebook)
 		for i in 0..(g.adjlists[x as usize].len())
 		{
 			if ! m[g.adjlists[x as usize][i] as usize]
-			{
-				paint_ugraph("dfs",notebook,g.adjlists[x as usize][i],-1);
+			{   
+				let mut colors = vec![0;g.order as usize];
+				for j in 0..m.len()
+				{
+					if m[j] 
+					{
+						colors[j]=1;
+						
+					}
+				}
+				colors[g.adjlists[x as usize][i] as usize] = 2;
+				paint_ugraph("dfs",notebook,colors,vec![(g.adjlists[x as usize][i],x)]);
 				dfs_ugraph(g.adjlists[x as usize][i],m,mark,notebook);
 			}
 		}
@@ -33,7 +41,17 @@ pub fn dfs_digraph(x:i32,m:&mut Vec<bool>, mark :bool,notebook : &mut Notebook)
 		{
 			if ! m[g.adjlists[x as usize][i] as usize]
 			{
-				paint_digraph("dfs",notebook,g.adjlists[x as usize][i],-1);
+				let mut colors = vec![0;g.order as usize];
+				for j in 0..m.len()
+				{
+					if m[j] 
+					{
+						colors[j]=1;
+						
+					}
+				}
+				colors[g.adjlists[x as usize][i] as usize] = 2;
+				paint_digraph("dfs",notebook,colors,vec![(g.adjlists[x as usize][i],x)]);
 				dfs_digraph(g.adjlists[x as usize][i],m,mark,notebook);
 			}
 		}

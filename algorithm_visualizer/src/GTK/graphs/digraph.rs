@@ -170,15 +170,6 @@ pub fn get_d_paned() -> gtk::Paned
     }
     {
         let notebook_ref_clone = notebook_ref.clone();
-        let combo_ref_clone = combo_ref.clone();
-        sort_button.connect_clicked(move |_| {
-            let mut notebook_mut = notebook_ref_clone.borrow_mut();
-            let mut combo_mut = combo_ref_clone.borrow_mut();
-            search(&mut combo_mut,&mut notebook_mut,&starting_point);
-        });
-    }
-    {
-        let notebook_ref_clone = notebook_ref.clone();
         refresh_button.connect_clicked(move |_| {
             let mut notebook_mut = notebook_ref_clone.borrow_mut();
             refresh(&mut notebook_mut);
@@ -189,6 +180,15 @@ pub fn get_d_paned() -> gtk::Paned
         info.connect_clicked(move |_| {
             let mut combo_mut = combo_ref_clone.borrow_mut();
             information(&mut combo_mut);
+        });
+    }
+    {
+        let notebook_ref_clone = notebook_ref.clone();
+        let combo_ref_clone = combo_ref.clone();
+        sort_button.connect_clicked(move |_| {
+            let mut notebook_mut = notebook_ref_clone.borrow_mut();
+            let mut combo_mut = combo_ref_clone.borrow_mut();
+            search(&mut combo_mut,&mut notebook_mut,&starting_point);
         });
     }
     
@@ -204,21 +204,22 @@ fn add_vertice(notebook :&mut Notebook)
 {
 	unsafe 
 	{
-		let order;
 		if DIGRAPH ==None 
 		{
 			DIGRAPH = Some(diGraph::new(1));
-			order = 1;
+			paint_digraph("Add vertice",notebook,vec![2],vec![]);
 		}
 		else
 		{
 			let mut g = DIGRAPH.clone().unwrap();
 			g.order+=1;
-			order = g.order;
 			g.adjlists.push(vec![]);
+			let mut colors = vec![0;g.order as usize];
+			colors[g.order as usize -1] = 2;
 			DIGRAPH = Some(g);
+			paint_digraph("Add vertice",notebook,colors,vec![]);
 		}
-		paint_digraph("Add vertice",notebook,order-1,-1);
+
 	}
 }
 
@@ -232,7 +233,7 @@ fn reset(notebook :&mut Notebook)
 			notebook.remove_page(Some(0));
 		}
 		DIGRAPH = None;
-		paint_digraph("Reset",notebook, -1,-1);
+		paint_digraph("Reset",notebook, vec![],vec![]);
 	}
 }
 
@@ -265,7 +266,7 @@ fn remove_vertice(notebook :&mut Notebook)
 			}
 		}  
 		DIGRAPH = Some(g);                 
-		paint_digraph("remove vertice",notebook, -1,-1);
+		paint_digraph("remove vertice",notebook, vec![],vec![]);
 	 }
 }
 
@@ -423,8 +424,11 @@ fn add_edge(start: &Entry, end: &Entry,notebook :&mut Notebook)
 		}
 		g.adjlists[number1 as usize ].push(number);
 		g.adjlists[number1 as usize].sort();
+		let mut colors = vec![0 ; g.order as usize];
+		colors[number as usize] = 2;
+		colors[number1 as usize] = 2;
 		DIGRAPH = Some(g);
-		paint_digraph("add edge",notebook,-1,-1);	
+		paint_digraph("add edge",notebook,colors,vec![(number1,number)]);	
 		
 	}
 }
@@ -585,12 +589,12 @@ fn remove_edge(start : &Entry,end : &Entry,notebook :&mut Notebook )
 			}
 		}
 		DIGRAPH = Some(g);
-		paint_digraph("remove edge",notebook,-1,-1);
+		paint_digraph("remove edge",notebook,vec![],vec![]);
 	}
 }
 
 
-fn dot(current :i32 , old : i32) -> String
+fn dot(colors : Vec<i32>, edges:Vec<(i32,i32)>) -> String
 {
 	let mut result = String::from("digraph dig {\n");
 	unsafe
@@ -605,11 +609,11 @@ fn dot(current :i32 , old : i32) -> String
 				result.push('n');
 				result.push_str(&i.to_string());
 				result.push_str(&format!(" [label=\"{}\"",&i.to_string()));
-				if i == current
+				if colors[i as usize] == 2
 				{
 					result.push_str(", style = filled , color = green ]\n");
 				}
-				else if i == old
+				else if colors[i as usize] == 1 
 				{
 					result.push_str(", style = filled , color = red ]\n");
 				}
@@ -629,6 +633,14 @@ fn dot(current :i32 , old : i32) -> String
 					result.push_str(" -> ");
 					result.push_str("n");
 					result.push_str(&tmp.to_string());
+					for k in 0..edges.len()
+					{
+						if edges[k]==(i,tmp)
+						{
+							result.push_str(" [color = red]");
+							
+						}
+					}
 					result.push('\n');
 				}
 			}
@@ -669,9 +681,9 @@ pub fn get_absolute(root: &str) ->String
 
 	 result 
 }
-pub fn save_dot_tmp(current : i32 ,old :i32 ) 
+pub fn save_dot_tmp(colors : Vec<i32>, edges:Vec<(i32,i32)>) 
 {
-	let content = dot(current,old);
+	let content = dot(colors, edges);
 	let location = "algorithm_visualizer/src/save/tmp/digraph.dot";
 	let mut path = get_absolute("algorithm_visualizer");
 	path.push_str(location);
@@ -702,9 +714,9 @@ pub fn save_png_tmp()
                         .expect("failed to execute process");
 }
 
-pub fn paint_digraph(op :&str,notebook :&mut Notebook, current :i32 , old : i32)  
+pub fn paint_digraph(op :&str,notebook :&mut Notebook, colors : Vec<i32>, edges:Vec<(i32,i32)>)  
 {
-	save_dot_tmp(current,old);
+	save_dot_tmp(colors,edges);
 	save_png_tmp();
 	let output =  "/algorithm_visualizer/src/save/tmp/digraph.png";
 	let mut path_out = get_absolute("algorithm_visualizer");
@@ -836,7 +848,9 @@ pub fn search(algo :&mut ComboBoxText , notebook : &mut Notebook, entry :&Entry)
 				{
 					notebook.remove_page(Some(0));
 				}
-				paint_digraph("dfs",notebook,number1,-1);
+				let mut colors = vec![0;g.order as usize];
+				colors[number1 as usize] = 2;
+				paint_digraph("dfs",notebook,colors,vec![]);
 				dfs_digraph(number1,&mut m,true,notebook);
 			}
 		}
@@ -890,7 +904,7 @@ pub fn refresh(notebook :&mut Notebook)
 			{
 				notebook.remove_page(Some(0));
 			}
-			paint_digraph("refresh",notebook,-1,-1);
+			paint_digraph("refresh",notebook,vec![],vec![]);
 		}
 	}
 }

@@ -1,2 +1,14 @@
 digraph dig {
+n0 [label="0", style = filled , color = red ]
+n1 [label="1", style = filled , color = red ]
+n2 [label="2", style = filled , color = red ]
+n3 [label="3", style = filled , color = red ]
+n4 [label="4", style = filled , color = green ]
+n0 -> n1
+n0 -> n3
+n1 -> n2
+n1 -> n4
+n2 -> n3
+n3 -> n0
+n4 -> n3
 }

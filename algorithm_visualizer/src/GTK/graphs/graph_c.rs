@@ -63,6 +63,8 @@ pub fn get_paned_cost() -> gtk::Paned
     let reset_button =  Button::with_label("reset");
     let sort_button =  Button::with_label("search");
     let refresh_button= Button::with_label("refresh");
+    let starting_point = Entry::new();
+	starting_point.set_placeholder_text(Some("starting vertice"));
     
     let space_0  = Label::new(Some("                       "));
     let space_1  = Label::new(Some("                       "));
@@ -120,14 +122,16 @@ pub fn get_paned_cost() -> gtk::Paned
     
     grid.attach(&space_11          ,0,31,2,1);
     grid.attach(&space_12          ,0,32,2,1);
-    grid.attach(&sort_button       ,1,33,1,1);
     
-    grid.attach(&refresh_button    ,0,33,1,1);
+    grid.attach(&refresh_button    ,0,33,2,1);
+    grid.attach(&sort_button       ,1,34,1,1);
+    grid.attach(&starting_point    ,0,34,1,1);
     
     
     
     grid.set_size_request(200, -1);
     
+	
 	
 	paned.pack1(&grid,false,false);
 	paned

@@ -436,7 +436,7 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 		let string = &get_string();
 		let mut txtw =borrowed_cr.clone().expect("REASON").text_extents(string);
 		let mut font_size = 36.0;
-		while txtw.unwrap().width >= 740.0 
+		while txtw.unwrap().width >= width 
 		{
 			font_size-=0.1;
 			borrowed_cr.clone().expect("REASON").set_font_size(font_size);
