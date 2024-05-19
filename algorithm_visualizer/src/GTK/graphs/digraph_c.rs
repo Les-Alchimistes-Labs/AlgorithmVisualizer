@@ -675,7 +675,7 @@ fn remove_edge(start : &Entry,end : &Entry,notebook :&mut Notebook )
 
 fn dot(colors :Vec<i32>, edges : Vec<(i32,i32)> ) -> String
 {
-	let mut result = String::from("digraph dicgraph {\n");
+	let mut result = String::from("digraph dicgraph {");
 	unsafe
 	{
 		if DICGRAPH != None
@@ -683,6 +683,29 @@ fn dot(colors :Vec<i32>, edges : Vec<(i32,i32)> ) -> String
 
 			let g = DICGRAPH.clone().unwrap();
 			let order = g.order;
+			result.push_str(&format!(" // {}\n",order.to_string()));
+			for i in 0..(order)
+			{
+				for j in 0..(g.adjlists[i as usize].len())
+				{
+					let tmp = g.adjlists[i as usize ][j];
+					result.push('n');
+					result.push_str(&i.to_string());
+					result.push_str("->");
+					result.push_str("n");
+					result.push_str(&tmp.to_string());
+					result.push_str(" [label = ");
+					result.push_str(&g.costs.get(&(i,tmp)).unwrap().to_string());
+					for k in 0..edges.len()
+					{
+						if edges[k]==(i,tmp)
+						{
+							result.push_str(" ,color = red");
+						}
+					}
+					result.push_str(&format!("] // {} {} {}\n",&i.to_string(),&tmp.to_string(),&g.costs.get(&(i,tmp)).unwrap().to_string()));
+				}
+			}
 			for i in 0..order
 			{
 				result.push('n');
@@ -702,28 +725,7 @@ fn dot(colors :Vec<i32>, edges : Vec<(i32,i32)> ) -> String
 				}
 			}
 			
-			for i in 0..(order)
-			{
-				for j in 0..(g.adjlists[i as usize].len())
-				{
-					let tmp = g.adjlists[i as usize ][j];
-					result.push('n');
-					result.push_str(&i.to_string());
-					result.push_str(" -> ");
-					result.push_str("n");
-					result.push_str(&tmp.to_string());
-					result.push_str(" [label = ");
-					result.push_str(&g.costs.get(&(i,tmp)).unwrap().to_string());
-					for k in 0..edges.len()
-					{
-						if edges[k]==(i,tmp)
-						{
-							result.push_str(" ,color = red");
-						}
-					}
-					result.push_str("]\n");
-				}
-			}
+			
 		}		
 	}
 	result.push_str("}");

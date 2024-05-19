@@ -2,8 +2,7 @@ use std::sync::{Arc, Mutex};
 use cairo::{ImageSurface, Format};
 use gtk::prelude::*;
 use gtk::{ Grid, Orientation, Paned, Button, Label, Entry, 
-	ComboBoxText, Window, MessageDialog, DialogFlags, MessageType,
-	ButtonsType,Image, Notebook};
+	ComboBoxText, Image, Notebook};
 	
 use std::env;	
 	
@@ -13,11 +12,10 @@ use std::cell::RefCell;
 use crate::lists::insertion_sort::insertion_sort;
 use crate::lists::merge_sort::merge_sort;
 use crate::lists::counting_sort::counting_sort;
+use crate::message;
 
 use crate::CURRENT_LIST;
 #[allow(unused_must_use)]
-
-
 
 
 pub fn create_list_tab()->gtk::Paned
@@ -178,16 +176,7 @@ fn information(combo : &mut ComboBoxText)
 			to_show = "no sorting algorithm selected !";
 		},
 	}
-	let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 to_show);
-											 
-	dialog.set_title(title);
-	
-	dialog.run();
-	dialog.close();
+	message(title,to_show);
 	return
 }
 
@@ -211,13 +200,7 @@ fn add_number(notebook :&mut Notebook,entry :&Entry)
 	{
 		let text = entry.text().to_string(); 
 	    if text.is_empty() {
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "nothing typed !");
-			dialog.run();
-			dialog.close();
+			message("no entry", "nothing typed");
 			return        
 	    }
 	    let mut is_negative = false;
@@ -244,13 +227,7 @@ fn add_number(notebook :&mut Notebook,entry :&Entry)
 		}
 		if wrong
 		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "not a number !");
-			dialog.run();
-			dialog.close();
+			message("incorrect input", "not a number");
 			return
 		}
 		if is_negative
@@ -270,13 +247,7 @@ fn remove_number(notebook :&mut Notebook,entry :&Entry)
 		
 		let text = entry.text().to_string(); 
 	    if text.is_empty() {
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "nothing typed !");
-			dialog.run();
-			dialog.close();
+			message("no entry", "nothing typed");
 			return        
 	    }
 	    let mut is_negative = false;
@@ -303,14 +274,8 @@ fn remove_number(notebook :&mut Notebook,entry :&Entry)
 		}
 		if wrong
 		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "not a number !");
-			dialog.run();
-			dialog.close();
-			return
+			message("incorrect input", "not a number");
+			return 
 		}
 		if is_negative
 		{
@@ -325,13 +290,7 @@ fn remove_number(notebook :&mut Notebook,entry :&Entry)
 				return
 			}
 		}
-		let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "not found in the list !");
-		dialog.run();
-		dialog.close();
+		message("not found", "not found in the list");
 		return
 	}	
 }
@@ -349,13 +308,7 @@ fn sort_the_list(notebook :&mut Notebook,combo : &mut ComboBoxText)
 		};
 		if text2==""
 		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "no sorting algorithm selected !");
-			dialog.run();
-			dialog.close();
+			message("no algorithm", "no algorithm selected");
 			return
 		}
 		if text2=="Insertion sort"
@@ -382,13 +335,7 @@ fn sort_the_list(notebook :&mut Notebook,combo : &mut ComboBoxText)
 	        {
 	            if CURRENT_LIST[i] < 0
 	            {
-	                let dialog = MessageDialog::new(None::<&Window>,
-	                                         DialogFlags::MODAL,
-	                                         MessageType::Info,
-	                                         ButtonsType::Close,
-	                                     "can't work with a negative number !");
-	                dialog.run();
-	                dialog.close();
+					message("negative numbers", "counting sort doesn't work with negative numbers !");
 	                return
 	            }
 	        }
@@ -600,8 +547,3 @@ pub fn get_absolute(root: &str) ->String
 
 	 result 
 }
-
-
-
-
-

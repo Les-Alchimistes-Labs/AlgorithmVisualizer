@@ -632,7 +632,7 @@ fn dot(colors: Vec<i32>, edges :Vec<(i32,i32)>) -> String
 					let tmp = g.adjlists[i as usize ][j];
 					result.push('n');
 					result.push_str(&i.to_string());
-					result.push_str(" -- ");
+					result.push_str("--");
 					result.push_str("n");
 					result.push_str(&tmp.to_string());
 					for k in 0..edges.len()

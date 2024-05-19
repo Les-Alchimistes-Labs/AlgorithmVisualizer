@@ -1,10 +1,11 @@
 use gtk::prelude::*;
 use std::fs::read_to_string;
-use gtk::{FileChooserAction, FileChooserDialog, FileFilter, ResponseType, Window
-	, MessageDialog, DialogFlags, MessageType, ButtonsType};
-use crate::CURRENT_LIST;
-use crate::BTREE;
+use gtk::{FileChooserAction, FileChooserDialog, FileFilter, ResponseType, Window};
+use crate::message;
+
+use crate::{CURRENT_LIST,BTREE,DICGRAPH};
 use crate::tree::insert::*;
+use crate::dicGraph;
 
 pub fn open_list() {
     let file_chooser = FileChooserDialog::new(
@@ -40,7 +41,7 @@ pub fn open_list() {
 				        }
 				        None => 
 				        {
-				            println!("No path provided");
+				            message("no path","no path provided");
 				        }
 					}
 				}
@@ -78,13 +79,7 @@ fn opened_list(a :String)
 				unsafe
 				{
 					CURRENT_LIST=vec![];
-					let dialog = MessageDialog::new(None::<&Window>,
-												DialogFlags::MODAL,
-												MessageType::Info,
-												ButtonsType::Close,
-											"not a correct list");
-					dialog.run();
-					dialog.close();
+					message("incorrect list","not a correct list");
 					return
 				}
 			}
@@ -96,7 +91,7 @@ fn opened_list(a :String)
 	}
 }
 
-pub fn open_tree() 
+pub fn open_dot(op : i32) 
 {
     let file_chooser = FileChooserDialog::new(
         Some("Open tree"),
@@ -127,12 +122,17 @@ pub fn open_tree()
 						Some(path_buf) => 
 						{
 							let path_string: String = path_buf.to_string_lossy().into_owned();
-							opened_tree(path_string);
+							match op 
+							{
+								0 => open_tree(path_string),
+								1 => open_dicgraph(path_string),
+								_ => message("error","error encountered"),
+							}
 				            
 				        }
 				        None => 
 				        {
-				            println!("No path provided");
+				            message("no path","no path provided");
 				        }
 					}
 				}
@@ -145,7 +145,7 @@ pub fn open_tree()
     file_chooser.run();
 }
 
-fn opened_tree(a :String)
+fn open_tree(a :String)
 {
 	unsafe
 	{
@@ -168,13 +168,7 @@ fn opened_tree(a :String)
 							
 							Err(_e) => {
 							BTREE=None;
-							let dialog = MessageDialog::new(None::<&Window>,
-														DialogFlags::MODAL,
-														MessageType::Info,
-														ButtonsType::Close,
-													"not a correct binary tree");
-							dialog.run();
-							dialog.close();
+							message("incorrect tree","not a correct binary tree");
 							return }
 						}
 					}
@@ -183,13 +177,113 @@ fn opened_tree(a :String)
 				}
 			}
 		}
-		let dialog = MessageDialog::new(None::<&Window>,
-														DialogFlags::MODAL,
-														MessageType::Info,
-														ButtonsType::Close,
-													"the tree doesn't contain a prefix search comment");
-		dialog.run();
-		dialog.close();
+		message("no prefix comment","the tree doesn't contain a prefix search comment");
 		return	
+	}
+}
+fn open_dicgraph(a :String)
+{
+	unsafe 
+	{
+		let file = read_to_string(a).unwrap();
+		DICGRAPH = None;
+		let mut it = file.lines();
+		let mut line = it.next();
+		if !line.is_some()
+		{
+			message("incorrect graph","not a correct directed graph with cost");
+			return 
+		}
+		let mut words = line.unwrap().split_whitespace();
+		let mut word = words.next();
+		while word != Some("//")
+		{
+			if !word.is_some()
+			{
+				message("incorrect graph","not a correct directed graph with cost");
+				return 
+			}
+			word = words.next();
+		}
+		word = words.next();
+		if !word.is_some()
+		{
+			message("incorrect graph","not a correct directed graph with cost");
+			return 
+		}
+		let order = parser(word.unwrap(),"DICGRAPH");
+		let mut start;
+		let mut end;
+		let mut cost;
+		let mut g = dicGraph::new(order);
+		line = it.next();
+		dbg!(&line);
+		if !line.is_some()
+		{
+			message("incorrect graph","not a correct directed graph with cost");
+			return 
+		}
+		while line.unwrap().split_whitespace().next() != Some("n0")
+		{
+			words = line.unwrap().split_whitespace();
+			word = words.next();
+			while word != Some("//")
+			{
+				word = words.next();
+			}
+			word = words.next();
+			if !word.is_some()
+			{
+				message("incorrect graph","not a correct directed graph with cost");
+				return 
+			}
+			start = parser(word.unwrap(),"DICGRAPH");
+			word = words.next();
+			if !word.is_some()
+			{
+				message("incorrect graph","not a correct directed graph with cost");
+				return 
+			}
+			end = parser(word.unwrap(),"DICGRAPH");
+			word = words.next();
+			if !word.is_some()
+			{
+				message("incorrect graph","not a correct directed graph with cost");
+				return 
+			}
+			cost = parser(word.unwrap(),"DICGRAPH");
+			g.adjlists[start as usize].push(end);
+			g.costs.insert((start,end),cost);
+			line = it.next();
+			if !line.is_some()
+			{
+				message("incorrect graph","not a correct directed graph with cost");
+				return 
+			}
+			println!("ah");
+		} 
+		DICGRAPH = Some(g);
+		dbg!(&DICGRAPH);	
+	}
+}
+fn parser(to_parse :&str, T : &str) -> i32
+{
+	match to_parse.parse::<i32>()
+	{
+		Ok(parsed) => {return parsed},
+		Err(_e) => { 	let title;
+						let content;
+						match  T 
+						{
+							"BTREE" => {title = "incorrect tree";
+										content = "the tree doesn't contain a prefix search comment"},
+							"DICGRAPH" => {title = "incorrect graph";
+											content = "not a correct directed graph with cost"},
+							_          => {title = "error";
+											content = "error encountered";},
+						}
+						
+						message(title,content);
+						return i32::MAX },
 	}
 }

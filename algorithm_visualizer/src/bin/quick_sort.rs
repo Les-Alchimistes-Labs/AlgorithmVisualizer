@@ -1,4 +1,4 @@
-fn part(tab: &mut Vec<usize>, little: i32, big: i32) -> i32
+-fn part(tab: &mut Vec<usize>, little: i32, big: i32) -> i32
 {
     let piv = tab[big as usize];
     let mut pos = little - 1;

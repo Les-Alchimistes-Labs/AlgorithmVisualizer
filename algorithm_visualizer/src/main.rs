@@ -1,5 +1,6 @@
 use gtk::prelude::*;
-use gtk::{ Notebook, Orientation, Window, WindowType, Label, Button, Image, HeaderBar};
+use gtk::{ Notebook, Orientation, Window, WindowType, Label, Button, Image, HeaderBar,
+	MessageDialog, DialogFlags, MessageType, ButtonsType,};
 use std::collections::HashMap;
 
 #[allow(non_snake_case)]
@@ -201,4 +202,19 @@ pub fn create_graph_tab() -> gtk::Notebook
 	notebook.append_page(&with_cost,Some(&Label::new(Some("with cost"))));
 	notebook.append_page(&no_cost,Some(&Label::new(Some("without cost"))));
 	notebook
+}
+pub fn message(title : &str, content : &str)
+{
+	let dialog = MessageDialog::new(None::<&Window>,
+								DialogFlags::MODAL,
+								MessageType::Info,
+								ButtonsType::Close,
+								content);
+	if title != ""
+	{
+		dialog.set_title(title);
+	}
+	dialog.run();
+	dialog.close();
+	return	
 }

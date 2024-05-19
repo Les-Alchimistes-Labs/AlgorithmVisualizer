@@ -29,8 +29,19 @@ fn file_menu_create() -> gtk::MenuItem {
     let tree_open = gtk::MenuItem::with_label("tree");
     let graph_open = gtk::MenuItem::with_label("graph");
     let item_quit = gtk::MenuItem::with_label("Quit");
+    
+    let with_cost = gtk::MenuItem::with_label("undirected with cost");
+    let with_cost1 = gtk::MenuItem::with_label("directed with cost");
+    let without_cost = gtk::MenuItem::with_label("undirected without cost");
+    let without_cost1 = gtk::MenuItem::with_label("directed without cost");
+    let sub_graph = gtk::Menu::new();
 
     let menu_items = gtk::Menu::new();
+    graph_open.set_submenu(Some(&sub_graph));
+	sub_graph.append(&with_cost);
+	sub_graph.append(&without_cost);
+	sub_graph.append(&with_cost1);
+    sub_graph.append(&without_cost1);
 
     sub_open.append(&list_open);
     sub_open.append(&tree_open);
@@ -38,6 +49,7 @@ fn file_menu_create() -> gtk::MenuItem {
     menu_items.append(&open);
     menu_items.append(&item_quit);
     open.set_submenu(Some(&sub_open));
+    
 
     result.set_submenu(Some(&menu_items));
     
@@ -46,7 +58,10 @@ fn file_menu_create() -> gtk::MenuItem {
         open_list();
     });
     tree_open.connect_activate(|_| {
-        open_tree();
+        open_dot(0);
+    });
+    with_cost1.connect_activate(|_| {
+        open_dot(1);
     });
     
     
