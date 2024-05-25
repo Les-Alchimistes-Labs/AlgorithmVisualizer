@@ -1,22 +1,16 @@
 use gtk::prelude::*;
-use gtk::{Grid, Paned ,Orientation, ComboBoxText, Button, Notebook, Entry, Label
-	, Window, MessageDialog, DialogFlags, MessageType, ButtonsType,Image  };
+use gtk::{Grid, Paned ,Orientation, ComboBoxText, Button, Notebook, Entry, Label ,Image  };
 
 use std::cell::RefCell;
-use std::process::Command;
 
 use gdk_pixbuf::Pixbuf;
-
-use std::fs::File;
-use std::io::Write;
-use std::path::PathBuf;
-use std::env;
 
 
 use crate::DIGRAPH;
 use crate::diGraph;
 use crate::graph::dfs::dfs_digraph;
 use crate::graph::bfs::bfs_digraph;
+use crate::GTK::utilities::*;
 
 pub fn get_d_paned() -> gtk::Paned
 {
@@ -241,16 +235,15 @@ fn remove_vertice(notebook :&mut Notebook)
 {
 	 unsafe
 	 {
+		if DIGRAPH == None
+		{
+			message("not initialized","empty graph");
+			return 
+		}
 		let mut g = DIGRAPH.clone().unwrap();
 		if g.order == 0
 		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "no vertices left");
-			dialog.run();
-			dialog.close();
+			message("no vertice","no vertices left");
 			return
 		} 
 		g.order-=1;
@@ -275,155 +268,46 @@ fn add_edge(start: &Entry, end: &Entry,notebook :&mut Notebook)
 {
 	unsafe
 	{
-		let text = start.text().to_string(); 
-	    if text.is_empty() {
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "nothing typed !");
-			dialog.run();
-			dialog.close();
+		if DIGRAPH == None
+	    {
+			message("not initialized","empty graph");
+			start.set_text("");
+			end.set_text("");
+			
+			return 
+		}
+		
+		let mut text = start.text().to_string(); 
+	    if text.is_empty() 
+	    {
+			message("no input","nothing typed");
+			end.set_text("");
 			return        
 	    }
-	    let mut is_negative = false;
-	    let mut copy = text.clone();
+	    let number1 = parser(&text);
 	    start.set_text("");
-	    if copy.remove(0) =='-'
+	    if number1 == i32::MAX
 	    {
-			is_negative =true;
-		}
-		let mut to_parse = if is_negative{copy} else {text};
-		let mut number1 :i32 =0;
-		let mut wrong = false;
-		while to_parse.chars().count()!=0 && !wrong  
-		{
-			let c = to_parse.remove(0);
-			if c as u8>=48 && c as u8<=57 
-			{
-				number1 = number1*10+(c as u8 - 48) as i32;
-			}
-			else
-			{
-				wrong= true;
-			}
-		}
-		if wrong
-		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "not a number !");
-			dialog.run();
-			dialog.close();
+			end.set_text("");
 			return
 		}
-		if is_negative
-		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "why a negative number ?");
-			dialog.run();
-			dialog.close();
-			return
-		}
-		let text = end.text().to_string(); 
+	    
+		text = end.text().to_string(); 
 	    if text.is_empty() {
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "nothing typed !");
-			dialog.run();
-			dialog.close();
+			message("no input","nothing typed");
 			return        
 	    }
-	    let mut is_negative = false;
-	    let mut copy = text.clone();
-		end.set_text("");
-	    if copy.remove(0) =='-'
+	    
+	    let number = parser(&text);
+	    end.set_text("");
+	    if number1 == i32::MAX
 	    {
-			is_negative =true;
-		}
-		let mut to_parse = if is_negative{copy} else {text};
-		let mut number :i32 =0;
-		let mut wrong = false;
-		while to_parse.chars().count()!=0 && !wrong  
-		{
-			let c = to_parse.remove(0);
-			if c as u8>=48 && c as u8<=57 
-			{
-				number = number*10+(c as u8 - 48) as i32;
-			}
-			else
-			{
-				wrong= true;
-			}
-		}
-		if wrong
-		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "not a number !");
-			dialog.run();
-			dialog.close();
 			return
 		}
-		if is_negative
-		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "why a negative number ?");
-			dialog.run();
-			dialog.close();
-			return
-		}
-		if number == number1 
-		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "same number !");
-			dialog.run();
-			dialog.close();
-			return
-		}
-		let mut g = DIGRAPH.clone().unwrap();
-		if number>=g.order ||number1>= g.order
-		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "vertice doesn't exist");
-			dialog.run();
-			dialog.close();
-			return
-		}
-		for i in 0..(g.adjlists[number1 as usize].len())
-		{
-			if g.adjlists[number1 as usize][i] == number
-			{
-				let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "already in the graph ");
-			dialog.run();
-			dialog.close();
-			return
-			}
-		}
-		g.adjlists[number1 as usize ].push(number);
-		g.adjlists[number1 as usize].sort();
+		
+		
+	    let mut g = DIGRAPH.clone().unwrap();
+	    g.push(number1,number);
 		let mut colors = vec![0 ; g.order as usize];
 		colors[number as usize] = 2;
 		colors[number1 as usize] = 2;
@@ -439,157 +323,62 @@ fn remove_edge(start : &Entry,end : &Entry,notebook :&mut Notebook )
 	{
 		if DIGRAPH == None
 		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "no edges !");
-			dialog.run();
-			dialog.close();
+			message("not initialized","empty graph");
+			start.set_text("");
+			end.set_text("");
 			return 
 		}
-		let text = start.text().to_string(); 
-	    if text.is_empty() {
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "nothing typed !");
-			dialog.run();
-			dialog.close();
+		
+		let mut text = start.text().to_string(); 
+		start.set_text("");
+	    if text.is_empty() 
+	    {
+			message("no input","nothing typed");
+			end.set_text("");	
 			return        
 	    }
-	    let mut is_negative = false;
-	    let mut copy = text.clone();
-	    start.set_text("");
-	    if copy.remove(0) =='-'
+	    let number1 = parser(&text);
+		if number1 == i32::MAX 
+		{
+			end.set_text("");
+			return
+		}
+
+		text = end.text().to_string();
+		end.set_text(""); 
+	    if text.is_empty() 
 	    {
-			is_negative =true;
-		}
-		let mut to_parse = if is_negative{copy} else {text};
-		let mut number1 :i32 =0;
-		let mut wrong = false;
-		while to_parse.chars().count()!=0 && !wrong  
-		{
-			let c = to_parse.remove(0);
-			if c as u8>=48 && c as u8<=57 
-			{
-				number1 = number1*10+(c as u8 - 48) as i32;
-			}
-			else
-			{
-				wrong= true;
-			}
-		}
-		if wrong
-		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "not a number !");
-			dialog.run();
-			dialog.close();
-			return
-		}
-		if is_negative
-		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "why a negative number ?");
-			dialog.run();
-			dialog.close();
-			return
-		}
-		let text = end.text().to_string(); 
-	    if text.is_empty() {
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "nothing typed !");
-			dialog.run();
-			dialog.close();
+			message("no input","nothing typed");
 			return        
 	    }
-	    let mut is_negative = false;
-	    let mut copy = text.clone();
-		end.set_text("");
-	    if copy.remove(0) =='-'
-	    {
-			is_negative =true;
-		}
-		let mut to_parse = if is_negative{copy} else {text};
-		let mut number :i32 =0;
-		let mut wrong = false;
-		while to_parse.chars().count()!=0 && !wrong  
+	    let number = parser(&text);
+	    end.set_text("");
+	    if number == i32::MAX 
 		{
-			let c = to_parse.remove(0);
-			if c as u8>=48 && c as u8<=57 
-			{
-				number = number*10+(c as u8 - 48) as i32;
-			}
-			else
-			{
-				wrong= true;
-			}
-		}
-		if wrong
-		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "not a number !");
-			dialog.run();
-			dialog.close();
 			return
 		}
-		if is_negative
-		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "why a negative number ?");
-			dialog.run();
-			dialog.close();
-			return
-		}
+	    
 		if number == number1 
 		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "same number !");
-			dialog.run();
-			dialog.close();
+			message("error","same number");
 			return
 		}
 		let mut g =DIGRAPH.clone().unwrap();
-		if number>= g.order ||number1>= g.order
+		if number>= g.order ||number1 >= g.order ||number1 < 0 || number < 0 
 		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "not a vertex");
-			dialog.run();
-			dialog.close();
+			message("not found", "not a vertex");
 			return
 		}
-		for i in 0..(g.adjlists[number1 as usize].len())
+		for i in 0..g.adjlists[number1 as usize].len()
 		{
-			if g.adjlists[number1 as usize][i] == number
+			if g.adjlists[number1 as usize][i] == number 
 			{
 				g.adjlists[number1 as usize].remove(i);
 			}
 		}
+		let order = g.order as usize;
 		DIGRAPH = Some(g);
-		paint_digraph("remove edge",notebook,vec![],vec![]);
+		paint_digraph("remove edge",notebook,vec![0;order],vec![]);
 	}
 }
 
@@ -651,73 +440,12 @@ fn dot(colors : Vec<i32>, edges:Vec<(i32,i32)>) -> String
 	result
 }
 
-pub fn get_absolute(root: &str) ->String
-{
-	 let path = env::current_dir().unwrap().to_string_lossy().to_string();
-	 let mut words = vec![];
-	 let mut result = String::new();
-	 let mut word = String::new();
-	 for c in path.chars()
-	 {
-		 if c =='/'
-		 {
-			 if word==root.to_string()
-			 {
-				break
-			 } 
-			 words.push(word.clone());
-			 word = String::new();
-		 }
-		 else
-		 {
-			 word.push(c);
-		 }
-	 }
-	for i in words
-	{
-		result.push_str(&i);
-		result.push('/');
-	}
-
-	 result 
-}
-pub fn save_dot_tmp(colors : Vec<i32>, edges:Vec<(i32,i32)>) 
-{
-	let content = dot(colors, edges);
-	let location = "algorithm_visualizer/src/save/tmp/digraph.dot";
-	let mut path = get_absolute("algorithm_visualizer");
-	path.push_str(location);
-	let output = PathBuf::from(path);
-	
-	let mut file = File::create(output).expect("failed to create file");
-    file.write_all(content.as_bytes()).expect("failed to write to file");
-}
-
-pub fn save_png_tmp()
-{
-	let location = "algorithm_visualizer/src/save/tmp/digraph.dot";
-	let mut path = get_absolute("algorithm_visualizer");
-	path.push_str(location);
-	
-	
-	let output =  "/algorithm_visualizer/src/save/tmp/digraph.png";
-	let mut path_out = get_absolute("algorithm_visualizer");
-	path_out.push_str(output);
-	
-	
-	let _com = Command::new("dot")
-                        .arg("-Tpng")
-                        .arg(path)
-                        .arg("-o")
-                        .arg(path_out.clone())
-                        .output()
-                        .expect("failed to execute process");
-}
 
 pub fn paint_digraph(op :&str,notebook :&mut Notebook, colors : Vec<i32>, edges:Vec<(i32,i32)>)  
 {
-	save_dot_tmp(colors,edges);
-	save_png_tmp();
+	let content = dot(colors,edges);
+	save_dot_tmp(content,"digraph");
+	save_png_tmp("digraph");
 	let output =  "/algorithm_visualizer/src/save/tmp/digraph.png";
 	let mut path_out = get_absolute("algorithm_visualizer");
 	path_out.push_str(output);
@@ -741,6 +469,12 @@ pub fn search(algo :&mut ComboBoxText , notebook : &mut Notebook, entry :&Entry)
 {
 	unsafe
 	{
+		if DIGRAPH ==None 
+		{
+			message("not initialized","empty graph");
+			entry.set_text("");
+			return
+		}
 		let raw =  (*algo).active_text();
 		let text = Some(raw);
 		let text2 = match text 
@@ -750,145 +484,53 @@ pub fn search(algo :&mut ComboBoxText , notebook : &mut Notebook, entry :&Entry)
 		};
 		let text = entry.text().to_string(); 
 	    if text.is_empty() {
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "nothing typed !");
-			dialog.run();
-			dialog.close();
+			message("no input","nothing typed");
 			return        
 	    }
-	    let mut is_negative = false;
-	    let mut copy = text.clone();
-		entry.set_text("");
-	    if copy.remove(0) =='-'
+	    let number1 = parser(&text);
+	    entry.set_text("");
+	    if number1 == i32::MAX
 	    {
-			is_negative =true;
-		}
-		let mut to_parse = if is_negative{copy} else {text};
-		let mut number1 :i32 =0;
-		let mut wrong = false;
-		while to_parse.chars().count()!=0 && !wrong  
-		{
-			let c = to_parse.remove(0);
-			if c as u8>=48 && c as u8<=57 
-			{
-				number1 = number1*10+(c as u8 - 48) as i32;
-			}
-			else
-			{
-				wrong= true;
-			}
-		}
-		if wrong
-		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "not a number !");
-			dialog.run();
-			dialog.close();
-			return
-		}
-		if is_negative
-		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "why a negative number ?");
-			dialog.run();
-			dialog.close();
 			return
 		}
 		if text2 ==""
 		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "no sorting algorithm selected !");
-			dialog.run();
-			dialog.close();
+			message("no algorithm","no searching algorithm selected");
 			return
 		}
 		if text2 == "depth-first search"
 		{
-			if DIGRAPH ==None 
+			let g = DIGRAPH.clone().unwrap();
+			let mut m = vec![false ; g.order as usize];
+			if number1>=g.order || number1 < 0
 			{
-				let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "empty graph !");
-				dialog.run();
-				dialog.close();
+				message("not found", "not a vertex");
 				return
 			}
-			else
+			let n_pages = notebook.n_pages();
+			for _i in 0..n_pages
 			{
-				let g = DIGRAPH.clone().unwrap();
-				let mut m = vec![false ; g.order as usize];
-				if number1>=g.order
-				{
-					let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "doesn't exist !");
-				
-					dialog.run();
-					dialog.close();
-					return
-				}
-				let n_pages = notebook.n_pages();
-				for _i in 0..n_pages
-				{
-					notebook.remove_page(Some(0));
-				}
-				let mut colors = vec![0;g.order as usize];
-				colors[number1 as usize] = 2;
-				paint_digraph("dfs",notebook,colors,vec![]);
-				dfs_digraph(number1,&mut m,true,notebook);
+				notebook.remove_page(Some(0));
 			}
+			let mut colors = vec![0;g.order as usize];
+			colors[number1 as usize] = 2;
+			paint_digraph("dfs",notebook,colors,vec![]);
+			dfs_digraph(number1,&mut m,true,notebook);
 		}
 		if text2 == "breadth-first search"
 		{
-			if DIGRAPH ==None 
+			let g = DIGRAPH.clone().unwrap();
+			if number1>=g.order || number1 < 0
 			{
-				let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "empty graph !");
-				dialog.run();
-				dialog.close();
+				message("not found", "not a vertex");
 				return
 			}
-			else
+			let n_pages = notebook.n_pages();
+			for _i in 0..n_pages
 			{
-				let g = DIGRAPH.clone().unwrap();
-				if number1>=g.order
-				{
-					let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "doesn't exist !");
-				
-					dialog.run();
-					dialog.close();
-					return
-				}
-				let n_pages = notebook.n_pages();
-				for _i in 0..n_pages
-				{
-					notebook.remove_page(Some(0));
-				}
-				bfs_digraph(number1,notebook);
+				notebook.remove_page(Some(0));
 			}
+			bfs_digraph(number1,notebook);
 		}
 	}
 }
@@ -904,7 +546,8 @@ pub fn refresh(notebook :&mut Notebook)
 			{
 				notebook.remove_page(Some(0));
 			}
-			paint_digraph("refresh",notebook,vec![],vec![]);
+			let order = DIGRAPH.clone().unwrap().order as usize;
+			paint_digraph("refresh",notebook,vec![0;order],vec![]);
 		}
 	}
 }
@@ -942,15 +585,6 @@ fn information(combo : &mut ComboBoxText)
 			to_show = "no seraching algorithm selected !";
 		},
 	}
-	let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 to_show);
-											 
-	dialog.set_title(title);
-	
-	dialog.run();
-	dialog.close();
+	message(title,to_show);
 	return
 }

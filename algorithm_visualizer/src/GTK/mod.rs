@@ -7,3 +7,4 @@ pub mod tree;
 pub mod graphs;
 
 pub mod menu; 
+pub mod utilities;

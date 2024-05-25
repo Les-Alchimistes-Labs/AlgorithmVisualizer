@@ -1,7 +1,5 @@
 use gtk::prelude::*;
-use gtk::{ Notebook, Orientation, Window, WindowType, Label, Button, Image, HeaderBar,
-	MessageDialog, DialogFlags, MessageType, ButtonsType,};
-use std::collections::HashMap;
+use gtk::{ Notebook, Orientation, Window, WindowType, Label, Button, Image, HeaderBar};
 
 #[allow(non_snake_case)]
 pub mod GTK;
@@ -18,6 +16,8 @@ use crate::GTK::graphs::digraph_c::get_d_paned_cost;
 use crate::GTK::graphs::graph::get_paned;
 use crate::GTK::graphs::graph_c::get_paned_cost;
 
+use crate::graph::structs::*;
+
 #[derive(PartialEq)]
 #[derive(Debug, Clone)]
 
@@ -33,93 +33,6 @@ impl Btree {
         Btree { key, left, right }
     }
 }
-
-#[derive(PartialEq)]
-#[derive(Debug, Clone)]
-#[allow(non_camel_case_types)]
-pub struct uGraph
-{
-	adjlists :Vec<Vec<i32>>,
-	order:i32,
-}
-impl uGraph
-{
-	fn new(order : i32) -> Self
-	{
-		uGraph
-		{
-			adjlists : vec![vec![] ; order as usize],
-			order,
-		}
-	}
-}		
-
-
-#[derive(PartialEq)]
-#[derive(Debug, Clone)]
-#[allow(non_camel_case_types)]
-pub struct ucGraph
-{
-	adjlists :Vec<Vec<i32>>,
-	order:i32,
-	costs : HashMap<(i32,i32),i32>,
-}
-impl ucGraph
-{
-	fn new(order : i32) -> Self
-	{
-		ucGraph
-		{
-			adjlists : vec![vec![] ; order as usize],
-			order,
-			costs: HashMap::new(),
-		}
-	}
-}
-#[derive(PartialEq)]
-#[derive(Debug, Clone)]
-#[allow(non_camel_case_types)]
-pub struct diGraph
-{
-	adjlists :Vec<Vec<i32>>,
-	order:i32,
-}
-impl diGraph
-{
-	fn new(order : i32) -> Self
-	{
-		diGraph
-		{
-			adjlists : vec![vec![] ; order as usize],
-			order,
-		}
-	}
-}		
-
-
-#[derive(PartialEq)]
-#[derive(Debug, Clone)]
-#[allow(non_camel_case_types)]
-pub struct dicGraph
-{
-	adjlists :Vec<Vec<i32>>,
-	order:i32,
-	costs : HashMap<(i32,i32),i32>,
-}
-impl dicGraph
-{
-	fn new(order : i32) -> Self
-	{
-		dicGraph
-		{
-			adjlists : vec![vec![] ; order as usize],
-			order,
-			costs: HashMap::new(),
-		}
-	}
-}
-
-
 
 static mut CURRENT_LIST :Vec<i64> = vec![];
 static mut BTREE :Option<Box<Btree>> = None;
@@ -203,18 +116,4 @@ pub fn create_graph_tab() -> gtk::Notebook
 	notebook.append_page(&no_cost,Some(&Label::new(Some("without cost"))));
 	notebook
 }
-pub fn message(title : &str, content : &str)
-{
-	let dialog = MessageDialog::new(None::<&Window>,
-								DialogFlags::MODAL,
-								MessageType::Info,
-								ButtonsType::Close,
-								content);
-	if title != ""
-	{
-		dialog.set_title(title);
-	}
-	dialog.run();
-	dialog.close();
-	return	
-}
+

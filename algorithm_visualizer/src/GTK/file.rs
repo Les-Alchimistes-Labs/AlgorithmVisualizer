@@ -1,11 +1,11 @@
 use gtk::prelude::*;
 use std::fs::read_to_string;
 use gtk::{FileChooserAction, FileChooserDialog, FileFilter, ResponseType, Window};
-use crate::message;
 
 use crate::{CURRENT_LIST,BTREE,DICGRAPH};
 use crate::tree::insert::*;
 use crate::dicGraph;
+use crate::GTK::utilities::*;
 
 pub fn open_list() {
     let file_chooser = FileChooserDialog::new(

@@ -4,7 +4,6 @@ use gtk::prelude::*;
 use gtk::{ Grid, Orientation, Paned, Button, Label, Entry, 
 	ComboBoxText, Image, Notebook};
 	
-use std::env;	
 	
 
 use std::cell::RefCell;
@@ -12,7 +11,7 @@ use std::cell::RefCell;
 use crate::lists::insertion_sort::insertion_sort;
 use crate::lists::merge_sort::merge_sort;
 use crate::lists::counting_sort::counting_sort;
-use crate::message;
+use crate::GTK::utilities::*;
 
 use crate::CURRENT_LIST;
 #[allow(unused_must_use)]
@@ -203,38 +202,13 @@ fn add_number(notebook :&mut Notebook,entry :&Entry)
 			message("no entry", "nothing typed");
 			return        
 	    }
-	    let mut is_negative = false;
-	    let mut copy = text.clone();
+	    let number = parser(&text);
 	    entry.set_text("");
-	    if copy.remove(0) =='-'
-	    {
-			is_negative =true;
-		}
-		let mut to_parse = if is_negative{copy} else {text};
-		let mut number :i64 =0;
-		let mut wrong = false;
-		while to_parse.chars().count()!=0 && !wrong  
+		if number == i32::MAX
 		{
-			let c = to_parse.remove(0);
-			if c as u8>=48 && c as u8<=57 
-			{
-				number = number*10+(c as u8 - 48) as i64;
-			}
-			else
-			{
-				wrong= true;
-			}
-		}
-		if wrong
-		{
-			message("incorrect input", "not a number");
 			return
 		}
-		if is_negative
-		{
-			number*=-1;
-		}
-		CURRENT_LIST.push(number);
+		CURRENT_LIST.push(number as i64);
 		paint_list(notebook,String::from("Add"),CURRENT_LIST.len()-1,CURRENT_LIST.len());
 	}
 }
@@ -250,40 +224,15 @@ fn remove_number(notebook :&mut Notebook,entry :&Entry)
 			message("no entry", "nothing typed");
 			return        
 	    }
-	    let mut is_negative = false;
-	    let mut copy = text.clone();
-	    entry.set_text("");
-	    if copy.remove(0) =='-'
-	    {
-			is_negative =true;
-		}
-		let mut to_parse = if is_negative{copy} else {text};
-		let mut number :i64 =0;
-		let mut wrong = false;
-		while to_parse.chars().count()!=0 && !wrong  
+		let number = parser(&text);
+		entry.set_text("");
+		if number == i32::MAX
 		{
-			let c = to_parse.remove(0);
-			if c as u8>=48 && c as u8<=57 
-			{
-				number = number*10+(c as u8 - 48) as i64;
-			}
-			else
-			{
-				wrong= true;
-			}
-		}
-		if wrong
-		{
-			message("incorrect input", "not a number");
-			return 
-		}
-		if is_negative
-		{
-			number*=-1;
+			return
 		}
 		for i in 0..CURRENT_LIST.len()
 		{
-			if number==CURRENT_LIST[i]
+			if number as i64==CURRENT_LIST[i]
 			{
 				CURRENT_LIST.remove(i);
 				paint_list(notebook,String::from("Remove"),CURRENT_LIST.len(),CURRENT_LIST.len());
@@ -517,33 +466,4 @@ pub fn refresh(notebook : &mut Notebook)
 	}
 }
 
-pub fn get_absolute(root: &str) ->String
-{
-	 let path = env::current_dir().unwrap().to_string_lossy().to_string();
-	 let mut words = vec![];
-	 let mut result = String::new();
-	 let mut word = String::new();
-	 for c in path.chars()
-	 {
-		 if c =='/'
-		 {
-			 if word==root.to_string()
-			 {
-				break
-			 } 
-			 words.push(word.clone());
-			 word = String::new();
-		 }
-		 else
-		 {
-			 word.push(c);
-		 }
-	 }
-	for i in words
-	{
-		result.push_str(&i);
-		result.push('/');
-	}
 
-	 result 
-}
