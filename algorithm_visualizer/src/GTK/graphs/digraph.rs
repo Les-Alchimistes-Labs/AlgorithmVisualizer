@@ -385,33 +385,14 @@ fn remove_edge(start : &Entry,end : &Entry,notebook :&mut Notebook )
 
 fn dot(colors : Vec<i32>, edges:Vec<(i32,i32)>) -> String
 {
-	let mut result = String::from("digraph dig {\n");
+	let mut result = String::from("digraph digraph {");
 	unsafe
 	{
 		if DIGRAPH != None
 		{
-
 			let g = DIGRAPH.clone().unwrap();
 			let order = g.order;
-			for i in 0..order
-			{
-				result.push('n');
-				result.push_str(&i.to_string());
-				result.push_str(&format!(" [label=\"{}\"",&i.to_string()));
-				if colors[i as usize] == 2
-				{
-					result.push_str(", style = filled , color = green ]\n");
-				}
-				else if colors[i as usize] == 1 
-				{
-					result.push_str(", style = filled , color = red ]\n");
-				}
-				else
-				{
-					result.push_str("]\n");
-				}
-			}
-			
+			result.push_str(&format!(" // {}\n",order.to_string()));
 			for i in 0..(order)
 			{
 				for j in 0..(g.adjlists[i as usize].len())
@@ -430,7 +411,27 @@ fn dot(colors : Vec<i32>, edges:Vec<(i32,i32)>) -> String
 							
 						}
 					}
-					result.push('\n');
+					result.push_str(&format!(" // {} {}\n",&i.to_string(),&tmp.to_string()));
+				}
+			}
+			
+			
+			for i in 0..order
+			{
+				result.push('n');
+				result.push_str(&i.to_string());
+				result.push_str(&format!(" [label=\"{}\"",&i.to_string()));
+				if colors[i as usize] == 2
+				{
+					result.push_str(", style = filled , color = green ]\n");
+				}
+				else if colors[i as usize] == 1 
+				{
+					result.push_str(", style = filled , color = red ]\n");
+				}
+				else
+				{
+					result.push_str("]\n");
 				}
 			}
 		}		
@@ -582,7 +583,7 @@ fn information(combo : &mut ComboBoxText)
 		_ => 
 		{
 			title = "error";
-			to_show = "no seraching algorithm selected !";
+			to_show = "no searching algorithm selected !";
 		},
 	}
 	message(title,to_show);

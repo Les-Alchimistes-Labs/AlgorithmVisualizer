@@ -10,8 +10,10 @@ use gdk_pixbuf::Pixbuf;
 
 use crate::DICGRAPH;
 use crate::dicGraph;
-use crate::graph::dijkstra::dijkstra;
 use crate::GTK::utilities::*;
+
+
+use crate::graph::dijkstra::dijkstra;
 
 
 pub fn get_d_paned_cost() -> gtk::Paned
@@ -315,6 +317,7 @@ fn add_edge(start: &Entry, end: &Entry,cost: &Entry,notebook :&mut Notebook)
 			return        
 	    }
 	    let number1 = parser(&text);
+	    start.set_text("");
 	    if number1 == i32::MAX
 	    {
 			end.set_text("");

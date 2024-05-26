@@ -2,9 +2,12 @@ use gtk::prelude::*;
 use std::fs::read_to_string;
 use gtk::{FileChooserAction, FileChooserDialog, FileFilter, ResponseType, Window};
 
-use crate::{CURRENT_LIST,BTREE,DICGRAPH};
+use crate::{CURRENT_LIST,BTREE,DICGRAPH,UCGRAPH,UGRAPH,DIGRAPH};
 use crate::tree::insert::*;
 use crate::dicGraph;
+use crate::ucGraph;
+use crate::diGraph;
+use crate::uGraph;
 use crate::GTK::utilities::*;
 
 pub fn open_list() {
@@ -93,8 +96,18 @@ fn opened_list(a :String)
 
 pub fn open_dot(op : i32) 
 {
+	let mut o = String::from("Open ");
+	match op 
+	{
+		0  => o.push_str("tree"),
+		1  => o.push_str("dicgraph"),
+		2  => o.push_str("digraph"),
+		3  => o.push_str("ucgraph"),
+		4  => o.push_str("ugraph"),
+		_  => message("error","error encountered"),
+	}
     let file_chooser = FileChooserDialog::new(
-        Some("Open tree"),
+        Some(&o),
         None::<&Window>,      
         FileChooserAction::Open,
     );
@@ -126,6 +139,9 @@ pub fn open_dot(op : i32)
 							{
 								0 => open_tree(path_string),
 								1 => open_dicgraph(path_string),
+								2 => open_digraph(path_string),
+								3 => open_ucgraph(path_string),
+								4 => open_ugraph(path_string),
 								_ => message("error","error encountered"),
 							}
 				            
@@ -217,7 +233,6 @@ fn open_dicgraph(a :String)
 		let mut cost;
 		let mut g = dicGraph::new(order);
 		line = it.next();
-		dbg!(&line);
 		if !line.is_some()
 		{
 			message("incorrect graph","not a correct directed graph with cost");
@@ -252,20 +267,255 @@ fn open_dicgraph(a :String)
 				return 
 			}
 			cost = parser(word.unwrap(),"DICGRAPH");
-			g.adjlists[start as usize].push(end);
-			g.costs.insert((start,end),cost);
+			g.push(start,end,cost);
 			line = it.next();
 			if !line.is_some()
 			{
 				message("incorrect graph","not a correct directed graph with cost");
 				return 
 			}
-			println!("ah");
 		} 
 		DICGRAPH = Some(g);
 		dbg!(&DICGRAPH);	
 	}
 }
+
+fn open_ucgraph(a :String)
+{
+	unsafe 
+	{
+		let file = read_to_string(a).unwrap();
+		UCGRAPH = None;
+		let mut it = file.lines();
+		let mut line = it.next();
+		if !line.is_some()
+		{
+			message("incorrect graph","not a correct undirected graph with cost");
+			return 
+		}
+		let mut words = line.unwrap().split_whitespace();
+		let mut word = words.next();
+		while word != Some("//")
+		{
+			if !word.is_some()
+			{
+				message("incorrect graph","not a correct undirected graph with cost");
+				return 
+			}
+			word = words.next();
+		}
+		word = words.next();
+		if !word.is_some()
+		{
+			message("incorrect graph","not a correct undirected graph with cost");
+			return 
+		}
+		let order = parser(word.unwrap(),"UCGRAPH");
+		let mut start;
+		let mut end;
+		let mut cost;
+		let mut g = ucGraph::new(order);
+		line = it.next();
+		if !line.is_some()
+		{
+			message("incorrect graph","not a correct undirected graph with cost");
+			return 
+		}
+		while line.unwrap().split_whitespace().next() != Some("n0")
+		{
+			words = line.unwrap().split_whitespace();
+			word = words.next();
+			while word != Some("//")
+			{
+				word = words.next();
+			}
+			word = words.next();
+			if !word.is_some()
+			{
+				message("incorrect graph","not a correct undirected graph with cost");
+				return 
+			}
+			start = parser(word.unwrap(),"UCGRAPH");
+			word = words.next();
+			if !word.is_some()
+			{
+				message("incorrect graph","not a correct undirected graph with cost");
+				return 
+			}
+			end = parser(word.unwrap(),"UCGRAPH");
+			word = words.next();
+			if !word.is_some()
+			{
+				message("incorrect graph","not a correct undirected graph with cost");
+				return 
+			}
+			cost = parser(word.unwrap(),"UCGRAPH");
+			g.push(start,end,cost);
+			line = it.next();
+			if !line.is_some()
+			{
+				message("incorrect graph","not a correct undirected graph with cost");
+				return 
+			}
+		} 
+		UCGRAPH = Some(g);
+		dbg!(&UCGRAPH);	
+	}
+}
+
+
+fn open_ugraph(a :String)
+{
+	unsafe 
+	{
+		let file = read_to_string(a).unwrap();
+		UGRAPH = None;
+		let mut it = file.lines();
+		let mut line = it.next();
+		if !line.is_some()
+		{
+			message("incorrect graph","not a correct undirected graph without cost");
+			return 
+		}
+		let mut words = line.unwrap().split_whitespace();
+		let mut word = words.next();
+		while word != Some("//")
+		{
+			if !word.is_some()
+			{
+				message("incorrect graph","not a correct undirected graph without cost");
+				return 
+			}
+			word = words.next();
+		}
+		word = words.next();
+		if !word.is_some()
+		{
+			message("incorrect graph","not a correct undirected graph without cost");
+			return 
+		}
+		let order = parser(word.unwrap(),"UGRAPH");
+		let mut start;
+		let mut end;
+		let mut g = uGraph::new(order);
+		line = it.next();
+		if !line.is_some()
+		{
+			message("incorrect graph","not a correct undirected graph without cost");
+			return 
+		}
+		while line.unwrap().split_whitespace().next() != Some("n0")
+		{
+			words = line.unwrap().split_whitespace();
+			word = words.next();
+			while word != Some("//")
+			{
+				word = words.next();
+			}
+			word = words.next();
+			if !word.is_some()
+			{
+				message("incorrect graph","not a correct undirected graph without cost");
+				return 
+			}
+			start = parser(word.unwrap(),"UGRAPH");
+			word = words.next();
+			if !word.is_some()
+			{
+				message("incorrect graph","not a correct undirected graph without cost");
+				return 
+			}
+			end = parser(word.unwrap(),"UGRAPH");
+			g.push(start,end);
+			line = it.next();
+			if !line.is_some()
+			{
+				message("incorrect graph","not a correct undirected graph without cost");
+				return 
+			}
+		} 
+		UGRAPH = Some(g);
+		dbg!(&UGRAPH);	
+	}
+}
+
+
+fn open_digraph(a :String)
+{
+	unsafe 
+	{
+		let file = read_to_string(a).unwrap();
+		DIGRAPH = None;
+		let mut it = file.lines();
+		let mut line = it.next();
+		if !line.is_some()
+		{
+			message("incorrect graph","not a correct directed graph without cost");
+			return 
+		}
+		let mut words = line.unwrap().split_whitespace();
+		let mut word = words.next();
+		while word != Some("//")
+		{
+			if !word.is_some()
+			{
+				message("incorrect graph","not a correct directed graph without cost");
+				return 
+			}
+			word = words.next();
+		}
+		word = words.next();
+		if !word.is_some()
+		{
+			message("incorrect graph","not a correct directed graph without cost");
+			return 
+		}
+		let order = parser(word.unwrap(),"DIGRAPH");
+		let mut start;
+		let mut end;
+		let mut g = diGraph::new(order);
+		line = it.next();
+		if !line.is_some()
+		{
+			message("incorrect graph","not a correct directed graph without cost");
+			return 
+		}
+		while line.unwrap().split_whitespace().next() != Some("n0")
+		{
+			words = line.unwrap().split_whitespace();
+			word = words.next();
+			while word != Some("//")
+			{
+				word = words.next();
+			}
+			word = words.next();
+			if !word.is_some()
+			{
+				message("incorrect graph","not a correct directed graph without cost");
+				return 
+			}
+			start = parser(word.unwrap(),"DIGRAPH");
+			word = words.next();
+			if !word.is_some()
+			{
+				message("incorrect graph","not a correct directed graph without cost");
+				return 
+			}
+			end = parser(word.unwrap(),"DIGRAPH");
+			g.push(start,end);
+			line = it.next();
+			if !line.is_some()
+			{
+				message("incorrect graph","not a correct directed graph without cost");
+				return 
+			}
+		} 
+		DIGRAPH = Some(g);
+		dbg!(&DIGRAPH);	
+	}
+}
+
+
 fn parser(to_parse :&str, T : &str) -> i32
 {
 	match to_parse.parse::<i32>()
@@ -279,6 +529,12 @@ fn parser(to_parse :&str, T : &str) -> i32
 										content = "the tree doesn't contain a prefix search comment"},
 							"DICGRAPH" => {title = "incorrect graph";
 											content = "not a correct directed graph with cost"},
+							"DIGRAPH" => {title = "incorrect graph";
+											content = "not a correct directed graph without cost"},
+							"UCGRAPH" => {title = "incorrect graph";
+											content = "not a correct directed graph without cost"},
+							"UGRAPH" => {title = "incorrect graph";
+											content = "not a correct undirected graph without cost"},
 							_          => {title = "error";
 											content = "error encountered";},
 						}
