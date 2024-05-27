@@ -244,6 +244,7 @@ fn remove_vertice(notebook :&mut Notebook)
 			return
 		} 
 		g.order-=1;
+		let order = g.order as usize;
 		g.adjlists.remove(g.order as usize);
 		for i in 0..(g.order as usize)
 		{
@@ -256,7 +257,7 @@ fn remove_vertice(notebook :&mut Notebook)
 			}
 		}  
 		UGRAPH = Some(g);                 
-		paint_ugraph("remove vertice",notebook, vec![],vec![]);
+		paint_ugraph("remove vertice",notebook, vec![0;order],vec![]);
 	 }
 }
 
@@ -304,7 +305,7 @@ fn add_edge(start: &Entry, end: &Entry,notebook :&mut Notebook)
 		
 		let mut g = UGRAPH.clone().unwrap();
 		g.push(number1,number);
-		if number < g.order && number1 <g.order
+		if number1 <0 && number1>= g.order && number <0 && number>= g.order
 		{
 			let mut colors = vec![0;g.order as usize];
 			colors[number1 as usize] =2; 

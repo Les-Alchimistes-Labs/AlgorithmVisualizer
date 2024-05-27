@@ -28,7 +28,7 @@ pub fn prim(start : usize, notebook : &mut Notebook)
 		let mut m = vec![true ; g.order as usize];
 		let mut colors = vec![0;g.order as usize];
 		let mut n = 1;
-		let mut x = start as i32 ;
+		let mut x = start as i32;
 		m[x as usize] = true;
 		p[x as usize] = -1;
 		dist[x as usize] = 0;
@@ -52,9 +52,9 @@ pub fn prim(start : usize, notebook : &mut Notebook)
 				{
 					dist[y as usize] = *cost;
 					p[y as usize] = x;
+					let edges = get_edges(&p,&dist);
+					paint_ucgraph("prim",notebook,colors.clone(),edges,vec![("dist",dist.clone()),("p",p.clone())]);
 				}
-				let edges = get_edges(&p,&dist);
-				paint_ucgraph("prim",notebook,colors.clone(),edges,vec![("dist",dist.clone()),("p",p.clone())]);
 			}
 			colors[x as usize] = 1;
 			x = choose_min(&dist,&m);

@@ -176,11 +176,26 @@ fn open_tree(a :String)
 			{
 				if tmp.remove(0) == '/'
 				{
+					let mut m = vec![];
 					for number in tmp.split_whitespace()
 					{
 						match number.parse::<i32>()
 						{
-							Ok(parsed) => {  create(parsed) },
+							Ok(parsed) => { 
+											let mut b = false; 
+											for i in 0..m.len()
+											{
+												if parsed == m[i]
+												{
+													b = true;
+												}
+											}
+											if !b
+											{
+												m.push(parsed);
+												create(parsed); 
+											}
+											},
 							
 							Err(_e) => {
 							BTREE=None;
@@ -267,6 +282,13 @@ fn open_dicgraph(a :String)
 				return 
 			}
 			cost = parser(word.unwrap(),"DICGRAPH");
+			
+			if start <0 && start>= g.order && end <0 && end>= g.order || start ==end
+			{
+				DICGRAPH = None;
+			    message("incorrect graph","not a correct directed graph with cost");
+				return
+			}
 			g.push(start,end,cost);
 			line = it.next();
 			if !line.is_some()
@@ -350,6 +372,12 @@ fn open_ucgraph(a :String)
 				return 
 			}
 			cost = parser(word.unwrap(),"UCGRAPH");
+			if start <0 && start>= g.order && end <0 && end>= g.order || start ==end
+			{
+				UCGRAPH = None;
+			    message("incorrect graph","not a correct directed graph with cost");
+				return
+			}
 			g.push(start,end,cost);
 			line = it.next();
 			if !line.is_some()
@@ -426,6 +454,13 @@ fn open_ugraph(a :String)
 				return 
 			}
 			end = parser(word.unwrap(),"UGRAPH");
+			
+			if start <0 && start>= g.order && end <0 && end>= g.order || start ==end
+			{
+				UGRAPH = None;
+			    message("incorrect graph","not a correct directed graph with cost");
+				return
+			}
 			g.push(start,end);
 			line = it.next();
 			if !line.is_some()
@@ -502,6 +537,12 @@ fn open_digraph(a :String)
 				return 
 			}
 			end = parser(word.unwrap(),"DIGRAPH");
+			if start <0 && start>= g.order && end <0 && end>= g.order || start ==end
+			{
+				DICGRAPH = None;
+			    message("incorrect graph","not a correct directed graph with cost");
+				return
+			}
 			g.push(start,end);
 			line = it.next();
 			if !line.is_some()

@@ -187,6 +187,13 @@ pub fn get_paned_cost() -> gtk::Paned
             search(&mut notebook_mut,&mut combo_mut,&starting_point);
         });
     }
+    {
+        let combo_ref_clone = combo_ref.clone();
+        info.connect_clicked(move |_| {
+            let mut combo_mut = combo_ref_clone.borrow_mut();
+            information(&mut combo_mut);
+        });
+    }
     
 	
 	
@@ -352,12 +359,15 @@ fn add_edge(start: &Entry, end: &Entry,cost: &Entry,notebook :&mut Notebook)
 		}
 		let mut g = UCGRAPH.clone().unwrap();
 		g.push(number1,number,costs);
-		let mut colors = vec![0; g.order as usize];
-		colors[number as usize] = 2;
-		colors[number1 as usize] = 2;
-		UCGRAPH = Some(g);
-		dbg!(&UCGRAPH);
-		paint_ucgraph("add edge",notebook,colors,vec![(number1,number)],vec![]);
+		if number1 <0 && number1>= g.order && number <0 && number>= g.order
+		{
+			let mut colors = vec![0; g.order as usize];
+			colors[number as usize] = 2;
+			colors[number1 as usize] = 2;
+			UCGRAPH = Some(g);
+			dbg!(&UCGRAPH);
+			paint_ucgraph("add edge",notebook,colors,vec![(number1,number)],vec![]);
+		}
 	}
 }
 
@@ -662,4 +672,33 @@ pub fn search(notebook :&mut Notebook, algo: &mut ComboBoxText, entry : &Entry)
 			prim(number1 as usize,notebook);
 		}
 	}
+}
+
+
+fn information(combo : &mut ComboBoxText)
+{
+	let raw = (*combo).active_text();
+	let text = Some(raw);
+	let text2 = match text 
+	{
+		Some(Some(string)) => string.to_string(),
+		_ => String::new(), 
+	};
+	let to_show;
+	let title;
+
+	match text2.as_str() 
+	{
+		"Prim"=> 
+		{
+			title ="Prim";
+			to_show = "an algorithm based on Dijkstra to find the minimun spanning tree of a undirected graph with costs";
+		},
+		_ => 
+		{
+			title = "error";
+			to_show = "no searching algorithm selected !";
+		},
+	}
+	message(title,to_show);
 }

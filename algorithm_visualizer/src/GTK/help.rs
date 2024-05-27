@@ -1,14 +1,11 @@
-use gtk::prelude::*;
-use gtk::{Window, MessageDialog, DialogFlags, MessageType, ButtonsType};
+use crate::GTK::utilities::*;
+
 	
 pub fn list_info()
 {
-	let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "In the left part :
+	message("List tab information","In the left part :
 											 \n\tCombo box: choose a sorting algorithm
+											 \n\n\tInformation : gives information on the choosen algorithm
 											 \n\n\tAdd: add the written number in the list
 											 \n\n\tRemove: remove the written number in the list
 											 \n\n\tReset: remove every number in the list
@@ -16,20 +13,14 @@ pub fn list_info()
 											 \n\n\tRefresh: remove every tabs and show the current state of the list
 											 \nIn the right part:
 											 \n\tto see as an animation : select a tab and press left or right arrow on your \n\tkeyboard");
-	dialog.set_title("List tab information");
-	dialog.run();
-	dialog.close();
 	return     
 }
 
 pub fn tree_info()
 {
-	let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "In the left part :
+	message("Tree tab information","In the left part :
 											 \n\tCombo box: choose a searching algorithm
+											 \n\n\tInformation : gives information on the choosen algorithm
 											 \n\n\tAdd: add the written number in the tree
 											 \n\n\tRemove: remove the written number in the tree
 											 \n\n\tReset: remove every node in the tree
@@ -37,41 +28,36 @@ pub fn tree_info()
 											 \n\n\tRefresh: remove every tabs and show the current state of the tree
 											 \nIn the right part:
 											 \n\tto see as an animation : select a tab and press left or right arrow on your \n\tkeyboard");
-	dialog.set_title("Tree tab information");
-	dialog.run();
-	dialog.close();
 	return     
 }
 
 pub fn graph_info()
 {
-	
-	let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "nothing for now");
-	dialog.set_title("Graph tab information");
-	dialog.run();
-	dialog.close();
+	message("Graph tab information","In the left part:
+											 \n\tCombo box: choose a searching algorithm
+											 \n\n\tInformation : gives information on the choosen algorithm
+											 \n\nEdges:
+											 \n\n\tAdd: add an edge using the input given by the user 
+											 \n\n\tRemove: remove an edge using the input given by the user 
+											 \n\nVertices:
+											 \n\n\tAdd: add a vertice in the graph
+											 \n\n\tRemove: remove a vertice in the graph with all related edges 
+											 \n\n\tReset: remove every vertices in the graph
+											 \n\n\tSearch: search in the graph using the selected algorithm
+											 \n\n\tRefresh: remove every tabs and show the current state of the graph
+											 \nIn the right part:
+											 \n\tto see as an animation : select a tab and press left or right arrow on your \n\tkeyboard" );
 	return 
 }
 
 
 pub fn credits()
 {
-	 let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "This application was realised in the context of a project for the S4 at EPITA.
-											 \nrealised by: 
+	message("Credits","This application was realised in the context of a project for the S4 at EPITA.
+											 \nRealised by: 
 											 \n\t- Victor Tang
 											 \n\t- Jayson Vanmarcke
 											 \n\t- Olivier Bensemhoun
 											 \n\t- Sacha Layani");
-	dialog.set_title("credits");
-	dialog.run();
-	dialog.close();
 	return	
 }

@@ -247,6 +247,7 @@ fn remove_vertice(notebook :&mut Notebook)
 			return
 		} 
 		g.order-=1;
+		let order = g.order as usize ;
 		g.adjlists.remove(g.order as usize);
 		for i in 0..(g.order as usize)
 		{
@@ -259,7 +260,7 @@ fn remove_vertice(notebook :&mut Notebook)
 			}
 		}  
 		DIGRAPH = Some(g);                 
-		paint_digraph("remove vertice",notebook, vec![],vec![]);
+		paint_digraph("remove vertice",notebook, vec![0 ; order],vec![]);
 	 }
 }
 
@@ -304,16 +305,17 @@ fn add_edge(start: &Entry, end: &Entry,notebook :&mut Notebook)
 	    {
 			return
 		}
-		
-		
+
 	    let mut g = DIGRAPH.clone().unwrap();
 	    g.push(number1,number);
-		let mut colors = vec![0 ; g.order as usize];
-		colors[number as usize] = 2;
-		colors[number1 as usize] = 2;
-		DIGRAPH = Some(g);
-		paint_digraph("add edge",notebook,colors,vec![(number1,number)]);	
-		
+	    if number1 <0 && number1>= g.order && number <0 && number>= g.order
+		{
+			let mut colors = vec![0 ; g.order as usize];
+			colors[number as usize] = 2;
+			colors[number1 as usize] = 2;
+			DIGRAPH = Some(g);
+			paint_digraph("add edge",notebook,colors,vec![(number1,number)]);
+		}
 	}
 }
 

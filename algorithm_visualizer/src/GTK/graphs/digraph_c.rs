@@ -14,6 +14,8 @@ use crate::GTK::utilities::*;
 
 
 use crate::graph::dijkstra::dijkstra;
+use crate::graph::bellman_ford::bellman_ford;
+use crate::graph::floyd_warshall::floyd_warshall;
 
 
 pub fn get_d_paned_cost() -> gtk::Paned
@@ -353,12 +355,15 @@ fn add_edge(start: &Entry, end: &Entry,cost: &Entry,notebook :&mut Notebook)
 		}
 		let mut g = DICGRAPH.clone().unwrap();
 		g.push(number1,number,costs);
-		let mut colors = vec![0; g.order as usize];
-		colors[number as usize] = 2;
-		colors[number1 as usize] = 2;
-		DICGRAPH = Some(g);
-		dbg!(&DICGRAPH);
-		paint_dicgraph("add edge",notebook,colors,vec![(number1,number)],vec![]);
+		if number1 <0 && number1>= g.order && number <0 && number>= g.order
+		{
+			let mut colors = vec![0; g.order as usize];
+			colors[number as usize] = 2;
+			colors[number1 as usize] = 2;
+			DICGRAPH = Some(g);
+			dbg!(&DICGRAPH);
+			paint_dicgraph("add edge",notebook,colors,vec![(number1,number)],vec![]);
+		}
 	}
 }
 
@@ -643,6 +648,24 @@ pub fn search(notebook :&mut Notebook, algo: &mut ComboBoxText, entry : &Entry)
 				}
 			}
 			dijkstra(number1 as usize,notebook);
+		}
+		if text2 == "Bellman Ford"
+		{
+			let n_pages = notebook.n_pages();
+			for _i in 0..n_pages
+			{
+				notebook.remove_page(Some(0));
+			}
+			bellman_ford(number1 as usize,notebook);
+		}
+		if text2 == "Floyd Warshall"
+		{
+			let n_pages = notebook.n_pages();
+			for _i in 0..n_pages
+			{
+				notebook.remove_page(Some(0));
+			}
+			floyd_warshall(number1 as usize,notebook);
 		}
 	}
 }
