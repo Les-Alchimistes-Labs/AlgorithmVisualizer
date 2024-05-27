@@ -13,6 +13,8 @@ use crate::UCGRAPH;
 use crate::ucGraph;
 use crate::GTK::utilities::*;
 
+use crate::graph::prim::prim;
+
 
 
 
@@ -28,10 +30,7 @@ pub fn get_paned_cost() -> gtk::Paned
 	
 	
 	let combo =ComboBoxText::new();
-    combo.append_text("Dijkstra");
-    combo.append_text("Bellman Ford");
-    combo.append_text("A*");
-    combo.append_text("Floyd Warshall");
+    combo.append_text("Prim");
     
     let edit_label =  Label::new(Some("----|| edit graph ||----"));       
     
@@ -133,6 +132,7 @@ pub fn get_paned_cost() -> gtk::Paned
     
     
     grid.set_size_request(200, -1);
+    let combo_ref = RefCell::new(combo);
     
     {
         let notebook_ref_clone = notebook_ref.clone();
@@ -176,6 +176,15 @@ pub fn get_paned_cost() -> gtk::Paned
         refresh_button.connect_clicked(move |_| {
             let mut notebook_mut = notebook_ref_clone.borrow_mut();
             refresh(&mut notebook_mut);
+        });
+    }
+    {
+        let notebook_ref_clone = notebook_ref.clone();
+        let combo_ref_clone = combo_ref.clone();
+        sort_button.connect_clicked(move |_| {
+            let mut notebook_mut = notebook_ref_clone.borrow_mut();
+            let mut combo_mut = combo_ref_clone.borrow_mut();
+            search(&mut notebook_mut,&mut combo_mut,&starting_point);
         });
     }
     
@@ -458,7 +467,7 @@ fn dot(colors :Vec<i32>, edges : Vec<(i32,i32)> ) -> String
 					result.push_str(&g.costs.get(&(i,tmp)).unwrap().to_string());
 					for k in 0..edges.len()
 					{
-						if edges[k]==(i,tmp)
+						if edges[k]==(i,tmp) || edges[k] ==(tmp,i)
 						{
 							result.push_str(" ,color = red");
 						}
@@ -583,4 +592,74 @@ fn get_string(op :&str ,info :Vec<i32>) -> String
 	result.push(' ');
 	result.push(']');
 	result 
+}
+
+pub fn search(notebook :&mut Notebook, algo: &mut ComboBoxText, entry : &Entry)
+{
+	unsafe
+	{
+		if UCGRAPH ==None 
+		{
+			message("not initialized","empty graph");
+			entry.set_text("");
+			return
+		}
+		let raw =  (*algo).active_text();
+		let text = Some(raw);
+		let text2 = match text 
+		{
+			Some(Some(string)) => string.to_string(),
+			_ => String::new(), 
+		};
+		let text = entry.text().to_string(); 
+	    if text.is_empty() 
+	    {
+			message("no input", "nothing typed");
+			return        
+	    }
+	    let number1= parser(&text);
+	    entry.set_text("");
+	    if number1 == i32::MAX
+		{
+			entry.set_text("");
+			return
+		}
+		let g = UCGRAPH.clone().unwrap();
+		if number1>=g.order || number1 < 0
+		{
+			message("not found","not a vertex");
+			return
+		}
+	    
+		if text2 ==""
+		{
+			message("no algorithm","no sorting algorithm selected");
+			return
+		}
+		if text2 == "Prim"
+		{
+			let n_pages = notebook.n_pages();
+			for _i in 0..n_pages
+			{
+				notebook.remove_page(Some(0));
+			}
+			for i in 0..g.order 
+			{
+				for j in 0..g.order
+				{
+					match g.costs.get(&(i,j))
+					{
+						Some(value) => {if *value <0 
+										{
+											message("negative cost","Dijkstra doesm't work with negatives costs");
+											return
+										}
+										},
+						None        => continue,
+					}
+				}
+			}
+			prim(number1 as usize,notebook);
+		}
+	}
 }

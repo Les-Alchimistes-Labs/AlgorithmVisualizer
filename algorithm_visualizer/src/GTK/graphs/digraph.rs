@@ -385,7 +385,7 @@ fn remove_edge(start : &Entry,end : &Entry,notebook :&mut Notebook )
 
 fn dot(colors : Vec<i32>, edges:Vec<(i32,i32)>) -> String
 {
-	let mut result = String::from("digraph digraph {");
+	let mut result = String::from("digraph dig {");
 	unsafe
 	{
 		if DIGRAPH != None
@@ -466,6 +466,7 @@ pub fn paint_digraph(op :&str,notebook :&mut Notebook, colors : Vec<i32>, edges:
 	
 	gtk::main_iteration();
 }
+
 pub fn search(algo :&mut ComboBoxText , notebook : &mut Notebook, entry :&Entry)
 {
 	unsafe
