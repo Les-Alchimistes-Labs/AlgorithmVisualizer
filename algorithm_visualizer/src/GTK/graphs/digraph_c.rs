@@ -16,6 +16,7 @@ use crate::GTK::utilities::*;
 use crate::graph::dijkstra::dijkstra;
 use crate::graph::bellman_ford::bellman_ford;
 use crate::graph::floyd_warshall::floyd_warshall;
+use crate::graph::a_star::a_star;
 
 
 pub fn get_d_paned_cost() -> gtk::Paned
@@ -186,6 +187,13 @@ pub fn get_d_paned_cost() -> gtk::Paned
         refresh_button.connect_clicked(move |_| {
             let mut notebook_mut = notebook_ref_clone.borrow_mut();
             refresh(&mut notebook_mut);
+        });
+    }
+    {
+        let combo_ref_clone = combo_ref.clone();
+        info.connect_clicked(move |_| {
+            let mut combo_mut = combo_ref_clone.borrow_mut();
+            information(&mut combo_mut);
         });
     }
     
@@ -605,20 +613,6 @@ pub fn search(notebook :&mut Notebook, algo: &mut ComboBoxText, entry : &Entry)
 			message("no input", "nothing typed");
 			return        
 	    }
-	    let number1= parser(&text);
-	    entry.set_text("");
-	    if number1 == i32::MAX
-		{
-			entry.set_text("");
-			return
-		}
-		let g = DICGRAPH.clone().unwrap();
-		if number1>=g.order || number1 < 0
-		{
-			message("not found","not a vertex");
-			return
-		}
-	    
 		if text2 ==""
 		{
 			message("no algorithm","no sorting algorithm selected");
@@ -626,6 +620,19 @@ pub fn search(notebook :&mut Notebook, algo: &mut ComboBoxText, entry : &Entry)
 		}
 		if text2 == "Dijkstra"
 		{
+			let number1= parser(&text);
+		    entry.set_text("");
+		    if number1 == i32::MAX
+			{
+				entry.set_text("");
+				return
+			}
+			let g = DICGRAPH.clone().unwrap();
+			if number1>=g.order || number1 < 0
+			{
+				message("not found","not a vertex");
+				return
+			}
 			let n_pages = notebook.n_pages();
 			for _i in 0..n_pages
 			{
@@ -651,6 +658,19 @@ pub fn search(notebook :&mut Notebook, algo: &mut ComboBoxText, entry : &Entry)
 		}
 		if text2 == "Bellman Ford"
 		{
+			let number1= parser(&text);
+		    entry.set_text("");
+		    if number1 == i32::MAX
+			{
+				entry.set_text("");
+				return
+			}
+			let g = DICGRAPH.clone().unwrap();
+			if number1>=g.order || number1 < 0
+			{
+				message("not found","not a vertex");
+				return
+			}
 			let n_pages = notebook.n_pages();
 			for _i in 0..n_pages
 			{
@@ -660,6 +680,19 @@ pub fn search(notebook :&mut Notebook, algo: &mut ComboBoxText, entry : &Entry)
 		}
 		if text2 == "Floyd Warshall"
 		{
+			let number1= parser(&text);
+		    entry.set_text("");
+		    if number1 == i32::MAX
+			{
+				entry.set_text("");
+				return
+			}
+			let g = DICGRAPH.clone().unwrap();
+			if number1>=g.order || number1 < 0
+			{
+				message("not found","not a vertex");
+				return
+			}
 			let n_pages = notebook.n_pages();
 			for _i in 0..n_pages
 			{
@@ -667,5 +700,91 @@ pub fn search(notebook :&mut Notebook, algo: &mut ComboBoxText, entry : &Entry)
 			}
 			floyd_warshall(number1 as usize,notebook);
 		}
+		if text2 == "A*"
+		{
+			let mut it = text.split_whitespace();
+			let start = parser(it.next().unwrap());
+			let g = DICGRAPH.clone().unwrap();
+		    if start == i32::MAX
+			{
+				entry.set_text("");
+				return
+			}
+			if start>=g.order || start < 0
+			{
+				message("not found","not a vertex");
+				return
+			}
+			let tmp = it.next();
+			let end;
+			if tmp.is_some()
+			{
+				end = parser(tmp.unwrap());
+			    if end == i32::MAX
+				{
+					entry.set_text("");
+					return
+				}
+				if end>=g.order || end < 0
+				{
+					message("not found","not a vertex");
+					return
+				}
+			}
+			else
+			{
+				message("using error"," for A* it need the start and the end write the format like: \"1 2\"");
+				return
+			}
+			let n_pages = notebook.n_pages();
+			for _i in 0..n_pages
+			{
+				notebook.remove_page(Some(0));
+			}
+			a_star(start as usize,end as usize,notebook);
+		}
 	}
+}
+
+fn information(combo : &mut ComboBoxText)
+{
+	let raw = (*combo).active_text();
+	let text = Some(raw);
+	let text2 = match text 
+	{
+		Some(Some(string)) => string.to_string(),
+		_ => String::new(), 
+	};
+	let to_show;
+	let title;
+
+	match text2.as_str() 
+	{
+		"Dijkstra"=> 
+		{
+			title ="Dijkstra";
+			to_show = "a shortest path algorithm that chooses the nearest node that isn't visited and uses edge relaxation";
+		},
+		"Bellman Ford"=> 
+		{
+			title ="Bellman Ford";
+			to_show = "a shortest path algorithm that uses edge relaxation n times where n is the number od nodes in the graph";
+		},
+		"Floyd Warshall"=> 
+		{
+			title ="Floyd Warshall";
+			to_show = "a shortest path algorithm that \"brute force\" to find all shortest path from every nodes (only show from the source)";
+		},
+		"A*"=> 
+		{
+			title ="A*";
+			to_show = "a path fiding algorithm that uses a heuristic to find the way";
+		},
+		_ => 
+		{
+			title = "error";
+			to_show = "no searching algorithm selected !";
+		},
+	}
+	message(title,to_show);
 }
