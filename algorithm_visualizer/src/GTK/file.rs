@@ -170,7 +170,7 @@ fn open_tree(a :String)
 	    let  strings =  tmp.unwrap();
 	    for line in strings.lines()
 	    {
-			let mut tmp = line.clone().to_string();
+			let mut tmp = line.to_string();
 			let c =tmp.remove(0);
 			if c =='/'
 			{

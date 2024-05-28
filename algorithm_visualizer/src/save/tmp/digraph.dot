@@ -1,2 +1,4 @@
-digraph dig { // 0
+digraph dig { // 2
+n0 [label="0"]
+n1 [label="1", style = filled , color = green ]
 }

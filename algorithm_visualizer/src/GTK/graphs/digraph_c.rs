@@ -343,6 +343,7 @@ fn add_edge(start: &Entry, end: &Entry,cost: &Entry,notebook :&mut Notebook)
 			return        
 	    }
 	    let number = parser(&text);
+	    end.set_text("");
 		if number == i32::MAX
 	    {
 			cost.set_text("");
@@ -350,7 +351,8 @@ fn add_edge(start: &Entry, end: &Entry,cost: &Entry,notebook :&mut Notebook)
 		}
 		
 		
-	    let text = cost.text().to_string(); 
+	    let text = cost.text().to_string();
+	    cost.set_text(""); 
 	    if text.is_empty() 
 	    {
 			message("no input","nothing typed");
@@ -363,7 +365,7 @@ fn add_edge(start: &Entry, end: &Entry,cost: &Entry,notebook :&mut Notebook)
 		}
 		let mut g = DICGRAPH.clone().unwrap();
 		g.push(number1,number,costs);
-		if number1 <0 && number1>= g.order && number <0 && number>= g.order
+		if number1 >=0 && number1<= g.order && number >=0 && number<= g.order
 		{
 			let mut colors = vec![0; g.order as usize];
 			colors[number as usize] = 2;
@@ -411,7 +413,6 @@ fn remove_edge(start : &Entry,end : &Entry,notebook :&mut Notebook )
 			return        
 	    }
 	    let number = parser(&text);
-	    end.set_text("");
 	    if number == i32::MAX 
 		{
 			return

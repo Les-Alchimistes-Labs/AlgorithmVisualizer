@@ -308,7 +308,7 @@ fn add_edge(start: &Entry, end: &Entry,notebook :&mut Notebook)
 
 	    let mut g = DIGRAPH.clone().unwrap();
 	    g.push(number1,number);
-	    if number1 <0 && number1>= g.order && number <0 && number>= g.order
+	    if number1 >=0 && number1<= g.order && number >=0 && number<= g.order
 		{
 			let mut colors = vec![0 ; g.order as usize];
 			colors[number as usize] = 2;
