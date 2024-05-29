@@ -20,7 +20,6 @@ pub fn dfs_ugraph(x:i32,m:&mut Vec<bool>, mark :bool,notebook : &mut Notebook)
 					if m[j] 
 					{
 						colors[j]=1;
-						
 					}
 				}
 				colors[g.adjlists[x as usize][i] as usize] = 2;
@@ -46,8 +45,7 @@ pub fn dfs_digraph(x:i32,m:&mut Vec<bool>, mark :bool,notebook : &mut Notebook)
 				{
 					if m[j] 
 					{
-						colors[j]=1;
-						
+						colors[j]=1;	
 					}
 				}
 				colors[g.adjlists[x as usize][i] as usize] = 2;

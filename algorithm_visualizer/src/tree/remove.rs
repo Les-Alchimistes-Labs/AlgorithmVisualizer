@@ -3,8 +3,6 @@ use gtk::Notebook;
 use crate::GTK::tree::paint_tree;
 use crate::BTREE;
 
-
-
 fn delete_bis(btree: &mut Box<Btree>,notebook: &mut Notebook, key: i32) -> (Option<Box<Btree>>,bool) {
     if key > btree.key {
 		if btree.right == None {

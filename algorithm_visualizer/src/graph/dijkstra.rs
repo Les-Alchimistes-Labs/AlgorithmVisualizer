@@ -51,7 +51,5 @@ pub fn dijkstra(start: usize, notebook : &mut Notebook)
 			x = choose_min(&dist,&m);
 			n+=1;
 		}
-		dbg!(dist);
-		dbg!(p);
 	}
 }

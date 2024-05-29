@@ -6,6 +6,4 @@ pub mod dfs;
 pub mod bfs;
 pub mod bellman_ford;
 
-
-
 pub mod structs;

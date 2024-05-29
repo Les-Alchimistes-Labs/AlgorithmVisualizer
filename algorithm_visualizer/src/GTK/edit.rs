@@ -7,8 +7,6 @@ use std::fs::read_to_string;
 use crate::{CURRENT_LIST, BTREE, UGRAPH, UCGRAPH,DICGRAPH,DIGRAPH};
 use crate::GTK::utilities::*;
 
-
-
 pub fn save_list_text()
 {
 	unsafe
@@ -41,13 +39,11 @@ pub fn save_dot(t : &str)
 					return
 				}},
 				
-				
 			"ugraph"   =>{ if UGRAPH == None 
 				{
 					message("not intialized","nothing to save");
 					return
 				}},
-			
 			
 			"ucgraph"  => { if UCGRAPH == None 
 				{
@@ -55,13 +51,11 @@ pub fn save_dot(t : &str)
 					return
 				}},
 			
-			
 			"digraph"  => { if DIGRAPH == None 
 				{
 					message("not intialized","nothing to save");
 					return
 				}},
-			
 			
 			"dicgraph" =>{ if DICGRAPH == None 
 				{
@@ -104,13 +98,11 @@ pub fn save_png(t: &str)
 					return
 				}},
 				
-				
 			"ugraph"   =>{ if UGRAPH == None 
 				{
 					message("not intialized","nothing to save");
 					return
 				}},
-			
 			
 			"ucgraph"  => { if UCGRAPH == None 
 				{
@@ -118,13 +110,11 @@ pub fn save_png(t: &str)
 					return
 				}},
 			
-			
 			"digraph"  => { if DIGRAPH == None 
 				{
 					message("not intialized","nothing to save");
 					return
 				}},
-			
 			
 			"dicgraph" =>{ if DICGRAPH == None 
 				{

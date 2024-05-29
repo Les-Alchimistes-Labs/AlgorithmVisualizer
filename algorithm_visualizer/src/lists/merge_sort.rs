@@ -2,9 +2,6 @@ use crate::GTK::list::paint_list;
 use crate::CURRENT_LIST;
 use gtk::Notebook;
 
-
-
-
 struct List{
     l: Vec<i64>,
     n_p :usize,
@@ -75,7 +72,6 @@ pub fn merge_sort(notebook :&mut Notebook)
 
         while l.p_s.len() > 2
         {
-			
             merge_sort_join(&mut l,notebook);
             CURRENT_LIST = l.l.clone();
             paint_list(notebook,String::from("Merge sort"),0,0);
@@ -119,12 +115,10 @@ fn merge_sort_cut( n_p: &mut usize, p_s :&mut Vec<usize>) -> bool
     found
 }
 
-
 fn merge_sort_sort(v :&mut Vec<i64>,n_p: &mut usize, p_s :&mut Vec<usize>, notebook : &mut Notebook)
 {
 	unsafe
 	{
-			
 	    let mut p_v = 1;
 	    while p_v < *n_p
 	    {
@@ -136,8 +130,7 @@ fn merge_sort_sort(v :&mut Vec<i64>,n_p: &mut usize, p_s :&mut Vec<usize>, noteb
 	            paint_list(notebook,String::from("Merge sort"),p_s[p_v - 1] + 1,p_s[p_v - 1] + 1);
 	            (v[p_s[p_v - 1 ]],v[p_s[p_v - 1] + 1]) = 
 	                (v[p_s[p_v - 1] + 1],v[p_s[p_v - 1]]);
-	            CURRENT_LIST = v.clone();
-	                
+	            CURRENT_LIST = v.clone(); 
 	        }
 	        p_v += 1;
 	    }
@@ -182,7 +175,7 @@ fn merge_sort_join(li :&mut List,notebook :&mut Notebook)
         }
         remove_m(p_s[p_v],&mut p_s,&mut n_p);
         p_v += 1;
-   }
+	}
     let mut p = 0;
     while p_v < *n_p && p_s[p_v - 1] + p < p_s[*n_p - 1]
     {
@@ -190,17 +183,15 @@ fn merge_sort_join(li :&mut List,notebook :&mut Notebook)
         p += 1;
     }
     
-   
-   unsafe
-   {
-	                                                    
-	    for i in 0..li.l.len()
+	unsafe
+	{                                              
+		for i in 0..li.l.len()
 	    {
 			li.l[i] = v2[i];
 			CURRENT_LIST = li.l.clone();
 		    paint_list(notebook,String::from("Merge sort"),i,i);
 		}
-   }
+	}
 }
 
 

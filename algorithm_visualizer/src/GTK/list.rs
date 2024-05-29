@@ -1,21 +1,15 @@
 use std::sync::{Arc, Mutex};
+use std::cell::RefCell;
 use cairo::{ImageSurface, Format};
 use gtk::prelude::*;
 use gtk::{ Grid, Orientation, Paned, Button, Label, Entry, 
 	ComboBoxText, Image, Notebook};
-	
-	
-
-use std::cell::RefCell;
 
 use crate::lists::insertion_sort::insertion_sort;
 use crate::lists::merge_sort::merge_sort;
 use crate::lists::counting_sort::counting_sort;
 use crate::GTK::utilities::*;
-
 use crate::CURRENT_LIST;
-#[allow(unused_must_use)]
-
 
 pub fn create_list_tab()->gtk::Paned
 {
@@ -25,7 +19,6 @@ pub fn create_list_tab()->gtk::Paned
 	let notebook = Notebook::new();
 	panel.pack2(&notebook,true,true);
 	let notebook_ref = RefCell::new(notebook);
-
 		 
 	let space = Label::new(Some("                               "));	
 	let choose = Label::new(Some("----|| sorting algorithm ||----"));
@@ -38,7 +31,6 @@ pub fn create_list_tab()->gtk::Paned
     let edit_label_1 =  Label::new(Some("                       "));
     let edit_label =  Label::new(Some("----|| edit list ||----"));
     let edit_label_2=  Label::new(Some("                       "));
-    
     
     let add_button = Button::with_label("add");
     let remove_button = Button::with_label("remove");
@@ -54,7 +46,6 @@ pub fn create_list_tab()->gtk::Paned
     remove_entry.set_placeholder_text(Some("remove a number"));
     let refresh1=  Label::new(Some("                       "));
     let info = Button::with_label("information");
-    
     
     grid.attach(&space_1,0,0,2,1);
     grid.attach(&choose,0,1,2,1);
@@ -75,9 +66,7 @@ pub fn create_list_tab()->gtk::Paned
     grid.attach(&refresh1,0,16,2,1);
     grid.attach(&refresh_button,0,17,2,1);
     
-    
-    grid.set_size_request(200, -1);
-       
+    grid.set_size_request(200, -1);    
 							
 	let combo_ref = RefCell::new(combo);
     {
@@ -94,8 +83,6 @@ pub fn create_list_tab()->gtk::Paned
             add_number(&mut notebook_mut,&add_entry);
         });
     }
-	
-	
 	{
         let notebook_ref_clone = notebook_ref.clone();
         reset_button.connect_clicked(move |_| {
@@ -103,8 +90,6 @@ pub fn create_list_tab()->gtk::Paned
             reset(&mut notebook_mut);
         });
     }
-	
-	
 	{
         let notebook_ref_clone = notebook_ref.clone();
         remove_button.connect_clicked(move |_| {
@@ -112,8 +97,6 @@ pub fn create_list_tab()->gtk::Paned
             remove_number(&mut notebook_mut,&remove_entry);
         });
     }
-	
-	
 	{
         let notebook_ref_clone = notebook_ref.clone();
         let combo_ref_clone = combo_ref.clone();
@@ -132,9 +115,9 @@ pub fn create_list_tab()->gtk::Paned
     }
 	
     panel.pack1(&grid, false, false);
-    panel
-		
+    panel	
 }
+
 fn information(combo : &mut ComboBoxText)
 {
 	let raw = (*combo).active_text();
@@ -145,8 +128,7 @@ fn information(combo : &mut ComboBoxText)
 		_ => String::new(), 
 	};
 	let to_show;
-	let title;
-											 
+	let title;									 
 
 	match text2.as_str() 
 	{
@@ -213,12 +195,10 @@ fn add_number(notebook :&mut Notebook,entry :&Entry)
 	}
 }
 
-
 fn remove_number(notebook :&mut Notebook,entry :&Entry)
 {
 	unsafe
 	{
-		
 		let text = entry.text().to_string(); 
 	    if text.is_empty() {
 			message("no entry", "nothing typed");
@@ -309,8 +289,6 @@ fn sort_the_list(notebook :&mut Notebook,combo : &mut ComboBoxText)
 	}		
 }
 
-
-
 pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : usize)
 {
 	unsafe
@@ -344,7 +322,6 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 		let _ = borrowed_cr.clone().expect("REASON").show_text(string);
 		
 		drop(borrowed_cr);
-
 	
 		let max_height = (height *0.7) as i32;
 		let min_width  = (width *0.1) as i32;
@@ -352,7 +329,6 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 		let nb_to_draw = CURRENT_LIST.len() as i32;
 		if nb_to_draw != 0
 		{
-			
 			let mut max_value  = CURRENT_LIST[0];
 			for i in 1..CURRENT_LIST.len()
 			{
@@ -409,8 +385,6 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 			}
 		}
 		let image = Image::from_surface(Some(&surface)); 
-		
-		
 		let boxe = Grid::new();
 
 		boxe.attach(&image,0,0,1,1);	
@@ -422,7 +396,6 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 		notebook.queue_draw();
 		
 		gtk::main_iteration();
-		
 	}
 }
 

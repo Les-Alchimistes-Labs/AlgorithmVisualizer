@@ -3,7 +3,6 @@ use gtk::Notebook;
 use crate::GTK::tree::paint_tree;
 use crate::BTREE;
 
-
 fn insert_bis(btree: &mut Box<Btree>,notebook : &mut Notebook, key: i32) {
 
     if key <= btree.key {
@@ -46,6 +45,7 @@ pub fn create( key: i32) {
 	    }
 	}
 }
+
 fn create_bis(btree: &mut Box<Btree>, key: i32) {
 
     if key <= btree.key {

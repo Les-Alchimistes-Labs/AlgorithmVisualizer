@@ -1,22 +1,16 @@
 use std::sync::{Arc, Mutex};
 use gtk::prelude::*;
 use cairo::{ImageSurface, Format};
+use std::cell::RefCell;
+use gdk_pixbuf::Pixbuf;
 use gtk::{Grid, Paned ,Orientation, ComboBoxText, Button, Notebook, Entry, Label
 	,Image  };
-
-use std::cell::RefCell;
-
-
-use gdk_pixbuf::Pixbuf;
 
 use crate::UCGRAPH;
 use crate::ucGraph;
 use crate::GTK::utilities::*;
 
 use crate::graph::prim::prim;
-
-
-
 
 pub fn get_paned_cost() -> gtk::Paned
 {
@@ -27,7 +21,6 @@ pub fn get_paned_cost() -> gtk::Paned
 	let notebook_ref = RefCell::new(notebook);
 	let choose = Label::new(Some("----|| searchig algorithm ||----"));
 	let info = Button::with_label("information");
-	
 	
 	let combo =ComboBoxText::new();
     combo.append_text("Prim");
@@ -50,10 +43,10 @@ pub fn get_paned_cost() -> gtk::Paned
     let remove_edge_label= Label::new(Some("Remove:"));
     
     let remove_start_entry = Entry::new();
-    remove_start_entry.set_placeholder_text(Some("start"));
+    remove_start_entry.set_placeholder_text(Some("edge starting point"));
     
     let remove_end_entry = Entry::new();
-    remove_end_entry.set_placeholder_text(Some("end"));
+    remove_end_entry.set_placeholder_text(Some("edge ending point"));
     let remove_button = Button::with_label("remove");
     
     let vertices =Label::new(Some("--|Vertices|--"));
@@ -127,10 +120,6 @@ pub fn get_paned_cost() -> gtk::Paned
     grid.attach(&sort_button       ,1,34,1,1);
     grid.attach(&starting_point    ,0,34,1,1);
     
-    
-    
-    
-    
     grid.set_size_request(200, -1);
     let combo_ref = RefCell::new(combo);
     
@@ -148,8 +137,6 @@ pub fn get_paned_cost() -> gtk::Paned
             remove_edge(&remove_start_entry,&remove_end_entry,&mut notebook_mut);
         });
     } 
-    
-    
     {
         let notebook_ref_clone = notebook_ref.clone();
         add_v_button.connect_clicked(move |_| {
@@ -194,8 +181,6 @@ pub fn get_paned_cost() -> gtk::Paned
             information(&mut combo_mut);
         });
     }
-    
-	
 	
 	paned.pack1(&grid,false,false);
 	paned
@@ -221,7 +206,6 @@ fn add_vertice(notebook : &mut Notebook)
 			UCGRAPH = Some(g);
 			paint_ucgraph("add Vertice",notebook,colors,vec![],vec![]);
 		}
-		dbg!(&UCGRAPH);
 	}
 }
 fn reset(notebook : &mut Notebook)
@@ -235,7 +219,6 @@ fn reset(notebook : &mut Notebook)
 			notebook.remove_page(Some(0));
 		}
 		UCGRAPH = None; 
-		dbg!(&UCGRAPH);
 		paint_ucgraph("Reset",notebook,vec![],vec![],vec![]);
 	}
 }
@@ -294,7 +277,6 @@ fn remove_vertice(notebook :&mut Notebook)
 			g.costs.remove(&(i as i32,g.order));
 		}
 		UCGRAPH = Some(g);
-		dbg!(&UCGRAPH);
 		paint_ucgraph("Remove Vertice",notebook,vec![0; order],vec![],vec![]);                 
 	 }
 }
@@ -310,8 +292,7 @@ fn add_edge(start: &Entry, end: &Entry,cost: &Entry,notebook :&mut Notebook)
 			end.set_text("");
 			cost.set_text("");
 			return
-		}
-		
+		}	
 		
 		let text = start.text().to_string();	    
 		if text.is_empty() 
@@ -359,13 +340,12 @@ fn add_edge(start: &Entry, end: &Entry,cost: &Entry,notebook :&mut Notebook)
 		}
 		let mut g = UCGRAPH.clone().unwrap();
 		g.push(number1,number,costs);
-		if number1 >=0 && number1<= g.order && number >=0 && number<= g.order
+		if number1 >=0 && number1< g.order && number >=0 && number< g.order
 		{
 			let mut colors = vec![0; g.order as usize];
 			colors[number as usize] = 2;
 			colors[number1 as usize] = 2;
 			UCGRAPH = Some(g);
-			dbg!(&UCGRAPH);
 			paint_ucgraph("add edge",notebook,colors,vec![(number1,number)],vec![]);
 		}
 	}
@@ -381,8 +361,7 @@ fn remove_edge(start : &Entry,end : &Entry,notebook :&mut Notebook )
 			start.set_text("");
 			end.set_text("");
 			return 
-		}
-		
+		}	
 		
 		let mut text = start.text().to_string(); 
 	    if text.is_empty() 
@@ -447,7 +426,6 @@ fn remove_edge(start : &Entry,end : &Entry,notebook :&mut Notebook )
 		}
 		let order = g.order as usize; 
 		UCGRAPH = Some(g);
-		dbg!(&UCGRAPH);
 		paint_ucgraph("remove edge",notebook,vec![0;order],vec![],vec![]);
 	}
 }
@@ -459,7 +437,6 @@ fn dot(colors :Vec<i32>, edges : Vec<(i32,i32)> ) -> String
 	{
 		if UCGRAPH != None
 		{
-
 			let mut g = UCGRAPH.clone().unwrap();
 			let order = g.order;
 			result.push_str(&format!(" // {}\n",order.to_string()));
@@ -514,7 +491,6 @@ fn dot(colors :Vec<i32>, edges : Vec<(i32,i32)> ) -> String
 		}		
 	}
 	result.push_str("}");
-	println!("{}",result);
 	result
 }
 pub fn paint_ucgraph(op :&str,notebook :&mut Notebook,colors :Vec<i32>, edges : Vec<(i32,i32)> , info : Vec<(&str,Vec<i32>)>)  
@@ -640,7 +616,6 @@ pub fn search(notebook :&mut Notebook, algo: &mut ComboBoxText, entry : &Entry)
 			message("not found","not a vertex");
 			return
 		}
-	    
 		if text2 ==""
 		{
 			message("no algorithm","no sorting algorithm selected");
@@ -674,7 +649,6 @@ pub fn search(notebook :&mut Notebook, algo: &mut ComboBoxText, entry : &Entry)
 	}
 }
 
-
 fn information(combo : &mut ComboBoxText)
 {
 	let raw = (*combo).active_text();
@@ -686,7 +660,6 @@ fn information(combo : &mut ComboBoxText)
 	};
 	let to_show;
 	let title;
-
 	match text2.as_str() 
 	{
 		"Prim"=> 

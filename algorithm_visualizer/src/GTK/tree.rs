@@ -1,24 +1,16 @@
 use gtk::prelude::*;
-use gtk::{Grid, Paned ,Orientation, ComboBoxText, Button, Notebook, Entry, Label
-	, Window, MessageDialog, DialogFlags, MessageType, ButtonsType,Image  };
-
 use std::cell::RefCell;
-use std::process::Command;
-
 use gdk_pixbuf::Pixbuf;
+use gtk::{Grid, Paned ,Orientation, ComboBoxText, Button, Notebook, Entry, Label
+	,Image };
 
-use std::fs::File;
-use std::io::Write;
-use std::path::PathBuf;
-use std::env;
+use crate::GTK::utilities::*;
 
 use crate::BTREE;
 use crate::tree::insert::insert;
 use crate::tree::remove::delete;
 use crate::tree::dfs::*;
-
-use crate::tree::bfs::parcours_largeur;
-
+use crate::tree::bfs::*;
 
 pub fn create_tree_tab() -> gtk::Paned
 {
@@ -89,7 +81,6 @@ pub fn create_tree_tab() -> gtk::Paned
             information(&mut combo_mut);
         });
     }
-    
 	{
         let notebook_ref_clone = notebook_ref.clone();
         add_button.connect_clicked(move |_| {
@@ -97,8 +88,6 @@ pub fn create_tree_tab() -> gtk::Paned
             add_node(&mut notebook_mut,&add_entry);
         });
     }
-	
-	
 	{
         let notebook_ref_clone = notebook_ref.clone();
         reset_button.connect_clicked(move |_| {
@@ -106,8 +95,6 @@ pub fn create_tree_tab() -> gtk::Paned
             reset(&mut notebook_mut);
         });
     }
-	
-	
 	{
         let notebook_ref_clone = notebook_ref.clone();
         remove_button.connect_clicked(move |_| {
@@ -115,8 +102,6 @@ pub fn create_tree_tab() -> gtk::Paned
             remove_node(&mut notebook_mut,&remove_entry);
         });
     }
-	
-	
 	{
         let notebook_ref_clone = notebook_ref.clone();
         let combo_ref_clone = combo_ref.clone();
@@ -126,7 +111,6 @@ pub fn create_tree_tab() -> gtk::Paned
             search(&mut notebook_mut,&mut combo_mut);
         });
     }
-    
     {
         let notebook_ref_clone = notebook_ref.clone();
         refresh_button.connect_clicked(move |_| {
@@ -181,16 +165,7 @@ fn information(combo : &mut ComboBoxText)
 			to_show = "no seraching algorithm selected !";
 		},
 	}
-	let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 to_show);
-											 
-	dialog.set_title(title);
-	
-	dialog.run();
-	dialog.close();
+	message(title,to_show);
 	return
 }
 
@@ -245,6 +220,7 @@ pub fn dot(current : i32 ,old :i32 ) -> String
 	result.push('}');
 	result 
 }
+
 pub fn get_string(nb :i32) -> String
 {
 	let mut result = String::new();
@@ -266,52 +242,15 @@ pub fn add_node(notebook :&mut Notebook, entry : &Entry)
 	unsafe
 	{
 		let text = entry.text().to_string(); 
-	    if text.is_empty() {
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "nothing typed !");
-			dialog.run();
-			dialog.close();
+	    if text.is_empty() 
+	    {
+			message("no input","nothing typed");
 			return        
 	    }
-	    let mut is_negative = false;
-	    let mut copy = text.clone();
-	    entry.set_text("");
-	    if copy.remove(0) =='-'
-	    {
-			is_negative =true;
-		}
-		let mut to_parse = if is_negative{copy} else {text};
-		let mut number :i32 =0;
-		let mut wrong = false;
-		while to_parse.chars().count()!=0 && !wrong  
+		let number = parser(&text);
+		if number == i32::MAX
 		{
-			let c = to_parse.remove(0);
-			if c as u8>=48 && c as u8<=57 
-			{
-				number = number*10+(c as u8 - 48) as i32;
-			}
-			else
-			{
-				wrong= true;
-			}
-		}
-		if wrong
-		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "not a number !");
-			dialog.run();
-			dialog.close();
 			return
-		}
-		if is_negative
-		{
-			number*=-1;
 		}
 		let mut tmp = String::new();
 		tmp = parcours_profondeur(&mut BTREE, tmp);
@@ -319,14 +258,7 @@ pub fn add_node(notebook :&mut Notebook, entry : &Entry)
 		{
 			if n == &number.to_string()
 			{
-				let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "already in the tree !");
-				dialog.run();
-				dialog.close();
-				return
+				message("error","already in the tree");
 			}
 		}
 		let n_pages = notebook.n_pages();
@@ -338,57 +270,19 @@ pub fn add_node(notebook :&mut Notebook, entry : &Entry)
 		paint_tree("Add",notebook,number,number)
 	}
 }
+
 pub fn remove_node(notebook :&mut Notebook, entry : &Entry)
 {
-	unsafe
-	{
 		let text = entry.text().to_string(); 
-		if text.is_empty() {
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "nothing typed !");
-			dialog.run();
-			dialog.close();
+		if text.is_empty() 
+		{
+			message("no input","nothing typed");
 			return        
 		}
-		let mut is_negative = false;
-		let mut copy = text.clone();
-		entry.set_text("");
-		if copy.remove(0) =='-'
+		let number = parser(&text);
+		if number == i32::MAX
 		{
-			is_negative =true;
-		}
-		let mut to_parse = if is_negative{copy} else {text};
-		let mut number :i32 =0;
-		let mut wrong = false;
-		while to_parse.chars().count()!=0 && !wrong  
-		{
-			let c = to_parse.remove(0);
-			if c as u8>=48 && c as u8<=57 
-			{
-				number = number*10+(c as u8 - 48) as i32;
-			}
-			else
-			{
-				wrong= true;
-			}
-		}
-		if wrong
-		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "not a number !");
-			dialog.run();
-			dialog.close();
 			return
-		}
-		if is_negative
-		{
-			number*=-1;
 		}
 		let n_pages = notebook.n_pages();
 		for _i in 0..n_pages
@@ -396,19 +290,11 @@ pub fn remove_node(notebook :&mut Notebook, entry : &Entry)
 			notebook.remove_page(Some(0));
 		}
 		let (_t,b) = delete(notebook,number);
-		dbg!(&BTREE);
 		if !b
 		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "not found in the tree !");
-			dialog.run();
-			dialog.close();
+			message("not found","not found in the tree");
 			return
 		}
-	}
 }
 
 pub fn reset(notebook :&mut Notebook)
@@ -421,10 +307,10 @@ pub fn reset(notebook :&mut Notebook)
 			notebook.remove_page(Some(0));
 		}
 		BTREE = None;
-		dbg!(&BTREE);
 		paint_tree("reset",notebook,1,1);
 	}
 }
+
 pub fn search(notebook :&mut Notebook, combo : &ComboBoxText)
 {
 	 unsafe 
@@ -438,13 +324,7 @@ pub fn search(notebook :&mut Notebook, combo : &ComboBoxText)
 		};
 		if text2 ==""
 		{
-			let dialog = MessageDialog::new(None::<&Window>,
-											 DialogFlags::MODAL,
-											 MessageType::Info,
-											 ButtonsType::Close,
-											 "no sorting algorithm selected !");
-			dialog.run();
-			dialog.close();
+			message("no algorithm", "no searching algorithm selected");
 			return
 		}
 		if text2 == "depth-first search (prefix)" 
@@ -487,8 +367,7 @@ pub fn search(notebook :&mut Notebook, combo : &ComboBoxText)
 			let mut _tmp = String::new();
 			_tmp = parcours_largeur(&mut BTREE,_tmp,notebook);
 		}
-		dbg!(&BTREE);
-	 }
+	}
 }
 
 pub fn refresh(notebook :&mut Notebook)
@@ -507,44 +386,11 @@ pub fn refresh(notebook :&mut Notebook)
 	}
 }
 
-pub fn save_dot_tmp(current : i32 ,old :i32 ) 
-{
-	let content = dot(current,old);
-	let location = "algorithm_visualizer/src/save/tmp/tree.dot";
-	let mut path = get_absolute("algorithm_visualizer");
-	path.push_str(location);
-	let output = PathBuf::from(path);
-	
-	let mut file = File::create(output).expect("failed to create file");
-    file.write_all(content.as_bytes()).expect("failed to write to file");
-}
-
-
-pub fn save_png_tmp()
-{
-	let location = "algorithm_visualizer/src/save/tmp/tree.dot";
-	let mut path = get_absolute("algorithm_visualizer");
-	path.push_str(location);
-	
-	
-	let output =  "/algorithm_visualizer/src/save/tmp/tree.png";
-	let mut path_out = get_absolute("algorithm_visualizer");
-	path_out.push_str(output);
-	
-	
-	let _com = Command::new("dot")
-                        .arg("-Tpng")
-                        .arg(path)
-                        .arg("-o")
-                        .arg(path_out.clone())
-                        .output()
-                        .expect("failed to execute process");
-}
-
 pub fn paint_tree(op :&str,notebook :&mut Notebook, current :i32 , old : i32)  
 {
-	save_dot_tmp(current,old);
-	save_png_tmp();
+	let content = dot(current,old);
+	save_dot_tmp(content,"tree");
+	save_png_tmp("tree");
 	let output =  "/algorithm_visualizer/src/save/tmp/tree.png";
 	let mut path_out = get_absolute("algorithm_visualizer");
 	path_out.push_str(output);
@@ -565,34 +411,4 @@ pub fn paint_tree(op :&str,notebook :&mut Notebook, current :i32 , old : i32)
 	gtk::main_iteration();
 }
 
-pub fn get_absolute(root: &str) ->String
-{
-	 let path = env::current_dir().unwrap().to_string_lossy().to_string();
-	 let mut words = vec![];
-	 let mut result = String::new();
-	 let mut word = String::new();
-	 for c in path.chars()
-	 {
-		 if c =='/'
-		 {
-			 if word==root.to_string()
-			 {
-				break
-			 } 
-			 words.push(word.clone());
-			 word = String::new();
-		 }
-		 else
-		 {
-			 word.push(c);
-		 }
-	 }
-	for i in words
-	{
-		result.push_str(&i);
-		result.push('/');
-	}
-
-	 result 
-}
 

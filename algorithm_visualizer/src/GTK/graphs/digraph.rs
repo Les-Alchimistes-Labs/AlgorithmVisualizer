@@ -1,10 +1,7 @@
 use gtk::prelude::*;
-use gtk::{Grid, Paned ,Orientation, ComboBoxText, Button, Notebook, Entry, Label ,Image  };
-
 use std::cell::RefCell;
-
 use gdk_pixbuf::Pixbuf;
-
+use gtk::{Grid, Paned ,Orientation, ComboBoxText, Button, Notebook, Entry, Label ,Image  };
 
 use crate::DIGRAPH;
 use crate::diGraph;
@@ -21,7 +18,6 @@ pub fn get_d_paned() -> gtk::Paned
 	let notebook_ref = RefCell::new(notebook);
 	let choose = Label::new(Some("----|| searchig algorithm ||----"));
 	let info = Button::with_label("information");
-	
 	
 	let combo =ComboBoxText::new();
 	combo.append_text("depth-first search");
@@ -46,7 +42,7 @@ pub fn get_d_paned() -> gtk::Paned
     remove_start_entry.set_placeholder_text(Some("edge starting point"));
     
     let remove_end_entry = Entry::new();
-    remove_end_entry.set_placeholder_text(Some(" edge ending point"));
+    remove_end_entry.set_placeholder_text(Some("edge ending point"));
     let remove_button = Button::with_label("remove");
     
     let vertices =Label::new(Some("--|Vertices|--"));
@@ -120,10 +116,7 @@ pub fn get_d_paned() -> gtk::Paned
 
     grid.set_size_request(200, -1);
     
-    
     let combo_ref = RefCell::new(combo);
-    
-    //a connecter
     
     {
         let notebook_ref_clone = notebook_ref.clone();
@@ -186,13 +179,10 @@ pub fn get_d_paned() -> gtk::Paned
         });
     }
     
-    
-	
 	paned.pack1(&grid,false,false);
 	paned
 	
 }
-
 
 fn add_vertice(notebook :&mut Notebook)
 {
@@ -264,7 +254,6 @@ fn remove_vertice(notebook :&mut Notebook)
 	 }
 }
 
-
 fn add_edge(start: &Entry, end: &Entry,notebook :&mut Notebook)
 {
 	unsafe
@@ -274,7 +263,6 @@ fn add_edge(start: &Entry, end: &Entry,notebook :&mut Notebook)
 			message("not initialized","empty graph");
 			start.set_text("");
 			end.set_text("");
-			
 			return 
 		}
 		
@@ -308,7 +296,7 @@ fn add_edge(start: &Entry, end: &Entry,notebook :&mut Notebook)
 
 	    let mut g = DIGRAPH.clone().unwrap();
 	    g.push(number1,number);
-	    if number1 >=0 && number1<= g.order && number >=0 && number<= g.order
+	    if number1 >=0 && number1< g.order && number >=0 && number< g.order
 		{
 			let mut colors = vec![0 ; g.order as usize];
 			colors[number as usize] = 2;
@@ -384,7 +372,6 @@ fn remove_edge(start : &Entry,end : &Entry,notebook :&mut Notebook )
 	}
 }
 
-
 fn dot(colors : Vec<i32>, edges:Vec<(i32,i32)>) -> String
 {
 	let mut result = String::from("digraph dig {");
@@ -439,10 +426,8 @@ fn dot(colors : Vec<i32>, edges:Vec<(i32,i32)>) -> String
 		}		
 	}
 	result.push_str("}");
-	println!("{}",result);
 	result
 }
-
 
 pub fn paint_digraph(op :&str,notebook :&mut Notebook, colors : Vec<i32>, edges:Vec<(i32,i32)>)  
 {
@@ -555,7 +540,6 @@ pub fn refresh(notebook :&mut Notebook)
 		}
 	}
 }
-
 
 fn information(combo : &mut ComboBoxText)
 {

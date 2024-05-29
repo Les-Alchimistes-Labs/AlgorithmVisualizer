@@ -38,7 +38,6 @@ pub fn floyd_warshall(start : usize, notebook : &mut Notebook)
 						{
 							dist[x][y] = dist[x][i] + dist[i][y];
 							p[x][y] =i as i32;
-							dbg!(&p); 
 							if x == start
 							{
 								paint_dicgraph("floyd warshall",notebook,colors.clone(),vec![(i as i32,y as i32)],vec![("dist",dist[x].clone()),("p",p[x].clone())]);

@@ -55,7 +55,6 @@ pub fn a_star(start : usize , end : usize, notebook :&mut Notebook)
 				}
 			}
 		}
-		
 	}
 }
 fn get_colors(close : Vec<i32>) -> Vec<i32>

@@ -1,14 +1,10 @@
 use gtk::prelude::*;
-use gtk::{Window, MessageDialog, DialogFlags, MessageType, ButtonsType };
-
 use std::process::Command;
-
-
 use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
 use std::env;
-
+use gtk::{ Dialog, HeaderBar, Label ,Button,Image};
 
 pub fn get_absolute(root: &str) ->String
 {
@@ -54,17 +50,30 @@ pub fn parser(to_parse :&str) -> i32
 
 pub fn message(title : &str, content : &str)
 {
-	let dialog = MessageDialog::new(None::<&Window>,
-								DialogFlags::MODAL,
-								MessageType::Info,
-								ButtonsType::Close,
-								content);
+	let dialog = Dialog::new();
 	if title != ""
 	{
 		dialog.set_title(title);
 	}
-	dialog.run();
-	dialog.close();
+	let close_image = Image::from_icon_name(Some("window-close"), gtk::IconSize::Button.into());
+	let header_bar = HeaderBar::new();
+	let label = Label::new(Some(title));
+	header_bar.pack_start(&label);
+    header_bar.set_show_close_button(false); 
+    let close_button = Button::new();
+    close_button.set_image(Some(&close_image));
+    header_bar.pack_end(&close_button);
+    
+    let mut result = String::from("\n\n");
+    result.push_str(content);
+    result.push_str("\n\n");
+    let label2 = Label::new(Some(&result));
+    dialog.set_titlebar(Some(&header_bar));
+    
+    dialog.content_area().add(&label2);
+    
+	dialog.show_all();
+	close_button.connect_clicked(move |_| { dialog.close(); });
 	return	
 }
 

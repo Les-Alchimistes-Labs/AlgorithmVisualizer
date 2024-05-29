@@ -2,7 +2,6 @@ use crate::Btree;
 use gtk::Notebook;
 use crate::GTK::tree::paint_tree;
 
-
 pub fn parcours_profondeur(btree: &mut Option<Box<Btree>>, mut result: String) -> String {
     if btree.is_none() {
         return result;
@@ -15,7 +14,6 @@ pub fn parcours_profondeur(btree: &mut Option<Box<Btree>>, mut result: String) -
     }
     result.clone()
 }
-
 
 pub fn dfs_pre(btree: &mut Option<Box<Btree>>, mut result: String, notebook :&mut Notebook) -> String {
     if btree.is_none() {

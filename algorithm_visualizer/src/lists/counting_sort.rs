@@ -1,6 +1,7 @@
 use crate::GTK::list::paint_list;
 use crate::CURRENT_LIST;
 use gtk::Notebook;
+
 pub fn counting_sort(notebook : &mut Notebook ,max : usize)
 {
 	unsafe

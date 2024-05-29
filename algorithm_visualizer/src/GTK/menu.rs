@@ -3,7 +3,6 @@ use crate::GTK::file::*;
 use crate::GTK::edit::*;
 use crate::GTK::help::*;
 
-
 pub fn create_menu_bar() -> gtk::MenuBar 
 {
 	let menu_bar = gtk::MenuBar::new();
@@ -22,7 +21,6 @@ pub fn create_menu_bar() -> gtk::MenuBar
 
 fn file_menu_create() -> gtk::MenuItem {
     let result = gtk::MenuItem::with_label("File");
-
     let open = gtk::MenuItem::with_label("Open");
     let sub_open = gtk::Menu::new();
     let list_open = gtk::MenuItem::with_label("list");
@@ -50,9 +48,7 @@ fn file_menu_create() -> gtk::MenuItem {
     menu_items.append(&item_quit);
     open.set_submenu(Some(&sub_open));
     
-
     result.set_submenu(Some(&menu_items));
-    
     
     list_open.connect_activate(|_| {
         open_list();
@@ -72,8 +68,7 @@ fn file_menu_create() -> gtk::MenuItem {
     without_cost1.connect_activate(|_| {
         open_dot(2);
     });
-    
-    
+      
     item_quit.connect_activate(|_| gtk::main_quit());
     result
 }
@@ -86,11 +81,9 @@ fn edition_menu_create() -> gtk::MenuItem {
     let img_tree = gtk::MenuItem::with_label("Tree");
     let img_graph = gtk::MenuItem::with_label("Graph");
     
-
     menu_img.append(&img_tree);
     menu_img.append(&img_graph);
     as_image.set_submenu(Some(&menu_img));
-    
     
     let as_text = gtk::MenuItem::with_label("Save as text");
     let menu_txt = gtk::Menu::new();
@@ -127,7 +120,6 @@ fn edition_menu_create() -> gtk::MenuItem {
     menu_txt.append(&txt_graph);
     as_text.set_submenu(Some(&menu_txt));
     
-
     let menu_items = gtk::Menu::new();
 
     menu_items.append(&as_image);
@@ -147,8 +139,6 @@ fn edition_menu_create() -> gtk::MenuItem {
        save_png("tree");
     });
     
-    
-    
 	with_cost.connect_activate(|_| {
        save_png("ucgraph");
     });
@@ -161,7 +151,6 @@ fn edition_menu_create() -> gtk::MenuItem {
     without_cost1.connect_activate(|_| {
        save_png("digraph");
     });
-    
     with_cost2.connect_activate(|_| {
        save_dot("ucgraph");
     });
@@ -178,9 +167,9 @@ fn edition_menu_create() -> gtk::MenuItem {
     result
 }
 
-fn help_menu_create() -> gtk::MenuItem {
+fn help_menu_create() -> gtk::MenuItem 
+{
     let result = gtk::MenuItem::with_label("Help");
-
     let item_info = gtk::MenuItem::with_label("Informations");
     let Hlist = gtk::MenuItem::with_label("List");
     let Htree = gtk::MenuItem::with_label("Tree");
@@ -207,7 +196,6 @@ fn help_menu_create() -> gtk::MenuItem {
     Hgraph.connect_activate(|_| {
        graph_info();
     });
-    
     item_credits.connect_activate(|_| {
        credits();
     });

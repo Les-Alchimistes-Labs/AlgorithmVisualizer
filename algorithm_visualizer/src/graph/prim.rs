@@ -2,7 +2,6 @@ use crate::UCGRAPH;
 use crate::GTK::graphs::graph_c::paint_ucgraph;
 use gtk::Notebook;
 
-
 fn choose_min(dist :&Vec<i32>, m :&Vec<bool>) -> i32
 {
 	let mut result = i32::MAX;
@@ -60,10 +59,7 @@ pub fn prim(start : usize, notebook : &mut Notebook)
 			x = choose_min(&dist,&m);
 			n+=1;
 		}
-		dbg!(dist);
-		dbg!(p);
 	}
-	
 }
 
 fn get_edges(p : &Vec<i32> ,dist : &Vec<i32>) -> Vec<(i32,i32)>

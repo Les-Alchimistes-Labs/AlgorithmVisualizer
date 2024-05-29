@@ -25,7 +25,6 @@ pub fn open_list() {
     filter.add_pattern("*.txt");
     filter.set_name(Some("Text files"));
     file_chooser.add_filter(&filter);
-
     file_chooser.connect_response(move |dialog, response| 
     {
         match response 
@@ -63,7 +62,6 @@ fn opened_list(a :String)
     {
 		CURRENT_LIST=vec![];		
 	}
-    
     let  strings =  tmp.unwrap();
     for line in strings.lines()
     {
@@ -88,10 +86,6 @@ fn opened_list(a :String)
 			}
 		}
 	}
-	unsafe
-	{		
-		dbg!(&CURRENT_LIST);
-	}
 }
 
 pub fn open_dot(op : i32) 
@@ -115,12 +109,10 @@ pub fn open_dot(op : i32)
             ("Cancel", ResponseType::Cancel),
             ("Open", ResponseType::Ok),
         ]);
-
     let filter = FileFilter::new();
     filter.add_pattern("*.dot");
     filter.set_name(Some("DOT files"));
     file_chooser.add_filter(&filter);
-
     file_chooser.connect_response(move |dialog, response| 
     {
         match response 
@@ -203,7 +195,6 @@ fn open_tree(a :String)
 							return }
 						}
 					}
-					dbg!(&BTREE);
 					return;
 				}
 			}
@@ -297,8 +288,7 @@ fn open_dicgraph(a :String)
 				return 
 			}
 		} 
-		DICGRAPH = Some(g);
-		dbg!(&DICGRAPH);	
+		DICGRAPH = Some(g);	
 	}
 }
 
@@ -387,7 +377,6 @@ fn open_ucgraph(a :String)
 			}
 		} 
 		UCGRAPH = Some(g);
-		dbg!(&UCGRAPH);	
 	}
 }
 
@@ -470,7 +459,6 @@ fn open_ugraph(a :String)
 			}
 		} 
 		UGRAPH = Some(g);
-		dbg!(&UGRAPH);	
 	}
 }
 
@@ -552,7 +540,6 @@ fn open_digraph(a :String)
 			}
 		} 
 		DIGRAPH = Some(g);
-		dbg!(&DIGRAPH);	
 	}
 }
 
@@ -579,7 +566,6 @@ fn parser(to_parse :&str, T : &str) -> i32
 							_          => {title = "error";
 											content = "error encountered";},
 						}
-						
 						message(title,content);
 						return i32::MAX },
 	}

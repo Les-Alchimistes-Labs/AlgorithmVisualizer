@@ -4,7 +4,6 @@ use crate::UGRAPH;
 use crate::DIGRAPH;
 use gtk::Notebook;
 
-
 pub fn bfs_ugraph(start : i32,notebook :&mut Notebook)
 {
 	unsafe
@@ -36,7 +35,6 @@ pub fn bfs_ugraph(start : i32,notebook :&mut Notebook)
 			}
 		}
 	}
-	
 }
 
 pub fn bfs_digraph(start : i32,notebook :&mut Notebook)
@@ -44,7 +42,6 @@ pub fn bfs_digraph(start : i32,notebook :&mut Notebook)
 	unsafe
 	{
 		let g = DIGRAPH.clone().unwrap();
-		
 		let mut q = vec![];
 		let mut m = vec![false ;g.order as usize];
 		q.push(start);

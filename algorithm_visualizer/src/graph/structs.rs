@@ -1,7 +1,6 @@
 use crate::GTK::utilities::*;
 use std::collections::HashMap;
 
-
 #[derive(PartialEq)]
 #[derive(Debug, Clone)]
 #[allow(non_camel_case_types)]
@@ -53,7 +52,6 @@ impl uGraph
 		self.adjlists[start as usize].sort();
 		self.adjlists[end as usize].push(start);
 		self.adjlists[end as usize].sort();
-		
 	}
 }		
 
@@ -163,7 +161,6 @@ impl diGraph
 		self.adjlists[start as usize].push(end);
 		self.adjlists[start as usize].sort();
 	}
-	
 }		
 
 

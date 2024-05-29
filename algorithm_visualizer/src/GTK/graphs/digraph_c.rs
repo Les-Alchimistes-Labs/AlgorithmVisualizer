@@ -1,23 +1,19 @@
 use std::sync::{Arc, Mutex};
 use cairo::{ImageSurface, Format};
 use gtk::prelude::*;
+use std::cell::RefCell;
+use gdk_pixbuf::Pixbuf;
 use gtk::{Grid, Paned ,Orientation, ComboBoxText, Button, Notebook, Entry, Label
 	,Image  };
-
-use std::cell::RefCell;
-
-use gdk_pixbuf::Pixbuf;
 
 use crate::DICGRAPH;
 use crate::dicGraph;
 use crate::GTK::utilities::*;
 
-
 use crate::graph::dijkstra::dijkstra;
 use crate::graph::bellman_ford::bellman_ford;
 use crate::graph::floyd_warshall::floyd_warshall;
 use crate::graph::a_star::a_star;
-
 
 pub fn get_d_paned_cost() -> gtk::Paned
 {
@@ -28,7 +24,6 @@ pub fn get_d_paned_cost() -> gtk::Paned
 	let notebook_ref = RefCell::new(notebook);
 	let choose = Label::new(Some("----|| searchig algorithm ||----"));
 	let info = Button::with_label("information");
-	
 	
 	let combo =ComboBoxText::new();
     combo.append_text("Dijkstra");
@@ -54,10 +49,10 @@ pub fn get_d_paned_cost() -> gtk::Paned
     let remove_edge_label= Label::new(Some("Remove:"));
     
     let remove_start_entry = Entry::new();
-    remove_start_entry.set_placeholder_text(Some("start"));
+    remove_start_entry.set_placeholder_text(Some("edge starting point"));
     
     let remove_end_entry = Entry::new();
-    remove_end_entry.set_placeholder_text(Some("end"));
+    remove_end_entry.set_placeholder_text(Some("edge ending point"));
     let remove_button = Button::with_label("remove");
     
     let vertices =Label::new(Some("--|Vertices|--"));
@@ -131,11 +126,8 @@ pub fn get_d_paned_cost() -> gtk::Paned
     grid.attach(&sort_button       ,1,34,1,1);
     grid.attach(&starting_point    ,0,34,1,1);
     
-    
-    
     grid.set_size_request(200, -1);
     let combo_ref = RefCell::new(combo);
-    
     {
         let notebook_ref_clone = notebook_ref.clone();
         add_button.connect_clicked(move |_| {
@@ -150,8 +142,6 @@ pub fn get_d_paned_cost() -> gtk::Paned
             remove_edge(&remove_start_entry,&remove_end_entry,&mut notebook_mut);
         });
     } 
-    
-    
     {
         let notebook_ref_clone = notebook_ref.clone();
         add_v_button.connect_clicked(move |_| {
@@ -196,8 +186,6 @@ pub fn get_d_paned_cost() -> gtk::Paned
             information(&mut combo_mut);
         });
     }
-    
-	
 	
 	paned.pack1(&grid,false,false);
 	paned
@@ -210,7 +198,6 @@ fn add_vertice(notebook : &mut Notebook)
 		if DICGRAPH ==None 
 		{
 			DICGRAPH = Some(dicGraph::new(1));
-			dbg!(&DICGRAPH);
 			paint_dicgraph("add Vertice",notebook,vec![2],vec![],vec![]);
 		}
 		else
@@ -223,9 +210,7 @@ fn add_vertice(notebook : &mut Notebook)
 			
 			DICGRAPH = Some(g);
 			paint_dicgraph("add Vertice",notebook,colors,vec![],vec![]);
-			dbg!(&DICGRAPH);
 		}
-;
 	}
 }
 
@@ -233,14 +218,12 @@ fn reset(notebook : &mut Notebook)
 {
 	unsafe 
 	{
-		
 		let n_pages = notebook.n_pages();
 		for _i in 0..n_pages
 		{
 			notebook.remove_page(Some(0));
 		}
 		DICGRAPH = None; 
-		dbg!(&DICGRAPH);
 		paint_dicgraph("Reset",notebook,vec![],vec![],vec![]);
 	}
 }
@@ -300,7 +283,6 @@ fn remove_vertice(notebook :&mut Notebook)
 			g.costs.remove(&(i as i32,g.order));
 		}
 		DICGRAPH = Some(g);
-		dbg!(&DICGRAPH);
 		paint_dicgraph("Remove Vertice",notebook,vec![0; order],vec![],vec![]);                 
 	 }
 }
@@ -316,7 +298,6 @@ fn add_edge(start: &Entry, end: &Entry,cost: &Entry,notebook :&mut Notebook)
 			cost.set_text("");
 			return
 		}
-		
 		
 		let text = start.text().to_string();	    
 		if text.is_empty() 
@@ -350,7 +331,6 @@ fn add_edge(start: &Entry, end: &Entry,cost: &Entry,notebook :&mut Notebook)
 			return
 		}
 		
-		
 	    let text = cost.text().to_string();
 	    cost.set_text(""); 
 	    if text.is_empty() 
@@ -365,13 +345,12 @@ fn add_edge(start: &Entry, end: &Entry,cost: &Entry,notebook :&mut Notebook)
 		}
 		let mut g = DICGRAPH.clone().unwrap();
 		g.push(number1,number,costs);
-		if number1 >=0 && number1<= g.order && number >=0 && number<= g.order
+		if number1 >=0 && number1<= g.order && number >=0 && number< g.order
 		{
 			let mut colors = vec![0; g.order as usize];
 			colors[number as usize] = 2;
 			colors[number1 as usize] = 2;
 			DICGRAPH = Some(g);
-			dbg!(&DICGRAPH);
 			paint_dicgraph("add edge",notebook,colors,vec![(number1,number)],vec![]);
 		}
 	}
@@ -388,7 +367,6 @@ fn remove_edge(start : &Entry,end : &Entry,notebook :&mut Notebook )
 			end.set_text("");
 			return 
 		}
-		
 		
 		let mut text = start.text().to_string(); 
 		start.set_text("");
@@ -439,7 +417,6 @@ fn remove_edge(start : &Entry,end : &Entry,notebook :&mut Notebook )
 		g.costs.remove(&(number1,number));
 		let order = g.order as usize; 
 		DICGRAPH = Some(g);
-		dbg!(&DICGRAPH);
 		paint_dicgraph("remove edge",notebook,vec![0;order],vec![],vec![]);
 	}
 }
@@ -498,10 +475,8 @@ fn dot(colors :Vec<i32>, edges : Vec<(i32,i32)> ) -> String
 		}		
 	}
 	result.push_str("}");
-	println!("{}",result);
 	result
 }
-
 
 pub fn paint_dicgraph(op :&str,notebook :&mut Notebook,colors :Vec<i32>, edges : Vec<(i32,i32)> , info : Vec<(&str,Vec<i32>)>)  
 {
@@ -758,7 +733,6 @@ fn information(combo : &mut ComboBoxText)
 	};
 	let to_show;
 	let title;
-
 	match text2.as_str() 
 	{
 		"Dijkstra"=> 
