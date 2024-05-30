@@ -622,7 +622,7 @@ pub fn search(notebook :&mut Notebook, algo: &mut ComboBoxText, entry : &Entry)
 					{
 						Some(value) => {if *value <0 
 										{
-											message("negative cost","Dijkstra doesm't work with negatives costs");
+											message("negative cost","Dijkstra doesn't work with negatives costs");
 											return
 										}
 										},
