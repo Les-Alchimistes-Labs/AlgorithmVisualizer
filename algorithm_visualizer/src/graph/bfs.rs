@@ -15,22 +15,25 @@ pub fn bfs_ugraph(start : i32,notebook :&mut Notebook)
 		while q.len() !=  0 
 		{
 			let tmp = q.remove(0);
-			m[tmp as usize] = true;
-			let mut colors = vec![0;g.order as usize];
-			for j in 0..m.len()
+			if !m[tmp as usize]
 			{
-				if m[j] 
+				m[tmp as usize] = true;
+				let mut colors = vec![0;g.order as usize];
+				for j in 0..m.len()
 				{
-					colors[j]=1;	
+					if m[j] 
+					{
+						colors[j]=1;	
+					}
 				}
-			}
-			colors[tmp as usize] = 2;
-			paint_ugraph("bfs",notebook,colors,vec![]);
-			for i in 0..(g.adjlists[tmp as usize].len())
-			{
-				if ! m[g.adjlists[tmp as usize][i] as usize]
+				colors[tmp as usize] = 2;
+				paint_ugraph("bfs",notebook,colors,vec![]);
+				for i in 0..(g.adjlists[tmp as usize].len())
 				{
-					q.push(g.adjlists[tmp as usize][i])
+					if ! m[g.adjlists[tmp as usize][i] as usize]
+					{
+						q.push(g.adjlists[tmp as usize][i])
+					}
 				}
 			}
 		}
@@ -48,22 +51,25 @@ pub fn bfs_digraph(start : i32,notebook :&mut Notebook)
 		while q.len() !=  0 
 		{
 			let tmp = q.remove(0);
-			m[tmp as usize] = true;
-			let mut colors = vec![0;g.order as usize];
-			for j in 0..m.len()
+			if !m[tmp as usize]
 			{
-				if m[j] 
+				m[tmp as usize] = true;
+				let mut colors = vec![0;g.order as usize];
+				for j in 0..m.len()
 				{
-					colors[j]=1;	
+					if m[j] 
+					{
+						colors[j]=1;	
+					}
 				}
-			}
-			colors[tmp as usize] = 2;
-			paint_digraph("bfs",notebook,colors,vec![]);
-			for i in 0..(g.adjlists[tmp as usize].len())
-			{
-				if ! m[g.adjlists[tmp as usize][i] as usize]
+				colors[tmp as usize] = 2;
+				paint_digraph("bfs",notebook,colors,vec![]);
+				for i in 0..(g.adjlists[tmp as usize].len())
 				{
-					q.push(g.adjlists[tmp as usize][i])
+					if ! m[g.adjlists[tmp as usize][i] as usize]
+					{
+						q.push(g.adjlists[tmp as usize][i])
+					}
 				}
 			}
 		}
