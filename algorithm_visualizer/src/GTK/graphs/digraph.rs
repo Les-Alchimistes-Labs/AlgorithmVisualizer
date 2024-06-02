@@ -434,8 +434,8 @@ pub fn paint_digraph(op :&str,notebook :&mut Notebook, colors : Vec<i32>, edges:
 	let content = dot(colors,edges);
 	save_dot_tmp(content,"digraph");
 	save_png_tmp("digraph");
-	let output =  "/algorithm_visualizer/src/save/tmp/digraph.png";
-	let mut path_out = get_absolute("algorithm_visualizer");
+	let output =  "/save/tmp/digraph.png";
+	let mut path_out = get_absolute("");
 	path_out.push_str(output);
 	
 	let pixbuf = Pixbuf::from_file(path_out);

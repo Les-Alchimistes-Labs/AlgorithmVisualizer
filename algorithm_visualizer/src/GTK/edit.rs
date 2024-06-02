@@ -17,9 +17,12 @@ pub fn save_list_text()
 			content.push_str(&CURRENT_LIST[i].to_string());
 			content.push_str("\n");
 		}
-		let location = "algorithm_visualizer/src/save/dot/list.txt";
-		let mut path = get_absolute("algorithm_visualizer");
+		println!("test");
+		let location = "/save/dot/list.txt";
+		let mut path = get_absolute("");
+
 		path.push_str(location);
+		println!("{}",path);
 		let output = PathBuf::from(path);
 		
 		let mut file = File::create(output).expect("failed to create file");
@@ -66,17 +69,17 @@ pub fn save_dot(t : &str)
 			_          =>panic!("error in save"),
 		}
 		
-		let mut from = String::from("algorithm_visualizer/src/save/tmp/");
+		let mut from = String::from("/save/tmp/");
 		from.push_str(t);
 		from.push_str(".dot");
-		let mut path_from = get_absolute("algorithm_visualizer");
+		let mut path_from = get_absolute("");
 		path_from.push_str(&from);
 		let content = read_to_string(path_from).unwrap();
-		let mut location = String::from("algorithm_visualizer/src/save/dot/");
+		let mut location = String::from("/save/dot/");
 		location.push_str(t);
 		location.push_str(".dot");
 		
-		let mut path = get_absolute("algorithm_visualizer");
+		let mut path = get_absolute("");
 		path.push_str(&location);
 		let output = PathBuf::from(path);
 		
@@ -124,16 +127,16 @@ pub fn save_png(t: &str)
 			
 			_          =>panic!("error in save"),
 		}
-		let mut location = String::from("algorithm_visualizer/src/save/tmp/");
+		let mut location = String::from("/save/tmp/");
 		location.push_str(t);
 		location.push_str(".dot");
-		let mut path = get_absolute("algorithm_visualizer");
+		let mut path = get_absolute("");
 		path.push_str(&location);
 	
-		let mut output =  String::from("/algorithm_visualizer/src/save/image/");
+		let mut output =  String::from("/save/image/");
 		output.push_str(t);
 		output.push_str(".png");
-		let mut path_out = get_absolute("algorithm_visualizer");
+		let mut path_out = get_absolute("");
 		path_out.push_str(&output);
 		
 		let _com = Command::new("dot")

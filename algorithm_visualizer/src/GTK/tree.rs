@@ -391,8 +391,8 @@ pub fn paint_tree(op :&str,notebook :&mut Notebook, current :i32 , old : i32)
 	let content = dot(current,old);
 	save_dot_tmp(content,"tree");
 	save_png_tmp("tree");
-	let output =  "/algorithm_visualizer/src/save/tmp/tree.png";
-	let mut path_out = get_absolute("algorithm_visualizer");
+	let output =  "/save/tmp/tree.png";
+	let mut path_out = get_absolute("");
 	path_out.push_str(output);
 	
 	let pixbuf = Pixbuf::from_file(path_out);

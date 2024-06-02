@@ -498,8 +498,8 @@ pub fn paint_ucgraph(op :&str,notebook :&mut Notebook,colors :Vec<i32>, edges : 
 	let content = dot(colors,edges);
 	save_dot_tmp(content,"ucgraph");
 	save_png_tmp("ucgraph");
-	let output =  "/algorithm_visualizer/src/save/tmp/ucgraph.png";
-	let mut path_out = get_absolute("algorithm_visualizer");
+	let output =  "/save/tmp/ucgraph.png";
+	let mut path_out = get_absolute("");
 	path_out.push_str(output);
 	
 	let pixbuf = Pixbuf::from_file(path_out);

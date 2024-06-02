@@ -9,6 +9,10 @@ use gtk::{ Dialog, HeaderBar, Label ,Button,Image};
 pub fn get_absolute(root: &str) ->String
 {
 	 let path = env::current_dir().unwrap().to_string_lossy().to_string();
+	 if root.len() == 0
+	 {
+		return path
+	}
 	 let mut words = vec![];
 	 let mut result = String::new();
 	 let mut word = String::new();
@@ -79,10 +83,10 @@ pub fn message(title : &str, content : &str)
 
 pub fn save_dot_tmp(content : String, t : &str) 
 {
-	let mut location = String::from("algorithm_visualizer/src/save/tmp/");
+	let mut location = String::from("/save/tmp/");
 	location.push_str(t);
 	location.push_str(".dot");
-	let mut path = get_absolute("algorithm_visualizer");
+	let mut path = get_absolute("");
 	path.push_str(&location);
 	let output = PathBuf::from(path);
 	
@@ -92,16 +96,16 @@ pub fn save_dot_tmp(content : String, t : &str)
 
 pub fn save_png_tmp(t :&str)
 {
-	let mut location = String::from("algorithm_visualizer/src/save/tmp/");
+	let mut location = String::from("/save/tmp/");
 	location.push_str(t);
 	location.push_str(".dot");
-	let mut path = get_absolute("algorithm_visualizer");
+	let mut path = get_absolute("");
 	path.push_str(&location);
 	
-	let mut output = String::from("/algorithm_visualizer/src/save/tmp/");
+	let mut output = String::from("/save/tmp/");
 	output.push_str(t);
 	output.push_str(".png");
-	let mut path_out = get_absolute("algorithm_visualizer");
+	let mut path_out = get_absolute("");
 	path_out.push_str(&output);
 	
 	let _com = Command::new("dot")
