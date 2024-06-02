@@ -1,7 +1,7 @@
-# Project Name : Algorithm Visualizer 
+# Rust Algorithm Visualizer with GTK
 
 ![Epita](https://operator-front-static-cdn.winamax.fr/img/editorial/2021/11/23/epita2.jpg)
-# Rust Algorithm Visualizer with GTK
+
 
 ## Introduction
 
@@ -58,7 +58,7 @@ Please adhere to the coding style and guidelines used in the project.
 
 ## License
 
-This product was own by Epita.(help us) 
+This product was own by Epita.
 
 ## Acknowledgements
 
