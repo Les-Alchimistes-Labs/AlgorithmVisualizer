@@ -66,7 +66,7 @@ fn delete_bis(btree: &mut Box<Btree>,notebook: &mut Notebook, key: i32) -> (Opti
 			    return (None,false);
 			}
         } else if btree.right.is_none() {
-            if let Some(left_child) = btree.left.take() {
+            if let Some(left_child) = btree.left.clone() {
 				paint_tree("Remove",notebook,btree.left.as_mut().unwrap().key,btree.key);
 			        //*btree = left_child;
 			        //paint_tree("Remove",notebook,btree.left.as_mut().unwrap().key,btree.key);
