@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Algorithme Visualizer - Techniques</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Facebook Opengraph integration: https://developers.facebook.com/docs/sharing/opengraph -->
+  <meta property="og:title" content="">
+  <meta property="og:image" content="">
+  <meta property="og:url" content="">
+  <meta property="og:site_name" content="">
+  <meta property="og:description" content="">
+
+  <!-- Twitter Cards integration: https://dev.twitter.com/cards/  -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="">
+  <meta name="twitter:title" content="">
+  <meta name="twitter:description" content="">
+  <meta name="twitter:image" content="">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Imperial
+  * Updated: Nov 17 2023 with Bootstrap v5.3.2
+  * Template URL: https://bootstrapmade.com/imperial-free-onepage-bootstrap-theme/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="d-flex align-items-center">
+    <div class="container d-flex align-items-center justify-content-between">
+
+      <a href="index.html" class="logo mr-auto"><img src="assets/img/groupename.png" alt=""></a>
+      <!-- Uncomment below if you prefer to use a text logo -->
+      <!-- <h1 class="logo mr-auto"><a href="index.html">Imperial</a></h1> -->
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto " href="index.html#portfolio">Retour</a></li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar --> 
+
+    </div>
+  </header><!-- End Header -->
+
+  <main id="main">
+
+    <!-- ======= Breadcrumbs ======= -->
+    <section id="breadcrumbs" class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>Les aspects techniques</h2>
+        </div>
+
+      </div>
+    </section><!-- End Breadcrumbs -->
+
+    <!-- ======= Portfolio Details Section ======= -->
+    <section id="portfolio-details" class="portfolio-details">
+      <div class="container">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-8">
+            <div class="portfolio-details-slider swiper">
+              <div class="swiper-wrapper align-items-center">
+
+                <div class="swiper-slide">
+                  <img src="assets/img/insert1_site.png" alt="">
+                </div>
+
+                <div class="swiper-slide">
+                  <img src="assets/img/insert2_site.png" alt="">
+                </div>
+
+                <div class="swiper-slide">
+                  <img src="assets/img/tree1_site.png" alt="">
+                </div>
+
+                <div class="swiper-slide">
+                  <img src="assets/img/tree2_site.png" alt="">
+                </div>
+
+                <div class="swiper-slide">
+                  <img src="assets/img/ddijkstra.png" alt="">
+                </div>
+
+                <div class="swiper-slide">
+                  <img src="assets/img/ddijstrares.png" alt="">
+                </div>
+
+              </div>
+              <div class="swiper-pagination"></div>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="portfolio-info">
+              <h3>Projet information</h3>
+              <ul>
+                <li><strong>Catégorie</strong>: Techniques</li>
+                <li><strong>Date du projet</strong>: 03 Juin 2024</li>
+              </ul>
+            </div>
+            <div class="portfolio-description"><br>
+              <h2>Résumé</h2>
+              
+              <p>
+                Algorithme Dijkstra’s <br>
+                Algorithme A* Search <br>
+                ABR (Arbres Binaire de Recherche) <br>
+                BFS,DFS (graph) <br>
+                Algorithme Floyd-Warshall <br>
+                Algorithme de Ford-Bellman <br>
+                Algorithme Spanning Trees minimum <br>
+                Insertion sort <br>
+                Merge sort <br>
+                Counting sort <br>
+                Interface graphique <br>
+              </p>
+            </div>
+          </div>
+
+          <div class="portfolio-description">
+            <h2>Algorithme Dijkstra’s</h2>
+            <p>
+              L’algorithme de Dijkstra est un algorithme de recherche de chemin le plus court dans
+              un graphe, c’est-à-dire un réseau de nœuds connectés par des arêtes ayant des poids ou des
+              coûts associés. L’algorithme détermine le chemin le plus court entre un nœud de départ et
+              tous les autres nœuds du graphe.
+            </p>
+            <p>
+              Cet algorithme est aussi surnommé algorithme glouton ou vorace car il utilise une approche gloutonne pour trouver le chemin optimal. Initialement, il attribue une distance
+              infinie à tous les nœuds sauf au nœud de départ qui a une distance de 0. Puis, l’algorithme
+              sélectionne le nœud non visité avec la distance la plus faible, appelé le « nœud courant
+              » à chaque répétition. Il met à jour les distances des nœuds voisins en les comparants à
+              la distance actuelle du nœud courant, plus le poids de l’arête les reliant. Si la nouvelle
+              distance est plus petite, elle est mise à jour. L’algorithme répète ce processus jusqu’à ce
+              que tous les nœuds aient été visités ou que la distance minimale vers le nœud d’arrivée soit
+              trouvée.
+            </p>
+            <p>
+              L’algorithme de Dijkstra assure de trouver le chemin le plus court dans un graphe sans
+              arêtes de poids négatif, mais peut ne fonctionner correctement si de tels poids sont présents. Son utilisation est très répandue dans les applications de routage, dans les réseaux de
+              télécommunications, la planification de trajets dans les systèmes de transports et d’autres
+              domaines où la recherche de chemins optimaux est incontournable.
+            </p>
+
+            <div class="text-center">
+              <img class="responsiveimg" src="assets/img/dijkstra.png" alt="code">
+              <p> <br>
+                Ici, nous recherchons le chemin le plus court entre les sommets 1 et 9. Nous remarquons qu'il y a 4 chemins possibles. Nous analysons chacun de ces chemins Puis
+                nous calculons la somme des coûts entre les sommets. Pour finir, avec cette addition, nous trouvons notre plus court chemin ayant le plus petit coût.
+              </p>
+            </div>
+
+            </p>
+            <p>
+              Afin de coder cet algorithme, il me fallait plusieurs informations. Tout d’abord, débutant le Rust, je n’ai aucune notion pour traiter et implémenter des graphs. Après de
+              longues recherches et de compréhension, j’ai regardé le mimo (vidéo) sur l’algorithme de
+              Dijsktra afin de comprendre son fonctionnement puis, j’ai étudié la fiche synthèse et la
+              procédure donnée pour m’aider à coder cet algorithme. Une fois tous ces éléments en ma
+              possession, je pouvais enfin coder mon algorithme. Ensuite, vient le codage de la fonction.
+              Pour le codage, je me suis appuyé sur le mimo d’algorithmique S4 sur Dijkstra notamment
+              du pseudo code pour écrire ma fonction. Cela m’a beaucoup aidé pour compléter la fonction.
+            </p>
+            <p>
+              L’initialisation de la fonction n’est pas très complexe : tout d’abord, elle prend en paramètre une source à partir d’un sommet. Ceci est mon point de départ pour trouver le plus
+              court chemin. Ensuite, je mets en paramètre la liste d’adjacence du graph puis un vecteur
+              comprenant les sommets.
+            </p>
+            <p>
+              On commence à remplir la pile binaire avec les sommets qui ont la plus petite distance
+              qui sont placés en premier. Puis, nous visitons les sommets qui ont les plus petites distances
+              en premier. Par conséquent, comme nous l’avons mentionné dans le cahier des charges, l’algorithme Dijsktra se rapproche fortement de l’algorithme glouton (greedy en anglais). Pour
+              réaliser cela, nous utilisons les méthodes pop, get et set, permettant de savoir quelles sont
+              les plus petites distances ainsi que les coûts. Dès lors, on remarque que lorsque l’on modifie
+              la distance d’un sommet, la pile binaire ne change pas, ce qui est très contrariant. Par
+              conséquent, je décide de créer une nouvelle pile avec le bon ordre.
+            </p>
+            <p>
+              Après avoir réalisé la fonction, elle est accompagnée d’une fonction main permettant
+              de tester le code et déduire le chemin le plus court en fonction des coûts pour accéder à
+              cette distance.
+              A la fin du parcours, mon programme me renvoie les différents noms de sommets ainsi
+              que sa distance par rapport à la racine, facilement identifiable puisque sa distance de lui à
+              lui-même est de 0. Nous retrouvons ainsi le plus court chemin de la source (distance à 0)
+              et du nœud correspondant.
+            </p>
+
+            <div class="text-center">
+              <img class="responsiveimg" src="assets/img/resfordijkstra.png" alt="code">
+            </div> <br>
+          
+          </div>
+
+          <div class="portfolio-description">
+            <h2>Algorithme A* Search</h2>
+            <p>
+              L’algorithme A* est utilisé pour trouver un chemin entre un nœud initial et un nœud
+              final. Il repose sur une évaluation approximative de chaque nœud afin d’estimer le chemin
+              optimal, puis explore les nœuds en suivant cette estimation. Cet algorithme est simple, ne
+              nécessite pas de préparation préalable et limite l’utilisation de la mémoire.
+            </p>
+            <p>
+              L’algorithme A* est considéré comme le plus rapide pour trouver le chemin le plus court,
+              surpassant l’algorithme de Dijkstra. En d’autres termes, intégrer cet algorithme dans notre
+              projet serait une excellente manière de comparer le temps de traitement et le raisonnement
+              entre l’algorithme A* et l’algorithme de Dijkstra.
+            </p>
+            <p>
+              Étant donné que l’algorithme de recherche A* n’était pas abordé au cours de ma scolarité, j’ai dû me renseigner sur son fonctionnement. 
+              J’ai commencé par explorer plusieurs sites internet universitaires pour comprendre la théorie derrière cet algorithme. Malheureusement, 
+              la plupart de ces sites semblaient être conçus pour des étudiants déjà familiarisés
+              avec le sujet, ce qui m’a laissé dans le flou puisque je n’avais jamais été exposé à ce concept
+              auparavant.
+            </p>
+            <p>
+              J’ai alors eu l’idée de me tourner vers des vidéos explicatives, qui ont souvent l’avantage 
+              d’être plus claires et détaillées. Cette démarche s’est avérée fructueuse, car une vidéo
+              en particulier, que j’ai dû visionner à plusieurs reprises, m’a permis de comprendre le fonctionnement de cet algorithme.
+            </p>
+            <p>
+              Tout d’abord, on commence par initialiser deux listes. La première est la liste des sommets
+              à visiter (open_liste), et la deuxième est la liste des sommets déjà visités (closed_list).
+              Ensuite, nous entamons le parcours du graphe. À chaque sommet, on calcule un "score"
+              avec la formule suivante : score = coût déjà parcouru jusqu’à cet endroit + estimation du
+              coût restant jusqu’à la destination. Une fois que les scores ont été calculés, on choisit le
+              chemin le plus optimiste, celui ayant le coût le plus bas. Ainsi, notre algorithme continue
+              à calculer et sélectionner les endroits jusqu’à ce qu’il atteigne sa destination ou qu’il n’y
+              ait plus d’endroits à visiter.
+            </p>
+            <p>
+              En résumé, l’algorithme A* utilise une combinaison de la distance déjà parcourue et d’une
+              estimation de la distance restante pour guider ses choix et trouver le meilleur chemin vers
+              sa destination.
+              Voici un exemple :
+            </p>
+
+            <div class="text-center">
+              <img class="responsiveimg" src="assets/img/graphaetoile.png" alt="exemple image">
+              <p> <br>
+                Ce schéma représente un graphe. À présent, l’objectif est de le convertir en une liste d’adjacence.
+              </p>
+            </div>
+
+          </p>
+          <p>
+            Pour cela, nous utilisons la méthode suivante :
+          </p>
+
+          <div class="text-center">
+            <img class="responsiveimg" src="assets/img/graphaetoile2.png" alt="exemple image">
+            <p> <br>
+              Voici le contenu de la fonction main(), qui est le point d’entrée de notre programme et
+              qui exécutera le code avec l’exemple graphique.
+              En observant, nous constatons que le graphe a été converti en une liste d’adjacence.
+            </p>
+          </div>
+
+
+          <div class="text-center">
+            <img class="responsiveimg" src="assets/img/graphaetoile3.png" alt="exemple image">
+            <p> <br>
+              Le résultat que l’on obtient est bien le chemin le plus cours, c’est à dire : 0 -> 2 -> 4.
+            </p>
+          </div>
+
+          <div class="portfolio-description">
+            <h2>ABR (Arbres Binaire de Recherche)</h2>
+            <p>
+              Les arbres binaires de recherche sont une structure algorithmique étudiée au cours du
+              semestre 2 à l’EPITA.
+              Ce qui a été le plus complexe n’a pas été les algorithmes en eux-mêmes, mais plutôt
+              leur implémentation.
+            </p>
+
+            <p>
+              <strong>En effet, j’ai souhaité implémenter la même structure que celle étudiée en cours, à savoir :</strong> <br>
+              — Une clé (key) pour chaque nœud <br>
+              — Un tableau contenant les sous-arbres gauches (left) <br>
+              — Un tableau contenant les sous-arbres droits (right) <br>
+            </p>
+
+            <p>
+              Il est important de noter que Btree.left & Btree.right correspondent aux sous-arbres de la clé visitée.
+            </p>
+
+            <h3>Insertion</h3>
+            <p>
+              <strong>L’objectif de l’insertion est d’ajouter un nœud à l’arbre binaire de recherche. Pour ce faire, on parcourt l’arbre de la manière suivante :</strong> <br>
+              — Si le nœud que l’on souhaite insérer est inférieur ou égal au nœud actuel, on se dirige vers la partie gauche de l’arbre. <br>
+              — Sinon, on se dirige vers la droite. <br>
+              — Si l’un des sous-arbres que l’on souhaite accéder est vide, cela signifie que c’est à cet emplacement que l’on doit insérer le nouveau nœud. <br>
+            </p>
+            
+            <div class="text-center">
+              <img class="responsiveimg" src="assets/img/btree_insertion_bis.png" alt="example">
+            </div> <br>
+
+            <h3>Suppression</h3>
+            <p>
+              <strong>L’objectif de la suppression est de supprimer un nœud dans un arbre binaire de re-
+                      cherche. La différence entre l’insertion et la suppression réside dans le cas de l’élément que
+                      l’on souhaite supprimer :</strong> <br>
+              — Si c’est une feuille : on applique le même principe que pour l’insertion dans le sens de la
+              recherche du nœud. <br>
+              — Si ce n’est pas une feuille : on recherche le nœud. Une fois trouvé et lorsqu’on constate
+              que ce n’est pas une feuille, on cherche le maximum du sous-arbre gauche et on l’échange
+              avec l’élément que l’on souhaite supprimer. Ensuite, on le supprime comme une feuille. <br>
+            </p>
+            
+            <div class="text-center">
+              <img class="responsiveimg" src="assets/img/delete_btree.jpg" alt="example">
+            </div> <br>
+
+          </p>
+          <p>
+            Voici un exemple d’execution :
+          </p>
+
+          <div class="text-center">
+            <img class="responsiveimg" src="assets/img/abr_result.png" alt="example">
+          </div> <br>
+
+          </p>
+          <p>
+            On constate bien qu’en suivant un parcours en profondeur (préfixe) du côté gauche
+            principal (après l’insertion du nœud 22), l’arbre résultant est le suivant :
+        
+          </p>
+
+          <div class="text-center">
+            <img class="responsiveimg" src="assets/img/abr.png" alt="example">
+          </div> <br>
+
+          <h3>Parcours en profondeur</h3>
+          <p>
+            Pour afficher l’arbre après une insertion ou une suppression, nous avons actuellement
+            la possibilité d’utiliser un parcours en largeur ou en profondeur.
+            Le parcours en profondeur consiste à lire chaque nœud en suivant une trajectoire du plus
+            haut vers le plus bas, de gauche à droite. En d’autres termes, chaque nœud est noté dès sa
+            première visite. Ce que je vous ai décrit correspond à ce que l’on appelle un parcours en
+            profondeur de type préfixe. Il existe également d’autres types de parcours en profondeur :
+            suffixe et infixe. Toutefois, dans un souci de simplicité pour l’utilisateur, nous souhaitons
+            mettre en place uniquement la version préfixe.
+          </p>
+
+          <div class="text-center">
+            <img class="responsiveimg" src="assets/img/DFS_btree.png" alt="example">
+          </div> <br>
+
+          <h3>Parcours en largeur</h3>
+          <p>
+            Le parcours en largeur est une méthode qui consiste à explorer chaque niveau de
+            l’arbre de manière progressive, de gauche à droite. Pour mieux comprendre cette approche,
+            imaginez-vous lire un texte en français : vous le parcourez de gauche à droite, ligne par
+            ligne. De la même manière, lors du parcours en largeur, nous notons chaque nœud de gauche
+            à droite, niveau par niveau, comme si nous parcourions l’arbre de manière horizontale et
+            ordonnée.
+          </p>
+
+          <div class="text-center">
+            <img class="responsiveimg" src="assets/img/BFS_btree_bis.png" alt="example">
+          </div> <br>
+
+          </div>
+
+          <div class="portfolio-description">
+            <h2>BFS,DFS (graph)</h2>
+            <h3>BFS</h3>
+          <p>
+            Le BFS est utilisé pour explorer de manière rapide, un graphe dans la largeur, niveau
+            par niveau. Chaque itération augmentera la distance par rapport au nœud de départ. Son
+            objectif est de déterminer rapidement s’il existe un chemin entre deux sommets. Il peut
+            aussi définir le nombre de niveaux séparant deux sommets. Cet algorithme va ainsi explorer,
+            niveau par niveau dans tous les chemins simultanément et non se concentrer chemin par
+            chemin comme le DFS. Son fonctionnement se base sur une structure de données nommée
+            « la queue ».
+          </p>
+          <p>
+            Afin de faire le parcours BFS, il fallait au préalable, se renseigner sur les méthodes
+            disponibles. Fort heureusement, nous pouvons utiliser les queues comme en python grâce à
+            la méthode suivante : VecDeqeque issue de la bibliothèque std : collections. Ensuite, il faut
+            initialiser un graph pour utiliser le parcours. Le graph est une structure, comprenant des
+            sommets et des arrêtes. J’ai utilisé une liste d’adjacence. Puis, j’ai une fonction addeges
+            me permettant de tester ma fonction. Vient le codage du BFS.
+          </p>
+          <p>
+            Cette fonction prend deux paramètres : un graph et une source qui est la racine de
+            notre graph. Comme en python, nous commençons par initialiser une queue et un vecteur.
+            Dès lors, nous ajoutons dans notre queue la racine. A partir du moment où la queue n’est
+            pas vide, on ajoute le sommet dans le vec final et on parcourt le graph en regardant si il
+            possède des fils afin de les insérer (de gauche à droite) dans la queue. Et finalement, on
+            reboucle jusqu’à parcourir le graph en entier. Dans l’ultime étape, nous retournons la liste
+            de vecteurs, correspondant aux sommets parcourus en largeur.
+          </p>
+
+          <div class="text-center">
+            <img class="responsiveimg" src="assets/img/BFSg.jpg" alt="example">
+          </div> <br>
+          </p>
+          
+          <h3>DFS</h3>
+          <p>
+            Le principe du DFS est d’établir du retour sur trace (backtracking) ou de faire des recherches complètes. 
+            Pour chaque chemin, il va explorer méticuleusement le chemin actuel.
+            Puis, il va passer au chemin suivant pour être sûr d’avoir exploré toutes les possibilités de
+            chaque chemin. Son fonctionnement se base sur une structure de données : la stack.
+          </p>
+          <p>
+            Afin de faire le parcours DFS, nous avons du nous renseigner sur les méthodes disponibles. 
+            Comme ce dernier n’a pas besoin de queue, son implémentation est plus simple. Il a
+            fallu initialiser un graph pour utiliser le parcours. Le graph est une structure, comprenant
+            des sommets et des arrêtes. J’ai utilisé une liste d’adjacence. Ensuite, j’ai une fonction
+            addeges me permettant de tester ma fonction. Vient le codage du DFS.
+          </p>
+          <p>
+            Le DFS prend en paramètre un graph, une source et un Hashset permettant d’ajouter
+            les sommets. Comme en python, on commence par insérer la source dans le Hashset. Puis,
+            on initialise un vec contenant notre sommet source. Par la suite, nous regardons les fils
+            possédés par notre racine source et dans le cas ou le Hashset ne contient pas ses fils, nous
+            l’ajoutons dans le vec via une récursivité du fils et du Hashset. Pour finir, je retourne le
+            vec, contenant tous les sommets du graph, parcouru en profondeur.
+          </p>
+
+          <div class="text-center">
+            <img class="responsiveimg" src="assets/img/DFSg.jpg" alt="example">
+          </div> <br>
+
+          </div>
+
+          <div class="portfolio-description">
+            <h2>Algorithme Floyd-Warshall</h2>
+            <p>
+              L’algorithme de Floyd-Warshall est un algorithme que nous avons étudié dans le cadre
+              du cours d’algorithmes du semestre 4, portant sur les graphes.
+            </p>
+            <p>
+              Cet algorithme est utilisé pour déterminer les distances des plus courts chemins entre
+              tous les sommets d’un graphe orienté.
+            </p>
+            <p>
+              Maintenant, je vais vous expliquer brièvement le fonctionnement de l’algorithme de Floyd-Warshall :
+            </p>
+            <p>
+              L’algorithme de Floyd-Warshall est utilisé pour trouver les chemins les plus courts entre
+              tous les paires de sommets dans un graphe pondéré, même s’il contient des arêtes de poids
+              négatif, mais sans cycle de poids négatif.
+            </p>
+            <p>
+              Son fonctionnement est basé sur la notion de programmation dynamique. Il maintient
+              une matrice des distances minimales entre chaque paire de sommets. Initialement, cette
+              matrice est remplie avec les poids des arêtes du graphe. Ensuite, l’algorithme explore toutes
+              les paires de sommets (i, j) et vérifie si passer par un sommet intermédiaire k réduit la distance 
+              entre i et j. Si c’est le cas, la distance minimale entre i et j est mise à jour en utilisant
+              la distance minimale entre i et k ajoutée à la distance minimale entre k et j. Cette mise à
+              jour est répétée jusqu’à ce que toutes les paires de sommets aient été explorées et que la
+              matrice des distances minimales soit stabilisée.
+            </p>
+            <p>
+              En fin de compte, la matrice résultante contient les distances les plus courtes entre tous
+              les paires de sommets du graphe.
+            </p>
+
+            <div class="text-center">
+              <img class="responsiveimg" src="assets/img/floyd_warshall.png" alt="example">
+            </div> <br>
+
+          </div>
+
+          <div class="portfolio-description">
+            <h2>Algorithme de Ford-Bellman</h2>
+            <p>
+              L’algorithme de Bellman-Ford est utilisé pour calculer les chemins de coût minimal
+              dans les graphs. Il est nommé d’après Richard E. Bellman et Lester Ford, Jr. L’algorithme
+              fonctionne en initialisant le coût de tous les sommets à l’infini, à l’exception du sommet
+              source, qui est initialisé à 0.
+            </p>
+
+            <p>
+              Ensuite, il effectue V-1 itérations, où V est le nombre de sommets dans le graph. Dans
+              chaque itération, l’algorithme examine chaque arête (u, v) et met à jour le coût du sommet
+              v si le coût du chemin de u à v via cette arête est inférieur au coût actuel du chemin de
+              u à v. Si une mise à jour se produit pendant la dernière itération, cela indique qu’il existe
+              un chemin négatif dans le graph, ce qui est impossible dans un graph sans cycle négatif.
+            </p>
+
+            <p>
+              Pour l’algorithme de Ford-Belleman, j’ai passé du temps pour comprendre et j’ai re-
+              gardé différentes vidéos. Ceci m’a permis de comprendre le fonctionnement de l’algorithme
+              et d’en réaliser une première version qui peut contenir de multiples bugs. Pour le moment,
+              mon programme prend le graph et un histogramme pour les coûts. Il rajoute les coûts dans
+              le second graph pour simuler son utilisation.
+            </p>
+
+            <p>
+              Nous allons le réaliser pour tous les arcs en faisant un parcours DFS qui a pour objectif
+              de parcourir le graph. J’ai réalisé des modifications dans l’algorithme pour l’optimiser en
+              arrêtant le code si aucune valeur dans l’histogramme n’a été changée ce qui permet de faire
+              moins V-1 parcours. J’ai ensuite testé mon code avec le graph que vous pouvez retrouver
+              ci-dessous
+            </p>
+
+            <div class="text-center">
+              <img class="responsiveimg" src="assets/img/bellman.png" alt="example">
+            </div> <br>
+
+          </div>
+
+          <div class="portfolio-description" >
+            <h2>Algorithme Spanning Trees minimum</h2>
+            <p>
+              Pour l’algorithme de prim, j’ai réalisé de nombreuses recherches pour me permettre
+              de comprendre le fonctionnement de cet algorithme. Suite aux différentes vidéos que j’ai
+              visionnées, j’ai pu vous établir cette description. L’algorithme commence sur une arête du
+              graph et l’inclut dans l’arbre sous- arbre que j’ai créé.
+            </p>
+
+            <p>
+              Puis, à chaque étape, il ajoute une arête supplémentaire au minimum de poids qui relie
+              un sommet de l’arbre à un sommet non inclus dans ce sous graph. Le processus se poursuit
+              jusqu’à ce que tous les sommets soient inclus dans l’arbre. Après avoir parcouru de nombreux sites, 
+              j’ai effectué une première version du programme qui a pour objectif de vérifier
+              ma compréhension de cet algorithme et de passer du temps pour comprendre comment
+              transformer l’algorithme pour qu’il soit fonctionnel en exécutant le code en plusieurs fois
+              pour nous permettre d’avoir une animation.
+            </p>
+
+            <div class="text-center">
+              <img class="responsiveimg" src="assets/img/prims.png" alt="example">
+            </div> <br>
+
+          </div>
+
+          <div class="portfolio-description">
+            <h2>Insertion sort</h2>
+            <p>
+              Le tri par insertion est l’un des premiers algorithme de tri vu en classe. C’est l’un des
+              tris le plus basique et souvent on le fait sans s’en rendre compte. Il est utilisé pour trier
+              les tableaux et est efficace pour trier les tableaux de petite taille ou des tableaux presque
+              trié. Le meilleur cas a une complexité de O(n), sa complexité moyenne est de O(n²) et le
+              pire cas est de O(n²), avec le tableau triée a l’envers.
+            </p>
+
+            <p>
+              Son principe est très simple. On parcours tout le tableaux, et durant ce parcours ,si on
+              tombe sur une valeur qui est mal placée dans le tableau, on décale cette valeur a gauche
+              jusqu’à ce que le tableau soit triee entre la première valeur et là où etait la valeur.
+            </p>
+
+            <div class="text-center">
+              <img class="responsiveimg" src="assets/img/insertion_sort.png" alt="example">
+            </div> <br>
+
+          </div>
+
+          <div class="portfolio-description">
+            <h2>Merge sort</h2>
+
+            <p>
+              Pour l’algorithme du merge sort, j’ai effectué une première version qui se base sur le
+              cours du S2. Cependant, pour le faire fonctionner avec des animations, j’ai découpé mon
+              programme en différents sous programmes qui peuvent être appelés avec une liste et une
+              liste de pointeurs. La version que j’ai créé utilise une liste de pointeurs comme marquer
+              de différentes sous listes, après une autre fonction utiliser ses et la liste pour fusionner la
+              sous-liste 2 pars deux pour réaliser le merge sort.
+            </p>
+
+            <p>
+              Cependant j’ai trouvé un certain nombre de problèmes pour réaliser une modification
+              en place donc j’utilise une sous liste. L’une des solutions qui pourrait rendre mon algorithme 
+              plus efficace serait avec l’utilisation de liste chainé, mais qui ne sera pas le cas pour
+              ce projet S4.
+
+            </p>
+
+            <div class="text-center">
+              <img class="responsiveimg" src="assets/img/merge_sort.png" alt="example">
+            </div> <br>
+
+            </div> 
+
+            <div class="portfolio-description">
+              <h2>Counting sort</h2>
+              <p>
+                Le tri par dénombrement (counting sort) est l’un des algorithmes de tri le plus rapide,
+                même s’il a quelques restrictions et défauts. Le tri s’exécute en un temps linéaire, mais
+                uniquement sur des nombres entiers non signé (u64 par défaut). La particularité du tri est
+                qu’il est la base d’autres algorithmes de tri en temps linéaires, permettant de s’adapter
+                aux besoins en temps et en mémoire.
+              </p>
+
+              <p>
+                Le principe de cet algorithme est le suivant : on parcourt notre tableau puis on compte
+                le nombre de fois où chaque élément doit apparaître. Dès que l’on obtient le tableau T
+                (T[i] correspond au nombre où il apparaît dans le tableau), nous avons la possibilité de
+                le parcourir dans le sens croissant ou décroissant. Cela dépend du tri effectué. Il est ainsi
+                possible de mettre dans le tableau trié T[i] fois l’élément i, allant du minimum jusqu’au
+                maximum du tableau.
+              </p>
+              
+              <div class="text-center">
+                <img class="responsiveimg" src="assets/img/Countings.png" alt="example">
+              </div> <br>
+  
+              <p>
+                Cette fonction prend en paramètre un tableau mutable car on va modifier son contenu
+                pour le trier dans l’ordre croissant et une valeur : l qui sera la valeur maximale de notre
+                tableau. J’ai préféré mettre en paramètre cette valeur maximale plutôt que la calculée car
+                cela facilite les tests et les modifications à apporter si besoin pour l’amélioration du code.
+                Le tableau est modifié en place pour éviter de recréer un tableau supplémentaire où l’on
+                insère nos valeurs finales. Ma première version de l’algorithme était comme cela mais j’ai
+                voulu essayé en place. Cela n’a pas été simple car il y avait des changements de calculs
+                mais j’ai réussi à le faire.
+              </p>
+              <p>
+                Je commence par créer un tableau (vec !) de type usize, de longueur valeur maximale
+                du tableau + 1 contenant que des 0. Ce vec va permettre de stocker toutes les occurrences
+                des différents éléments présents dans notre tableau d’origine. Vient une première boucle :
+                celle-ci va parcourir notre tableau et stocker le nombre de chaque élément du tableau d’origine 
+                avec leur indice correspondant. Puis, une fois ces éléments en mains, grâce aux index
+                proposés, de parcourir notre tableau d’occurrences et en fonction des résultats de notre
+                première boucle, il est possible de trier notre tableau (si le 1er élément à 5 comme nb
+                d’occurrence et le 2e 2, le 2e sera placé ainsi avant le 1er et ainsi de suite).
+              </p>
+              <p>
+                Après avoir codé ma fonction, il fallait naturellement la tester. J’ai donc fait une fonction 
+                main basique permettant de tester mon code. J’ai initialisé deux tableaux de longueurs
+                et valeurs différentes puis j’ai testé.
+              </p>
+
+              <div class="text-center">
+                <img class="responsiveimg" src="assets/img/testcounting.png" alt="example">
+              </div> <br>
+
+              <p>
+                Le counting sort à un défaut majeur : il n’est possible de travailler qu’avec des nombres
+                entiers positifs et qu’en temps linéaire. Par ailleurs, il est inefficace si la page de valeur à
+                trier est très large. Toutefois, il fait partie des plus rapides algorithmes de tri basé sur des
+                comparaisons. Quand nous donnons un tableau connu, nous avons la possibilité de se servir
+                de cet algorithme pour avoir un temps d’exécution rapide et efficace. On pourrait modifier
+                légèrement le fonctionnement de ce tri pour avoir une meilleur complexité en mémoire, en
+                utilisant le Radix sort (tri par base), autre algorithme linéaire.
+              </p>
+
+            </div> 
+            
+            <div class="portfolio-description">
+              <h2>Interface graphique</h2>
+              <p>
+                Pour ce qui est de l’implémentation de l’interface graphique, le plus long était de créer une
+                fenêtre GTK avec plusieurs propriétés. Ensuite, nous avons ajouté petit à petit des fonctionnalités
+                supplémentaires. L'interface graphique est l'élément central de notre projet.Il faut naturellement
+                qu'elle soit de qualité et claire pour l'utilisateur.
+                Quand vous ouvrirez notre application pour la première fois, vous verrez pleins de détails et vous riquez de vous perdre. Laissez-nous vous guider.
+                Pour commencer, vous aurez un menu contenant plusieurs choses:
+              </p>
+
+              <div class="text-center">
+                <img class="responsiveimg" src="assets/img/menu_inter.png" alt="interface graphique">
+              </div> <br>
+
+              <div class="text-center">
+                <img class="responsiveimg" src="assets/img/edit.png" alt="interface graphique">
+              </div> <br>
+
+              <p>
+                — L'onglet "File" permet d'ouvrir un fichier: soit une liste, un arbre binaire ou un graph précis (avec ou sans coûts). <br>
+                — L'onglet "Save" permet de sauvegarder une image ou un texte afin que vous puissiez observer les différences et autres entre les algorithmes. <br>
+                — L'onglet "Help" vous permettra d'avoir des informations sur les grandes catégories: listes, arbres binaires et graphs et les crédits permettent de
+                savoir qui sont les réalisateurs de ce projet.<br>
+              </p>
+
+              <div class="text-center">
+                <img class="responsiveimg" src="assets/img/Help.png" alt="interface graphique">
+              </div> <br>
+
+              <p>
+                Cette interface se décompose en 3 grandes parties.
+              </p>
+              <h3>Les Lists</h3>
+              
+              <div class="text-center">
+                <img class="responsiveimg" src="assets/img/list_img.png" alt="interface graphique">
+              </div> <br>
+              <p>
+                Dans notre application, vous pourrez manipulez différents algorithmes de tri et observer leur temps d'éxécution.
+              </p>
+
+              <p>
+                Vous avez différents outils à votre disposition:
+              </p>
+  
+              <p>
+                — Dans la partie "sorting algorithme", vous pouvez choisir quel algorithme de tri vous allez utilisé pour votre liste. Vous 
+                aurez également des informations complémentaires sur l'lgorithme choisi. <br>
+                — Dans la partie "edit list", vous pourrez ajouter ou supprimer un nombre dans la liste. A noter que si vous voulez rentrer
+                une valeur qui n'est pas un nombre, un message d'erreur apparaîtra. <br>
+                — Le bouton "Reset" permet de reset la liste en entière. <br>
+                — Le bouton "Sort the list" permet de trier la liste en fonction de l'algorithme de tri choisi. <br>
+                — Le bouton "Refresh" permet d'afficher la liste avant de faire des modifications sur cette dernière. <br>
+              </p>
+  
+              <h3>Les Arbres Binaires</h3>
+              
+              <div class="text-center">
+                <img class="responsiveimg" src="assets/img/tree_inter.png" alt="interface graphique">
+              </div> <br>
+
+              <p>Notre application ne propose pas seulement des manipulations de listes. Elle propose également des manipulations d'arbres binaires.</p>
+
+              <p>
+                Vous avez différents outils à votre disposition:
+              </p>
+
+              <p>
+                — Dans la partie "searching algorithm", vous pouvez choisir quel algorithme sur les arbres bonaires vous allez utilisé pour votre arbre. Vous 
+                aurez également des informations complémentaires sur l'algorithme choisi. <br>
+                — Dans la partie "edit tree", vous pourrez ajouter ou supprimer un sommet dans l'arbre. A noter que si vous voulez rentrer
+                une valeur qui existe déjà pour l'insertion ou une valeur qui n'existe pas pour la suppression, un message d'erreur apparaîtra. <br>
+                — Le bouton "Reset" permet de reset l'arbre en entière. <br>
+                — Le bouton "Search" permet de faire la recherhce dans l'arbre en fonction de l'algorithme choisi. <br>
+                — Le bouton "Refresh" permet d'afficher l'arbre avant de faire des modifications sur ce dernier. <br>
+              </p>
+
+              <h3>Les Graphs Orientés et non Orientés</h3>
+              
+              <p>
+                Les outils mis à votre disposition pour les graphs orientés et non orientés sont identiques.
+                Dans notre application, nous distinguons 2 types de graphs: ceux avec et sans coûts.
+              </p>
+
+              <h4>Avec coûts</h4>
+
+              <div class="text-center">
+                <img class="responsiveimg" src="assets/img/graph_avec_couts.png" alt="interface graphique">
+              </div> <br>
+
+              <p>
+                Vous avez différents outils à votre disposition pour les graphs orientés et non orientés avec coûts:
+              </p>
+
+              <p>
+                — Dans la partie "searching algorithm", vous pouvez choisir quel algorithme sur les graphs avec coûts vous allez utilisé pour votre graph. Vous 
+                aurez également des informations complémentaires sur l'algorithme choisi. <br>
+                — Dans la partie "edit graph", vous pourrez ajouter un arc entre 2 sommets et ajoutez son coût ou bien le supprimer dans le graph. A noter que si vous voulez
+                ajouter un arc non valide ou supprimer un arc inexistant, un message d'erreur apparaîtra. <br>
+                — Vous pouvez également ajouter et supprimer des sommets dans la partie "vertices" et les boutons add et remove. <br>
+                — Le bouton "Reset" permet de reset le graph en entier. <br>
+                — Le bouton "Search" permet de faire la recherhce dans le graph à partir d'un sommet que vous choisirez en fonction de l'algorithme choisi. <br>
+                — Le bouton "Refresh" permet d'afficher le graph avant de faire des modifications sur ce dernier. <br>
+              </p>
+
+              <h4>Sans coûts</h4>
+              
+              <div class="text-center">
+                <img class="responsiveimg" src="assets/img/graph_sans_couts.png" alt="interface graphique">
+              </div> <br>
+              
+              <p>
+                Vous avez différents outils à votre disposition pour les graphs orientés et non orientés sans coûts:
+              </p>
+
+              <p>
+                — Dans la partie "searching algorithm", vous pouvez choisir quel algorithme sur les graphs sans coûts vous allez utilisé pour votre graph. Vous 
+                aurez également des informations complémentaires sur l'algorithme choisi. <br>
+                — Dans la partie "edit graph", vous pourrez ajouter un arc entre 2 sommets ou bien le supprimer dans le graph. A noter que si vous voulez
+                ajouter un arc non valide ou supprimer un arc inexistant, un message d'erreur apparaîtra. <br>
+                — Vous pouvez également ajouter et supprimer des sommets dans la partie "vertices" et les boutons add et remove. <br>
+                — Le bouton "Reset" permet de reset le graph en entier. <br>
+                — Le bouton "Search" permet de faire la recherhce dans le graph à partir d'un sommet que vous choisirez en fonction de l'algorithme choisi. <br>
+                — Le bouton "Refresh" permet d'afficher le graph avant de faire des modifications sur ce dernier. <br>
+              </p>
+
+              <p>
+                Maintenant que vous avez connaissance de ces informations, on vous laisse découvrir toutes ces fonctionnalités et profiter de notre application pour découvrir 
+                tous ces algorithmes. 
+              </p>
+  
+            </div> <br><br><br>    
+          
+          </div>
+
+          <!-- <div class="portfolio-description" >
+            <h2>This is an example of portfolio detail</h2>
+            <p>
+              Autem ipsum nam porro corporis rerum. Quis eos dolorem eos itaque inventore commodi labore quia quia. Exercitationem repudiandae officiis neque suscipit non officia eaque itaque enim. Voluptatem officia accusantium nesciunt est omnis tempora consectetur dignissimos. Sequi nulla at esse enim cum deserunt eius.
+            </p>
+          </div> -->
+
+        </div>
+
+      </div>
+    </section><!-- End Portfolio Details Section -->
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="copyright">
+            &copy; Copyright <strong>Les Alchimistes</strong>. All Rights Reserved
+          </div>
+          <div class="credits">
+            <!--
+            All the links in the footer should remain intact.
+            You can delete the links only if you purchased the pro version.
+            Licensing information: https://bootstrapmade.com/license/
+            Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=Imperial
+          -->
+          Designed by <a href="#">Les Alchimistes</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+  <div id="preloader"></div>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/typed.js/typed.umd.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
