@@ -1,4 +1,3 @@
-use std::sync::{Arc, Mutex};
 use std::cell::RefCell;
 use cairo::{ImageSurface, Format};
 use gtk::prelude::*;
@@ -121,10 +120,9 @@ pub fn create_list_tab()->gtk::Paned
 fn information(combo : &mut ComboBoxText)
 {
 	let raw = (*combo).active_text();
-	let text = Some(raw);
-	let text2 = match text 
+	let text2 = match raw 
 	{
-		Some(Some(string)) => string.to_string(),
+		Some(string) => string.to_string(),
 		_ => String::new(), 
 	};
 	let to_show;
@@ -180,7 +178,8 @@ fn add_number(notebook :&mut Notebook,entry :&Entry)
 	unsafe
 	{
 		let text = entry.text().to_string(); 
-	    if text.is_empty() {
+	    if text.is_empty() 
+	    {
 			message("no entry", "nothing typed");
 			return        
 	    }
@@ -200,7 +199,8 @@ fn remove_number(notebook :&mut Notebook,entry :&Entry)
 	unsafe
 	{
 		let text = entry.text().to_string(); 
-	    if text.is_empty() {
+	    if text.is_empty() 
+	    {
 			message("no entry", "nothing typed");
 			return        
 	    }
@@ -229,10 +229,9 @@ fn sort_the_list(notebook :&mut Notebook,combo : &mut ComboBoxText)
 	unsafe
 	{
 		let raw = (*combo).active_text();
-		let text = Some(raw);
-		let text2 = match text 
+		let text2 = match raw 
 		{
-			Some(Some(string)) => string.to_string(),
+			Some(string) => string.to_string(),
 			_ => String::new(), 
 		};
 		if text2==""
@@ -247,7 +246,6 @@ fn sort_the_list(notebook :&mut Notebook,combo : &mut ComboBoxText)
 			{
 				notebook.remove_page(Some(0));
 			}
-			let mut _tmp = String::new();
 			insertion_sort(notebook);
 		}
 		if text2=="Counting sort"
@@ -273,7 +271,6 @@ fn sort_the_list(notebook :&mut Notebook,combo : &mut ComboBoxText)
 			{
 				notebook.remove_page(Some(0));
 			}
-			let mut _tmp = String::new();
 	        counting_sort(notebook,max);
 		}
 		if text2 =="Merge sort"
@@ -283,7 +280,6 @@ fn sort_the_list(notebook :&mut Notebook,combo : &mut ComboBoxText)
 			{
 				notebook.remove_page(Some(0));
 			}
-			let mut _tmp = String::new();
 			merge_sort(notebook);
 		}
 	}		
@@ -296,33 +292,28 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 	    let height = 797.0;
 		let width = 1160.0;
 		let surface = ImageSurface::create(Format::ARgb32, width as i32, height as i32).expect("Failed to create surface");
-		let cr = &Arc::new(Mutex::new(cairo::Context::new(&surface)));			
-		let cloned_cr = Arc::clone(cr);
-		let arc_cr  = &*cloned_cr;
-		let borrowed_cr = arc_cr.lock().unwrap();
-		borrowed_cr.clone().expect("REASON").set_source_rgb(0.0,0.0,0.0);
-		let _ = borrowed_cr.clone().expect("REASON").paint();
-		borrowed_cr.clone().expect("REASON").move_to(185.0,100.0);
-		borrowed_cr.clone().expect("REASON").set_source_rgb(1.0,1.0,1.0);
-		borrowed_cr.clone().expect("REASON").set_font_size(36.0);
-		borrowed_cr.clone().expect("REASON").move_to(10.0,35.0);
-		let _ = borrowed_cr.clone().expect("REASON").show_text(&op);
+		let cr = cairo::Context::new(&surface).unwrap();
+		cr.set_source_rgb(0.0,0.0,0.0);
+		let _ = cr.paint();
+		cr.clone().move_to(185.0,100.0);
+		cr.set_source_rgb(1.0,1.0,1.0);
+		cr.set_font_size(36.0);
+		cr.move_to(10.0,35.0);
+		let _ = cr.show_text(&op);
+		
 		let string = &get_string();
-		let mut txtw =borrowed_cr.clone().expect("REASON").text_extents(string);
+		let mut txtw = cr.text_extents(string).unwrap();
 		let mut font_size = 36.0;
-		while txtw.unwrap().width >= width 
+		while txtw.width >= width 
 		{
 			font_size-=0.1;
-			borrowed_cr.clone().expect("REASON").set_font_size(font_size);
-			txtw =borrowed_cr.clone().expect("REASON").text_extents(string);
+			cr.set_font_size(font_size);
+			txtw = cr.text_extents(string).unwrap();
 		}
-
-		borrowed_cr.clone().expect("REASON").move_to(width/2.0 -txtw.unwrap().width/2.0,100.0);
+		cr.move_to(width/2.0 -txtw.width/2.0,100.0);
 		
-		let _ = borrowed_cr.clone().expect("REASON").show_text(string);
+		let _ =cr.show_text(string);
 		
-		drop(borrowed_cr);
-	
 		let max_height = (height *0.7) as i32;
 		let min_width  = (width *0.1) as i32;
 		let max_width  = (width *0.9) as i32;
@@ -348,40 +339,26 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 			}			
 			for i in 0..nb_to_draw
 			{
-				let cloned_cr = Arc::clone(cr);
-				let arc_cr  = &*cloned_cr;
-				let borrowed_cr = arc_cr.lock().unwrap();
 				if i == pos as i32 
 				{
-					let _ = borrowed_cr.clone().expect("REASON").set_source_rgb(0.0,1.0,0.0);
+					cr.set_source_rgb(0.0,1.0,0.0);
 				}
 				else if i == old_pos as i32
 				{	
-					let _ = borrowed_cr.clone().expect("REASON").set_source_rgb(1.0,0.0,0.0);
+					cr.set_source_rgb(1.0,0.0,0.0);
 				}	
 				else
 				{
-					let _ = borrowed_cr.clone().expect("REASON").set_source_rgb(1.0,1.0,1.0);
+					cr.set_source_rgb(1.0,1.0,1.0);
 				}
-				drop(borrowed_cr);
 				let begin_height = (height - (((CURRENT_LIST[i as usize] + min*-1 +1)  as f64/ (max_value +min*-1 +1) as f64) ) *  max_height as f64) as i32;
-				let cloned_cr = Arc::clone(cr);
-				let arc_cr  = &*cloned_cr;
-				let mut borrowed_cr = arc_cr.lock().unwrap();
-				if let Ok(ref mut ar) = *borrowed_cr {
-				    ar.rectangle(
+				cr.rectangle(
 				        (min_width + ((bar_width+1) * i)) as f64,
 				        (begin_height)as f64,
 				        bar_width as f64,
 				        height - begin_height as f64,
-				    );}
-				
-				drop(borrowed_cr);
-				let cloned_cr = Arc::clone(cr);
-				let arc_cr  = &*cloned_cr;
-				let mut borrowed_cr = arc_cr.lock().unwrap();
-				if let Ok(ref mut ar) = *borrowed_cr { let _ = ar.fill() ;}
-				drop(borrowed_cr);
+				    );
+				let _ = cr.fill();
 			}
 		}
 		let image = Image::from_surface(Some(&surface)); 
@@ -392,7 +369,6 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 		notebook.show_all();				
 		notebook.set_current_page(Some(notebook.n_pages()-1));
 		
-		drop(boxe);
 		notebook.queue_draw();
 		
 		gtk::main_iteration();

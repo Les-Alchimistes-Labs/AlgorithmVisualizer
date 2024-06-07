@@ -32,7 +32,6 @@ pub fn insert(notebook : &mut Notebook, key: i32) {
 	    } else {
 	        insert_bis(BTREE.as_mut().unwrap(),notebook, key);
 	    }
-	    dbg!(&BTREE);
 	}
 }
 

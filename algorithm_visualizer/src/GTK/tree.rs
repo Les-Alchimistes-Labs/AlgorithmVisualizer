@@ -248,6 +248,7 @@ pub fn add_node(notebook :&mut Notebook, entry : &Entry)
 			return        
 	    }
 		let number = parser(&text);
+		entry.set_text("");
 		if number == i32::MAX
 		{
 			return
@@ -259,6 +260,7 @@ pub fn add_node(notebook :&mut Notebook, entry : &Entry)
 			if n == &number.to_string()
 			{
 				message("error","already in the tree");
+				return
 			}
 		}
 		let n_pages = notebook.n_pages();
@@ -280,6 +282,7 @@ pub fn remove_node(notebook :&mut Notebook, entry : &Entry)
 			return        
 		}
 		let number = parser(&text);
+		entry.set_text("");
 		if number == i32::MAX
 		{
 			return

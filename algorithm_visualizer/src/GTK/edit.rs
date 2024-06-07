@@ -24,6 +24,7 @@ pub fn save_list_text()
 		
 		let mut file = File::create(output).expect("failed to create file");
 	    file.write_all(content.as_bytes()).expect("failed to write to file");
+	    message("save success", "successfully saved the list as text");
 	}
 }
 
@@ -82,6 +83,20 @@ pub fn save_dot(t : &str)
 		
 		let mut file = File::create(output).expect("failed to create file");
 	    file.write_all(content.as_bytes()).expect("failed to write to file");
+	    match t 
+		{
+			"tree"     => message("save success","successfully saved the tree as dot"),
+				
+			"ugraph"   => message("save success","successfully saved the undirected graph without cost as dot"),
+
+			"ucgraph"  => message("save success","successfully saved the undirected graph with cost as dot"),
+
+			"digraph"  => message("save success","successfully saved the directed graph without cost as dot"),
+			
+			"dicgraph" => message("save success","successfully saved the directed graph with cost as dot"),
+			
+			_          =>panic!("error in save"),
+		}
 	}
 }
 
@@ -142,6 +157,20 @@ pub fn save_png(t: &str)
 	                        .arg("-o")
 	                        .arg(path_out.clone())
 	                        .output()
-	                        .expect("failed to execute process");
+	                        .expect("failed to execute process");                
+	    match t 
+		{
+			"tree"     => message("save success","successfully saved the tree as image"),
+				
+			"ugraph"   => message("save success","successfully saved the undirected graph without cost as image"),
+
+			"ucgraph"  => message("save success","successfully saved the undirected graph with cost as image"),
+
+			"digraph"  => message("save success","successfully saved the directed graph without cost as image"),
+			
+			"dicgraph" => message("save success","successfully saved the directed graph with cost as image"),
+			
+			_          =>panic!("error in save"),
+		}
 	}
 }

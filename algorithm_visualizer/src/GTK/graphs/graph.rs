@@ -304,6 +304,7 @@ fn add_edge(start: &Entry, end: &Entry,notebook :&mut Notebook)
 		
 	}
 }
+
 fn remove_edge(start : &Entry,end : &Entry,notebook :&mut Notebook )
 {
 	unsafe 
@@ -550,6 +551,7 @@ pub fn refresh(notebook :&mut Notebook)
 		}
 	}
 }
+
 fn information(combo : &mut ComboBoxText)
 {
 	let raw = (*combo).active_text();

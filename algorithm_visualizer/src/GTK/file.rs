@@ -55,29 +55,23 @@ pub fn open_list() {
 	);
     file_chooser.run();
 }
+
 fn opened_list(a :String)
 {
-	let tmp = read_to_string(a);
-	unsafe
-    {
+	unsafe 
+	{
+		let tmp = read_to_string(a);
 		CURRENT_LIST=vec![];		
-	}
-    let  strings =  tmp.unwrap();
-    for line in strings.lines()
-    {
-		match line.parse::<i64>() 
-		{
-			Ok(parsed_i64) => 
+	    let  strings =  tmp.unwrap();
+	    for line in strings.lines()
+	    {
+			match line.parse::<i64>() 
 			{
-				unsafe
+				Ok(parsed_i64) => 
 				{
 					CURRENT_LIST.push(parsed_i64);
 				}
-				
-			}
-			Err(_e) => 
-			{
-				unsafe
+				Err(_e) => 
 				{
 					CURRENT_LIST=vec![];
 					message("incorrect list","not a correct list");
@@ -85,6 +79,7 @@ fn opened_list(a :String)
 				}
 			}
 		}
+		message("load success", "successfully loaded the list");
 	}
 }
 
@@ -136,11 +131,11 @@ pub fn open_dot(op : i32)
 								4 => open_ugraph(path_string),
 								_ => message("error","error encountered"),
 							}
-				            
 				        }
 				        None => 
 				        {
 				            message("no path","no path provided");
+				            return
 				        }
 					}
 				}
@@ -180,6 +175,7 @@ fn open_tree(a :String)
 												if parsed == m[i]
 												{
 													b = true;
+													break
 												}
 											}
 											if !b
@@ -187,7 +183,7 @@ fn open_tree(a :String)
 												m.push(parsed);
 												create(parsed); 
 											}
-											},
+										  },
 							
 							Err(_e) => {
 							BTREE=None;
@@ -195,6 +191,7 @@ fn open_tree(a :String)
 							return }
 						}
 					}
+					message("load success", "successfully loaded the tree");
 					return;
 				}
 			}
@@ -289,6 +286,7 @@ fn open_dicgraph(a :String)
 			}
 		} 
 		DICGRAPH = Some(g);	
+		message("load success", "successfully loaded the directed graph with cost");
 	}
 }
 
@@ -377,6 +375,7 @@ fn open_ucgraph(a :String)
 			}
 		} 
 		UCGRAPH = Some(g);
+		message("load success", "successfully loaded the undirected graph with cost");
 	}
 }
 
@@ -459,6 +458,7 @@ fn open_ugraph(a :String)
 			}
 		} 
 		UGRAPH = Some(g);
+		message("load success", "successfully loaded the undirected graph without cost");
 	}
 }
 
@@ -540,6 +540,7 @@ fn open_digraph(a :String)
 			}
 		} 
 		DIGRAPH = Some(g);
+		message("load success", "successfully loaded the directed graph without cost");
 	}
 }
 

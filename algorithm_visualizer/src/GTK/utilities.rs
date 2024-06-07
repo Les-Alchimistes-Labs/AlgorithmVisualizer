@@ -9,6 +9,10 @@ use gtk::{ Dialog, HeaderBar, Label ,Button,Image};
 pub fn get_absolute(root: &str) ->String
 {
 	 let path = env::current_dir().unwrap().to_string_lossy().to_string();
+	 if root == ""
+	 {
+		return path;
+	 }
 	 let mut words = vec![];
 	 let mut result = String::new();
 	 let mut word = String::new();
@@ -33,7 +37,6 @@ pub fn get_absolute(root: &str) ->String
 		result.push_str(&i);
 		result.push('/');
 	}
-
 	 result 
 }
 
@@ -43,8 +46,7 @@ pub fn parser(to_parse :&str) -> i32
 	{
 		Ok(parsed) => {parsed},
 		Err(_e) => { message("incorrect input", "not a number");
-					i32::MAX
-					},
+					i32::MAX },
 	}
 }
 

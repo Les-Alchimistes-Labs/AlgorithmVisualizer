@@ -1,4 +1,3 @@
-use std::sync::{Arc, Mutex};
 use cairo::{ImageSurface, Format};
 use gtk::prelude::*;
 use std::cell::RefCell;
@@ -286,6 +285,7 @@ fn remove_vertice(notebook :&mut Notebook)
 		paint_dicgraph("Remove Vertice",notebook,vec![0; order],vec![],vec![]);                 
 	 }
 }
+
 fn add_edge(start: &Entry, end: &Entry,cost: &Entry,notebook :&mut Notebook)
 {
 	unsafe
@@ -501,25 +501,22 @@ pub fn paint_dicgraph(op :&str,notebook :&mut Notebook,colors :Vec<i32>, edges :
 	for i in 0..info.len()
 	{
 		let surface = ImageSurface::create(Format::ARgb32, width as i32, height as i32).expect("Failed to create surface");
-		let cr = &Arc::new(Mutex::new(cairo::Context::new(&surface)));			
-		let cloned_cr = Arc::clone(cr);
-		let arc_cr  = &*cloned_cr;
-		let borrowed_cr = arc_cr.lock().unwrap();
-		borrowed_cr.clone().expect("REASON").set_source_rgb(1.0,1.0,1.0);
-		let _ = borrowed_cr.clone().expect("REASON").paint();
-		borrowed_cr.clone().expect("REASON").set_source_rgb(0.0,0.0,0.0);
-		borrowed_cr.clone().expect("REASON").set_font_size(36.0);
+		let cr = cairo::Context::new(&surface).unwrap();			
+		cr.set_source_rgb(1.0,1.0,1.0);
+		let _ = cr.paint();
+		cr.set_source_rgb(0.0,0.0,0.0);
+		cr.set_font_size(36.0);
 		let string = &get_string(info[i].0,info[i].1.clone());
-		let mut txtw =borrowed_cr.clone().expect("REASON").text_extents(string);
+		let mut txtw = cr.text_extents(string).unwrap();
 		let mut font_size = 36.0;
-		while txtw.unwrap().width >= width
+		while txtw.width >= width
 		{
 			font_size-=0.1;
-			borrowed_cr.clone().expect("REASON").set_font_size(font_size);
-			txtw =borrowed_cr.clone().expect("REASON").text_extents(string);
+			cr.set_font_size(font_size);
+			txtw = cr.text_extents(string).unwrap();
 		}
-		borrowed_cr.clone().expect("REASON").move_to(width/2.0 -txtw.unwrap().width/2.0,34.0);
-		let _ = borrowed_cr.clone().expect("REASON").show_text(string);
+		cr.move_to(width/2.0 -txtw.width/2.0,34.0);
+		let _ = cr.show_text(string);
 		let image = Image::from_surface(Some(&surface));
 		boxe.attach(&image,0,n,1,1);
 		n+=1; 
