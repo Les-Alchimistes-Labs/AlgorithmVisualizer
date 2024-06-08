@@ -39,6 +39,8 @@ static mut UCGRAPH : Option<ucGraph> = None;
 static mut DIGRAPH :Option<diGraph> = None;
 static mut DICGRAPH : Option<dicGraph> = None;
 
+static mut BOGO_WARNED : bool = false;
+
 fn main() 
 {
     gtk::init().expect("Failed to initialize GTK.");  

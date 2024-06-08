@@ -623,11 +623,7 @@ pub fn search(notebook :&mut Notebook, algo: &mut ComboBoxText, entry : &Entry)
 		}
 		if text2 == "Prim"
 		{
-			let n_pages = notebook.n_pages();
-			for _i in 0..n_pages
-			{
-				notebook.remove_page(Some(0));
-			}
+			clear(notebook);
 			for i in 0..g.order 
 			{
 				for j in 0..g.order

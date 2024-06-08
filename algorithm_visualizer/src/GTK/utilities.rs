@@ -4,7 +4,7 @@ use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
 use std::env;
-use gtk::{ Dialog, HeaderBar, Label ,Button,Image};
+use gtk::{ Dialog, HeaderBar, Label ,Button,Image, Notebook};
 
 pub fn get_absolute(root: &str) ->String
 {
@@ -113,4 +113,13 @@ pub fn save_png_tmp(t :&str)
                         .arg(path_out.clone())
                         .output()
                         .expect("failed to execute process");
+}
+
+pub fn clear(notebook : &mut Notebook)
+{
+	let n_pages = notebook.n_pages();
+	for _i in 0..n_pages
+	{
+		notebook.remove_page(Some(0));
+	}
 }

@@ -332,41 +332,25 @@ pub fn search(notebook :&mut Notebook, combo : &ComboBoxText)
 		}
 		if text2 == "depth-first search (prefix)" 
 		{
-			let n_pages = notebook.n_pages();
-			for _i in 0..n_pages
-			{
-				notebook.remove_page(Some(0));
-			}
+			clear(notebook);
 			let mut _tmp = String::new();
 			_tmp = dfs_pre(&mut BTREE,_tmp,notebook);
 		}
 		if text2 == "depth-first search (infix)" 
 		{
-			let n_pages = notebook.n_pages();
-			for _i in 0..n_pages
-			{
-				notebook.remove_page(Some(0));
-			}
+			clear(notebook);
 			let mut _tmp = String::new();
 			_tmp = dfs_in(&mut BTREE,_tmp,notebook);
 		}
 		if text2 == "depth-first search (suffix)" 
 		{
-			let n_pages = notebook.n_pages();
-			for _i in 0..n_pages
-			{
-				notebook.remove_page(Some(0));
-			}
+			clear(notebook);
 			let mut _tmp = String::new();
 			_tmp = dfs_suf(&mut BTREE,_tmp,notebook);
 		}
 		if text2 == "breadth-first search"
 		{
-			let n_pages = notebook.n_pages();
-			for _i in 0..n_pages
-			{
-				notebook.remove_page(Some(0));
-			}
+			clear(notebook);
 			let mut _tmp = String::new();
 			_tmp = parcours_largeur(&mut BTREE,_tmp,notebook);
 		}

@@ -10,6 +10,8 @@ gtk = "0.14.3"
 gio = "0.14.3"
 cairo-rs = "0.14.3"
 gdk-pixbuf = "0.14.0"
+rand = "0.8.5"
+rand_core = "0.6.3"
 
 # [profile.dev]
 # opt-level = 3

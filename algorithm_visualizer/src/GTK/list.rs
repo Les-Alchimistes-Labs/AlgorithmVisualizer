@@ -2,13 +2,21 @@ use std::cell::RefCell;
 use cairo::{ImageSurface, Format};
 use gtk::prelude::*;
 use gtk::{ Grid, Orientation, Paned, Button, Label, Entry, 
-	ComboBoxText, Image, Notebook};
-
+	ComboBoxText, Image, Notebook,};
+	
 use crate::lists::insertion_sort::insertion_sort;
 use crate::lists::merge_sort::merge_sort;
 use crate::lists::counting_sort::counting_sort;
+use crate::lists::reverse::reverse;
+use crate::lists::shuffle::shuffle;
+
+use crate::lists::stalin_sort::stalin_sort;
+use crate::lists::quick_sort::quick_sort;
+use crate::lists::bogo_sort::bogo_sort;
+
 use crate::GTK::utilities::*;
 use crate::CURRENT_LIST;
+use crate::BOGO_WARNED;
 
 pub fn create_list_tab()->gtk::Paned
 {
@@ -23,9 +31,14 @@ pub fn create_list_tab()->gtk::Paned
 	let choose = Label::new(Some("----|| sorting algorithm ||----"));
 	let space_1 = Label::new(Some("                               "));
 	let combo =ComboBoxText::new();
+	combo.append_text("Shuffle");
+	combo.append_text("Reverse");
     combo.append_text("Insertion sort");
     combo.append_text("Merge sort");
     combo.append_text("Counting sort");
+    combo.append_text("Quick sort");
+    combo.append_text("Stalin sort");
+    combo.append_text("Bogo sort");
     
     let edit_label_1 =  Label::new(Some("                       "));
     let edit_label =  Label::new(Some("----|| edit list ||----"));
@@ -117,48 +130,6 @@ pub fn create_list_tab()->gtk::Paned
     panel	
 }
 
-fn information(combo : &mut ComboBoxText)
-{
-	let raw = (*combo).active_text();
-	let text2 = match raw 
-	{
-		Some(string) => string.to_string(),
-		_ => String::new(), 
-	};
-	let to_show;
-	let title;									 
-
-	match text2.as_str() 
-	{
-		"Insertion sort"=> 
-		{
-			title ="Insertion sort";
-			to_show = "Insertion sort is a very simple algorithm where it takes in ascending order every number and swap then with the previous one until it is sorted" ;
-		
-		
-		},
-		"Merge sort"    => 
-		{
-			title ="Merge sort";
-			to_show = "Merge sort is a algorithm that split the list in half recursively until there's 2 or less number and then merge then in sorted order";
-		
-
-		},
-		"Counting sort" => 
-		{
-			title= "Counting sort";
-			to_show = "Counting sort is a algorithm that uses a list to count the occurence of every number and then use it to evaluate the starting index for every number and0 update the list";
-		},
-		_ => 
-		{
-			title = "error";
-			to_show = "no sorting algorithm selected !";
-		},
-	}
-	message(title,to_show);
-	return
-}
-
 fn reset(notebook :&mut Notebook)
 {                  
 	unsafe
@@ -222,67 +193,6 @@ fn remove_number(notebook :&mut Notebook,entry :&Entry)
 		message("not found", "not found in the list");
 		return
 	}	
-}
-
-fn sort_the_list(notebook :&mut Notebook,combo : &mut ComboBoxText)
-{
-	unsafe
-	{
-		let raw = (*combo).active_text();
-		let text2 = match raw 
-		{
-			Some(string) => string.to_string(),
-			_ => String::new(), 
-		};
-		if text2==""
-		{
-			message("no algorithm", "no algorithm selected");
-			return
-		}
-		if text2=="Insertion sort"
-		{
-			let n_pages = notebook.n_pages();
-			for _i in 0..n_pages
-			{
-				notebook.remove_page(Some(0));
-			}
-			insertion_sort(notebook);
-		}
-		if text2=="Counting sort"
-		{
-	        let mut max: usize = 0;
-	        for i in 0..CURRENT_LIST.len()
-	        {
-	            if CURRENT_LIST[i] as usize > max
-	            {
-	                max = CURRENT_LIST[i] as usize;
-	            }
-	        }
-	        for i in 0..CURRENT_LIST.len()
-	        {
-	            if CURRENT_LIST[i] < 0
-	            {
-					message("negative numbers", "counting sort doesn't work with negative numbers !");
-	                return
-	            }
-	        }
-	        let n_pages = notebook.n_pages();
-			for _i in 0..n_pages
-			{
-				notebook.remove_page(Some(0));
-			}
-	        counting_sort(notebook,max);
-		}
-		if text2 =="Merge sort"
-		{
-			let n_pages = notebook.n_pages();
-			for _i in 0..n_pages
-			{
-				notebook.remove_page(Some(0));
-			}
-			merge_sort(notebook);
-		}
-	}		
 }
 
 pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : usize)
@@ -414,5 +324,158 @@ pub fn refresh(notebook : &mut Notebook)
 		paint_list(notebook,String::from("Refresh"),CURRENT_LIST.len(),CURRENT_LIST.len());
 	}
 }
+
+fn sort_the_list(notebook :&mut Notebook,combo : &mut ComboBoxText)
+{
+	unsafe
+	{
+		if CURRENT_LIST.len() < 2
+		{
+			message("already sorted", "nothing to sort");
+			return
+		}
+		let raw = (*combo).active_text();
+		let text2 = match raw 
+		{
+			Some(string) => string.to_string(),
+			_ => String::new(), 
+		};
+		if text2==""
+		{
+			message("no algorithm", "no algorithm selected");
+			return
+		}
+		else if text2=="Insertion sort"
+		{
+			clear(notebook);
+			insertion_sort(notebook);
+		}
+		else if text2=="Counting sort"
+		{
+	        let mut max: usize = 0;
+	        for i in 0..CURRENT_LIST.len()
+	        {
+	            if CURRENT_LIST[i] as usize > max
+	            {
+	                max = CURRENT_LIST[i] as usize;
+	            }
+	        }
+	        for i in 0..CURRENT_LIST.len()
+	        {
+	            if CURRENT_LIST[i] < 0
+	            {
+					message("negative numbers", "counting sort doesn't work with negative numbers !");
+	                return
+	            }
+	        }
+			clear(notebook);
+	        counting_sort(notebook,max);
+		}
+		else if text2 =="Merge sort"
+		{
+			clear(notebook);
+			merge_sort(notebook);
+		}
+		else if text2 =="Reverse"
+		{
+			clear(notebook);
+			reverse(notebook);
+		}
+		else if text2 =="Shuffle"
+		{
+			clear(notebook);
+			shuffle(notebook);
+		}
+		else if text2 =="Stalin sort"
+		{
+			clear(notebook);
+			stalin_sort(notebook);
+		}
+		else if text2 =="Quick sort"
+		{
+			clear(notebook);
+			quick_sort(notebook,0,CURRENT_LIST.len() as i32-1);
+		}
+		else if text2 =="Bogo sort"
+		{
+			if BOGO_WARNED
+			{
+				clear(notebook);
+				bogo_sort(notebook);
+				BOGO_WARNED = false;				
+			}
+			else
+			{
+				message("Warning","Bogo sort might crash the application because it sorts randomly.\n be sure to have a low number of element in the listbefore proceeding \n\n click again to proceed");
+				BOGO_WARNED = true;
+			}
+		}
+	}		
+}
+
+fn information(combo : &mut ComboBoxText)
+{
+	let raw = (*combo).active_text();
+	let text2 = match raw 
+	{
+		Some(string) => string.to_string(),
+		_ => String::new(), 
+	};
+	let to_show;
+	let title;									 
+
+	match text2.as_str() 
+	{
+		"Insertion sort"=> 
+		{
+			title ="Insertion sort";
+			to_show = "Insertion sort is a very simple algorithm where it takes in ascending order every number and swap then with the previous one until it is sorted." ;
+		},
+		"Merge sort"    => 
+		{
+			title ="Merge sort";
+			to_show = "Merge sort is a algorithm that split the list in half recursively until there's 2 or less number and then merge then in sorted order.";
+		},
+		"Counting sort" => 
+		{
+			title= "Counting sort";
+			to_show = "Counting sort is a algorithm that uses a list to count the occurence of every number and then use it to evaluate the starting index for every number and0 update the list.";
+		},
+		"Reverse"       => 
+		{
+			title = "Reverse";
+			to_show = "reverses the values in the list, so if itis sorted in ascending order,it puts it in descendiong order.";
+		},	
+		"Shuffle"       => 
+		{
+			title = "Shuffle";
+			to_show = "shuffles all the elements in the list.";
+		},		
+		"Quick sort"    => 
+		{
+			title = "Quick sort";
+			to_show = "Quick sort is an recursive algorithm that uses a pivot to swap values wether they're greater or smaller.";
+		},
+		"Stalin sort" => 
+		{
+			title = "Stalin sort";
+			to_show = "Stalin sort is a very effective sorting algorithm but at the cost of losing information, it removes every values that make the list unsorted.";
+		},	
+		"Bogo sort" => 
+		{
+			title = "Bogo sort";
+			to_show = "bogo sort is one of the less effective sorting algorithm that shuffles the list until it is sorted.";
+		},
+		_ => 
+		{
+			title = "error";
+			to_show = "no sorting algorithm selected !";
+		},
+	}
+	message(title,to_show);
+	return
+}
+
+
 
 

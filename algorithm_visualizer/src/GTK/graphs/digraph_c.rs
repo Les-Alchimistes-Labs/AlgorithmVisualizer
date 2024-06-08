@@ -606,11 +606,7 @@ pub fn search(notebook :&mut Notebook, algo: &mut ComboBoxText, entry : &Entry)
 				message("not found","not a vertex");
 				return
 			}
-			let n_pages = notebook.n_pages();
-			for _i in 0..n_pages
-			{
-				notebook.remove_page(Some(0));
-			}
+			clear(notebook);
 			for i in 0..g.order 
 			{
 				for j in 0..g.order
@@ -644,11 +640,7 @@ pub fn search(notebook :&mut Notebook, algo: &mut ComboBoxText, entry : &Entry)
 				message("not found","not a vertex");
 				return
 			}
-			let n_pages = notebook.n_pages();
-			for _i in 0..n_pages
-			{
-				notebook.remove_page(Some(0));
-			}
+			clear(notebook);
 			bellman_ford(number1 as usize,notebook);
 		}
 		if text2 == "Floyd Warshall"
@@ -666,11 +658,7 @@ pub fn search(notebook :&mut Notebook, algo: &mut ComboBoxText, entry : &Entry)
 				message("not found","not a vertex");
 				return
 			}
-			let n_pages = notebook.n_pages();
-			for _i in 0..n_pages
-			{
-				notebook.remove_page(Some(0));
-			}
+			clear(notebook);
 			floyd_warshall(number1 as usize,notebook);
 		}
 		if text2 == "A*"
@@ -709,11 +697,7 @@ pub fn search(notebook :&mut Notebook, algo: &mut ComboBoxText, entry : &Entry)
 				message("using error"," for A* it need the start and the end write the format like: \"1 2\"");
 				return
 			}
-			let n_pages = notebook.n_pages();
-			for _i in 0..n_pages
-			{
-				notebook.remove_page(Some(0));
-			}
+			clear(notebook);
 			a_star(start as usize,end as usize,notebook);
 		}
 	}

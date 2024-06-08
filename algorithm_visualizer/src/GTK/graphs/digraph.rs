@@ -496,11 +496,7 @@ pub fn search(algo :&mut ComboBoxText , notebook : &mut Notebook, entry :&Entry)
 				message("not found", "not a vertex");
 				return
 			}
-			let n_pages = notebook.n_pages();
-			for _i in 0..n_pages
-			{
-				notebook.remove_page(Some(0));
-			}
+			clear(notebook);
 			let mut colors = vec![0;g.order as usize];
 			colors[number1 as usize] = 2;
 			paint_digraph("dfs",notebook,colors,vec![]);
@@ -514,11 +510,7 @@ pub fn search(algo :&mut ComboBoxText , notebook : &mut Notebook, entry :&Entry)
 				message("not found", "not a vertex");
 				return
 			}
-			let n_pages = notebook.n_pages();
-			for _i in 0..n_pages
-			{
-				notebook.remove_page(Some(0));
-			}
+			clear(notebook);
 			bfs_digraph(number1,notebook);
 		}
 	}
