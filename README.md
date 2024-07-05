@@ -64,4 +64,4 @@ This product was own by Epita.
 
 - Special thanks to the contributors of the GTK-rs project for providing Rust bindings for GTK.
 - Thanks to the open-source community for various algorithm implementations that this project relies on.
-This is a general README template for your Rust project focusing on algorithm visualization with GTK. You can customize it further according to your project's specific details and requirements.
+
