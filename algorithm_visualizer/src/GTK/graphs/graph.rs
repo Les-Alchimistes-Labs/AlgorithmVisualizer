@@ -4,6 +4,7 @@ use gdk_pixbuf::Pixbuf;
 use gtk::{Grid, Paned ,Orientation, ComboBoxText, Button, Notebook, Entry, Label
 	, Image  };
 
+use crate::OS;
 use crate::UGRAPH;
 use crate::uGraph;
 use crate::graph::dfs::dfs_ugraph;
@@ -445,7 +446,12 @@ pub fn paint_ugraph(op :&str,notebook :&mut Notebook, colors: Vec<i32>, edges :V
 	let content = dot(colors,edges);
 	save_dot_tmp(content,"ugraph");
 	save_png_tmp("ugraph");
-	let output =  "/algorithm_visualizer/src/save/tmp/ugraph.png";
+	let output;
+	match OS
+	{
+	    "windows" 	=>  output = "\\algorithm_visualizer\\src\\save\\tmp\\ugraph.png",
+	    _ 			=>  output = "/algorithm_visualizer/src/save/tmp/ugprah.png",
+	}
 	let mut path_out = get_absolute("algorithm_visualizer");
 	path_out.push_str(output);
 	

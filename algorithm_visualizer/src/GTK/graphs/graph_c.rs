@@ -5,6 +5,7 @@ use gdk_pixbuf::Pixbuf;
 use gtk::{Grid, Paned ,Orientation, ComboBoxText, Button, Notebook, Entry, Label
 	,Image  };
 
+use crate::OS;
 use crate::UCGRAPH;
 use crate::ucGraph;
 use crate::GTK::utilities::*;
@@ -501,7 +502,12 @@ pub fn paint_ucgraph(op :&str,notebook :&mut Notebook,colors :Vec<i32>, edges : 
 	let content = dot(colors,edges);
 	save_dot_tmp(content,"ucgraph");
 	save_png_tmp("ucgraph");
-	let output =  "/algorithm_visualizer/src/save/tmp/ucgraph.png";
+	let output;
+	match OS
+	{
+	    "windows" 	=>  output = "\\algorithm_visualizer\\src\\save\\tmp\\ucgraph.png",
+	    _ 			=>  output = "/algorithm_visualizer/src/save/tmp/ucgprah.png",
+	}
 	let mut path_out = get_absolute("algorithm_visualizer");
 	path_out.push_str(output);
 	

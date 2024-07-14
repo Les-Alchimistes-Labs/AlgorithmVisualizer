@@ -18,6 +18,7 @@ This project is a visualization tool for various algorithms implemented in Rust,
 
 - Rust programming language (https://www.rust-lang.org/)
 - GTK development libraries and dependencies
+- Dot command from GraphViz 
 
 ## Installation
 

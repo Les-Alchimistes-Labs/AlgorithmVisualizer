@@ -1,3 +1,4 @@
+use std::env;
 use gtk::prelude::*;
 use gtk::{ Notebook, Orientation, Window, WindowType, Label, Button, Image, HeaderBar};
 
@@ -40,6 +41,7 @@ static mut DIGRAPH :Option<diGraph> = None;
 static mut DICGRAPH : Option<dicGraph> = None;
 
 static mut BOGO_WARNED : bool = false;
+static OS :&str = env::consts::OS;
 
 fn main() 
 {
@@ -73,6 +75,7 @@ fn main()
     
     verti_box.pack_end(&notebook, true, true, 0);
     let close_image = Image::from_icon_name(Some("window-close"), gtk::IconSize::Button.into());
+    
     
 	let header_bar = HeaderBar::new();
 	let label = Label::new(Some("Algorithm Visualizer"));

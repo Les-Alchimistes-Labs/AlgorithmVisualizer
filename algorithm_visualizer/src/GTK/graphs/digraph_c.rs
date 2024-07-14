@@ -5,6 +5,7 @@ use gdk_pixbuf::Pixbuf;
 use gtk::{Grid, Paned ,Orientation, ComboBoxText, Button, Notebook, Entry, Label
 	,Image  };
 
+use crate::OS;
 use crate::DICGRAPH;
 use crate::dicGraph;
 use crate::GTK::utilities::*;
@@ -483,7 +484,12 @@ pub fn paint_dicgraph(op :&str,notebook :&mut Notebook,colors :Vec<i32>, edges :
 	let content = dot(colors,edges);
 	save_dot_tmp(content,"dicgraph");
 	save_png_tmp("dicgraph");
-	let output =  "/algorithm_visualizer/src/save/tmp/dicgraph.png";
+	let output;
+	match OS
+	{
+	    "windows" 	=>  output = "\\algorithm_visualizer\\src\\save\\tmp\\dicgraph.png",
+	    _ 			=>  output = "/algorithm_visualizer/src/save/tmp/dicgprah.png",
+	}
 	let mut path_out = get_absolute("algorithm_visualizer");
 	path_out.push_str(output);
 	

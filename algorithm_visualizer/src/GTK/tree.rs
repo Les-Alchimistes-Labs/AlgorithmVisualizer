@@ -6,6 +6,7 @@ use gtk::{Grid, Paned ,Orientation, ComboBoxText, Button, Notebook, Entry, Label
 
 use crate::GTK::utilities::*;
 
+use crate::OS;
 use crate::BTREE;
 use crate::tree::insert::insert;
 use crate::tree::remove::delete;
@@ -177,7 +178,7 @@ pub fn dot(current : i32 ,old :i32 ) -> String
 		if BTREE !=None
 		{
 			let mut tmp = String::new();
-			tmp = parcours_profondeur(&mut BTREE,tmp);
+			tmp = parcours_profondeur(&mut BTREE.clone(),tmp);
 			result.push_str(&format!("//{}\n",&tmp));
 			for s in tmp.split_whitespace()
 			{
@@ -254,7 +255,7 @@ pub fn add_node(notebook :&mut Notebook, entry : &Entry)
 			return
 		}
 		let mut tmp = String::new();
-		tmp = parcours_profondeur(&mut BTREE, tmp);
+		tmp = parcours_profondeur(&mut BTREE.clone(), tmp);
 		for n in tmp.split_whitespace()
 		{
 			if n == &number.to_string()
@@ -334,25 +335,25 @@ pub fn search(notebook :&mut Notebook, combo : &ComboBoxText)
 		{
 			clear(notebook);
 			let mut _tmp = String::new();
-			_tmp = dfs_pre(&mut BTREE,_tmp,notebook);
+			_tmp = dfs_pre(&mut BTREE.clone(),_tmp,notebook);
 		}
 		if text2 == "depth-first search (infix)" 
 		{
 			clear(notebook);
 			let mut _tmp = String::new();
-			_tmp = dfs_in(&mut BTREE,_tmp,notebook);
+			_tmp = dfs_in(&mut BTREE.clone(),_tmp,notebook);
 		}
 		if text2 == "depth-first search (suffix)" 
 		{
 			clear(notebook);
 			let mut _tmp = String::new();
-			_tmp = dfs_suf(&mut BTREE,_tmp,notebook);
+			_tmp = dfs_suf(&mut BTREE.clone(),_tmp,notebook);
 		}
 		if text2 == "breadth-first search"
 		{
 			clear(notebook);
 			let mut _tmp = String::new();
-			_tmp = parcours_largeur(&mut BTREE,_tmp,notebook);
+			_tmp = parcours_largeur(&mut BTREE.clone(),_tmp,notebook);
 		}
 	}
 }
@@ -378,7 +379,13 @@ pub fn paint_tree(op :&str,notebook :&mut Notebook, current :i32 , old : i32)
 	let content = dot(current,old);
 	save_dot_tmp(content,"tree");
 	save_png_tmp("tree");
-	let output =  "/algorithm_visualizer/src/save/tmp/tree.png";
+	
+	let output;
+	match OS
+	{
+	    "windows" 	=>  output = "\\algorithm_visualizer\\src\\save\\tmp\\tree.png",
+	    _ 			=>  output = "/algorithm_visualizer/src/save/tmp/tree.png",
+	}	
 	let mut path_out = get_absolute("algorithm_visualizer");
 	path_out.push_str(output);
 	
@@ -392,10 +399,8 @@ pub fn paint_tree(op :&str,notebook :&mut Notebook, current :i32 , old : i32)
 	notebook.append_page(&boxe,Some(&Label::new(Some(op))));
 	notebook.show_all();
 	notebook.set_current_page(Some(notebook.n_pages()-1));
-	drop(boxe);
-	notebook.queue_draw();
+
 	
-	gtk::main_iteration();
 }
 
 

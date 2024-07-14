@@ -5,9 +5,17 @@ use std::io::Write;
 use std::path::PathBuf;
 use std::env;
 use gtk::{ Dialog, HeaderBar, Label ,Button,Image, Notebook};
+use crate::OS;
 
 pub fn get_absolute(root: &str) ->String
 {
+	 let separator;
+ 	 match OS
+	 {
+	    "windows"	=> separator = '\\',
+	    _			=> separator = '/',
+	 }
+
 	 let path = env::current_dir().unwrap().to_string_lossy().to_string();
 	 if root == ""
 	 {
@@ -18,7 +26,7 @@ pub fn get_absolute(root: &str) ->String
 	 let mut word = String::new();
 	 for c in path.chars()
 	 {
-		 if c =='/'
+		 if c ==separator
 		 {
 			 if word==root.to_string()
 			 {
@@ -35,7 +43,7 @@ pub fn get_absolute(root: &str) ->String
 	for i in words
 	{
 		result.push_str(&i);
-		result.push('/');
+		result.push(separator.clone());
 	}
 	 result 
 }
@@ -81,26 +89,41 @@ pub fn message(title : &str, content : &str)
 
 pub fn save_dot_tmp(content : String, t : &str) 
 {
-	let mut location = String::from("algorithm_visualizer/src/save/tmp/");
+    	let mut location;
+	match OS
+	{
+	    "windows" 	=>  location = String::from("algorithm_visualizer\\src\\save\\tmp\\"),
+	    _ 			=>  location = String::from("algorithm_visualizer/src/save/tmp/"),
+	}	
 	location.push_str(t);
 	location.push_str(".dot");
 	let mut path = get_absolute("algorithm_visualizer");
 	path.push_str(&location);
 	let output = PathBuf::from(path);
-	
 	let mut file = File::create(output).expect("failed to create file");
     file.write_all(content.as_bytes()).expect("failed to write to file");
 }
 
 pub fn save_png_tmp(t :&str)
 {
-	let mut location = String::from("algorithm_visualizer/src/save/tmp/");
+	let mut location;
+	let mut output;
+	match OS
+	{
+	    "windows" 	=>  	{
+					    location = String::from("algorithm_visualizer\\src\\save\\tmp\\");
+					    output = String::from("\\algorithm_visualizer\\src\\save\\tmp\\");
+					},
+	    _ 			=>  	{
+					    location = String::from("algorithm_visualizer/src/save/tmp/");
+					    output = String::from("/algorithm_visualizer/src/save/tmp/");
+					},
+	}	
 	location.push_str(t);
 	location.push_str(".dot");
 	let mut path = get_absolute("algorithm_visualizer");
 	path.push_str(&location);
 	
-	let mut output = String::from("/algorithm_visualizer/src/save/tmp/");
 	output.push_str(t);
 	output.push_str(".png");
 	let mut path_out = get_absolute("algorithm_visualizer");
