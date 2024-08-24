@@ -89,13 +89,7 @@ pub fn message(title : &str, content : &str)
 
 pub fn save_dot_tmp(content : String, t : &str) 
 {
-    	let mut location;
-	match OS
-	{
-	    "windows" 	=>  location = String::from("algorithm_visualizer\\src\\save\\tmp\\"),
-	    _ 			=>  location = String::from("algorithm_visualizer/src/save/tmp/"),
-	}	
-	location.push_str(t);
+	let mut location = get_path("tmp",t);
 	location.push_str(".dot");
 	let mut path = get_absolute("algorithm_visualizer");
 	path.push_str(&location);
@@ -106,25 +100,12 @@ pub fn save_dot_tmp(content : String, t : &str)
 
 pub fn save_png_tmp(t :&str)
 {
-	let mut location;
-	let mut output;
-	match OS
-	{
-	    "windows" 	=>  	{
-					    location = String::from("algorithm_visualizer\\src\\save\\tmp\\");
-					    output = String::from("\\algorithm_visualizer\\src\\save\\tmp\\");
-					},
-	    _ 			=>  	{
-					    location = String::from("algorithm_visualizer/src/save/tmp/");
-					    output = String::from("/algorithm_visualizer/src/save/tmp/");
-					},
-	}	
-	location.push_str(t);
+	let mut location = get_path("tmp",t);
+	let mut output = get_path("tmp",t);	
 	location.push_str(".dot");
 	let mut path = get_absolute("algorithm_visualizer");
 	path.push_str(&location);
 	
-	output.push_str(t);
 	output.push_str(".png");
 	let mut path_out = get_absolute("algorithm_visualizer");
 	path_out.push_str(&output);
@@ -145,4 +126,27 @@ pub fn clear(notebook : &mut Notebook)
 	{
 		notebook.remove_page(Some(0));
 	}
+}
+
+pub fn get_path(typ : &str, filename : &str) -> String
+{
+	let separator;
+ 	match OS
+	{
+	   "windows"	=> separator = '\\',
+	   _			=> separator = '/',
+	}
+	let mut result = String::from("algorithm_visualizer");
+	result.push(separator.clone());
+	if cfg!(debug_assertions)
+	{
+		result.push_str("src");
+		result.push(separator.clone());
+	}
+	result.push_str("save");
+	result.push(separator.clone());
+	result.push_str(typ);
+	result.push(separator.clone());
+	result.push_str(filename);
+	result	
 }

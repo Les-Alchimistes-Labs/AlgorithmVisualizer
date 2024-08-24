@@ -11,6 +11,7 @@ pub fn bogo_sort(notebook :&mut Notebook)
 		let mut rng = rand::thread_rng();
 		while !is_sorted()
 		{
+			paint_list(notebook,String::from("Bogo sort"),CURRENT_LIST.len(),CURRENT_LIST.len());
 			let mut clone = CURRENT_LIST.clone();
 			for i in 0..CURRENT_LIST.len()
 			{
@@ -18,8 +19,8 @@ pub fn bogo_sort(notebook :&mut Notebook)
 				CURRENT_LIST[i] = clone[index].clone();
 				clone.remove(index);
 			}
-			paint_list(notebook,String::from("Bogo sort"),CURRENT_LIST.len(),CURRENT_LIST.len());
 		}
+		paint_list(notebook,String::from("Bogo sort"),CURRENT_LIST.len(),CURRENT_LIST.len());
 	}
 }
 

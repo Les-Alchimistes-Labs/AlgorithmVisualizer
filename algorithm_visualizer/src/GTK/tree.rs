@@ -6,7 +6,6 @@ use gtk::{Grid, Paned ,Orientation, ComboBoxText, Button, Notebook, Entry, Label
 
 use crate::GTK::utilities::*;
 
-use crate::OS;
 use crate::BTREE;
 use crate::tree::insert::insert;
 use crate::tree::remove::delete;
@@ -380,12 +379,7 @@ pub fn paint_tree(op :&str,notebook :&mut Notebook, current :i32 , old : i32)
 	save_dot_tmp(content,"tree");
 	save_png_tmp("tree");
 	
-	let output;
-	match OS
-	{
-	    "windows" 	=>  output = "\\algorithm_visualizer\\src\\save\\tmp\\tree.png",
-	    _ 			=>  output = "/algorithm_visualizer/src/save/tmp/tree.png",
-	}	
+	let output = &get_path("tmp","tree.png");
 	let mut path_out = get_absolute("algorithm_visualizer");
 	path_out.push_str(output);
 	

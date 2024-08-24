@@ -3,7 +3,7 @@ use std::cell::RefCell;
 use gdk_pixbuf::Pixbuf;
 use gtk::{Grid, Paned ,Orientation, ComboBoxText, Button, Notebook, Entry, Label ,Image  };
 
-use crate::OS;
+
 use crate::DIGRAPH;
 use crate::diGraph;
 use crate::graph::dfs::dfs_digraph;
@@ -435,12 +435,7 @@ pub fn paint_digraph(op :&str,notebook :&mut Notebook, colors : Vec<i32>, edges:
 	let content = dot(colors,edges);
 	save_dot_tmp(content,"digraph");
 	save_png_tmp("digraph");
-	let output;
-	match OS
-	{
-	    "windows" 	=>  output = "\\algorithm_visualizer\\src\\save\\tmp\\digraph.png",
-	    _ 			=>  output = "/algorithm_visualizer/src/save/tmp/digprah.png",
-	}
+	let output = &get_path("tmp","digraph.png");
 	let mut path_out = get_absolute("algorithm_visualizer");
 	path_out.push_str(output);
 	

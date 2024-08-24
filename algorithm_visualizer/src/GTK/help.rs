@@ -34,30 +34,30 @@ pub fn tree_info()
 pub fn graph_info()
 {
 	message("Graph tab information","In the left part:
-											 \n\tCombo box: choose a searching algorithm
-											 \n\n\tInformation : gives information on the choosen algorithm
-											 \n\nEdges:
-											 \n\n\tAdd: add an edge using the input given by the user 
-											 \n\n\tRemove: remove an edge using the input given by the user 
-											 \n\nVertices:
-											 \n\n\tAdd: add a vertice in the graph
-											 \n\n\tRemove: remove a vertice in the graph with all related edges 
-											 \n\n\tReset: remove every vertices in the graph
-											 \n\n\tSearch: search in the graph using the selected algorithm
-											 \n\n\tRefresh: remove every tabs and show the current state of the graph
+											 \n\t\tCombo box: choose a searching algorithm
+											 \n\n\t\tInformation : gives information on the choosen algorithm
+											 \n\n\tEdges:
+											 \n\n\t\tAdd: add an edge using the input given by the user 
+											 \n\n\t\tRemove: remove an edge using the input given by the user 
+											 \n\n\tVertices:
+											 \n\n\t\tAdd: add a vertice in the graph
+											 \n\n\t\tRemove: remove a vertice in the graph with all related edges 
+											 \n\n\t\tReset: remove every vertices in the graph
+											 \n\n\t\tSearch: search in the graph using the selected algorithm
+											 \n\n\t\tRefresh: remove every tabs and show the current state of the graph
 											 \nIn the right part:
-											 \n\tto see as an animation : select a tab and press left or right arrow on your \n\tkeyboard" );
+											 \n\tto see as an animation : select a tab and press left or right arrow on your keyboard\t " );
 	return 
 }
 
 
 pub fn credits()
 {
-	message("Credits","This application was realised in the context of a project for the S4 at EPITA.
-											 \nRealised by: 
-											 \n\t- Victor Tang
-											 \n\t- Jayson Vanmarcke
-											 \n\t- Olivier Bensemhoun
-											 \n\t- Sacha Layani");
+	message("Credits","\tThis application was realised in the context of a project for the S4 at EPITA.\t
+											 \n\tRealised by: 
+											 \n\t\t- Victor Tang
+											 \n\t\t- Jayson Vanmarcke
+											 \n\t\t- Olivier Bensemhoun
+											 \n\t\t- Sacha Layani");
 	return	
 }

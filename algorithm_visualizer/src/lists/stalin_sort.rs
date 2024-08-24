@@ -7,7 +7,7 @@ pub fn stalin_sort(notebook : &mut Notebook)
 	unsafe
 	{
 		let mut index = 1;
-		while index != CURRENT_LIST.len() -1 
+		while index != CURRENT_LIST.len() 
 		{
 			if CURRENT_LIST[index-1]>CURRENT_LIST[index]
 			{

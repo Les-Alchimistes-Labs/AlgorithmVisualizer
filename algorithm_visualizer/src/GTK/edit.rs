@@ -17,9 +17,9 @@ pub fn save_list_text()
 			content.push_str(&CURRENT_LIST[i].to_string());
 			content.push_str("\n");
 		}
-		let location = "algorithm_visualizer/src/save/dot/list.txt";
+		let location = get_path("dot","list.txt");
 		let mut path = get_absolute("algorithm_visualizer");
-		path.push_str(location);
+		path.push_str(&location);
 		let output = PathBuf::from(path);
 		
 		let mut file = File::create(output).expect("failed to create file");
@@ -67,14 +67,13 @@ pub fn save_dot(t : &str)
 			_          =>panic!("error in save"),
 		}
 		
-		let mut from = String::from("algorithm_visualizer/src/save/tmp/");
-		from.push_str(t);
+		let mut from = get_path("tmp",t);
 		from.push_str(".dot");
 		let mut path_from = get_absolute("algorithm_visualizer");
 		path_from.push_str(&from);
 		let content = read_to_string(path_from).unwrap();
-		let mut location = String::from("algorithm_visualizer/src/save/dot/");
-		location.push_str(t);
+		
+		let mut location = get_path("tmp",t);
 		location.push_str(".dot");
 		
 		let mut path = get_absolute("algorithm_visualizer");
@@ -139,14 +138,12 @@ pub fn save_png(t: &str)
 			
 			_          =>panic!("error in save"),
 		}
-		let mut location = String::from("algorithm_visualizer/src/save/tmp/");
-		location.push_str(t);
+		let mut location = get_path("tmp",t);
 		location.push_str(".dot");
 		let mut path = get_absolute("algorithm_visualizer");
 		path.push_str(&location);
 	
-		let mut output =  String::from("/algorithm_visualizer/src/save/image/");
-		output.push_str(t);
+		let mut output = get_path("image",t);
 		output.push_str(".png");
 		let mut path_out = get_absolute("algorithm_visualizer");
 		path_out.push_str(&output);

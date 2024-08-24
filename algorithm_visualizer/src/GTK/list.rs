@@ -200,7 +200,7 @@ pub fn paint_list(notebook :&mut Notebook,op : String, pos :usize , old_pos : us
 	unsafe
 	{
 	    let height = 797.0;
-		let width = 1160.0;
+		let width = 1148.0;
 		let surface = ImageSurface::create(Format::ARgb32, width as i32, height as i32).expect("Failed to create surface");
 		let cr = cairo::Context::new(&surface).unwrap();
 		cr.set_source_rgb(0.0,0.0,0.0);
