@@ -12,12 +12,34 @@ This project is a visualization tool for various algorithms implemented in Rust,
 - Visualization of various algorithms.
 - Interactive GUI powered by GTK for user-friendly experience.
 - Customizable parameters for algorithms.
-- Real-time visualization updates.
+- Step-by-step visualization updates.
 
-## Requirements
+
+## Requirements for users
+
+- GTK development libraries and dependencies (for Linux)
+- Dot command from GraphViz (mandatory) (https://graphviz.org/download/)
+
+## Usages 
+1. download the project at https://github.com/Les-Alchimistes-Labs/AlgorithmVisualizer/releases
+
+2. unzip the project
+
+3. execute the main or main.exe file 
+
+4. files are saved in the save directory and contains simple examples 
+
+
+## Contributing
+
+Contributions are welcome from teachers (if they have good intention)! 
+If you'd like to contribute to this project, feel free to fork the repository and submit a pull request with your changes. 
+Please adhere to the coding style and guidelines used in the project.
+
+## Requirements for contributors
 
 - Rust programming language (https://www.rust-lang.org/)
-- GTK development libraries and dependencies
+- GTK development libraries and dependencies 
 - Dot command from GraphViz 
 
 ## Installation
@@ -32,7 +54,7 @@ git clone git@github.com:Les-Alchimistes-Labs/AlgorithmVisualizer.git
 2. Navigate into the project directory:
 
 ```bash
-cd AlgorithmVisualizer
+cd Algorithm_visualizer
 ```
 
 
@@ -42,7 +64,7 @@ cd AlgorithmVisualizer
 cargo build
 ```
 
-## Usage
+## Running
 
 Run the executable after building the project:
 
@@ -50,12 +72,6 @@ Run the executable after building the project:
 cargo run --bin main
 ```
 
-
-## Contributing
-
-Contributions are welcome for teacher (if they have good intention)! 
-If you'd like to contribute to this project, feel free to fork the repository and submit a pull request with your changes. 
-Please adhere to the coding style and guidelines used in the project.
 
 ## License
 
