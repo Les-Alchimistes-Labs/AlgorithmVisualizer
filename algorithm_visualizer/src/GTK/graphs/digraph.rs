@@ -10,18 +10,19 @@ use crate::graph::dfs::dfs_digraph;
 use crate::graph::bfs::bfs_digraph;
 use crate::GTK::utilities::*;
 
+
 pub fn get_d_paned() -> gtk::Paned
 {
-	let paned = Paned::new(Orientation::Horizontal);
-	let grid = Grid::new();
-	let notebook = Notebook::new();
-	paned.pack2(&notebook,true,true);
-	let notebook_ref = RefCell::new(notebook);
-	let choose = Label::new(Some("----|| searchig algorithm ||----"));
-	let info = Button::with_label("information");
-	
-	let combo =ComboBoxText::new();
-	combo.append_text("depth-first search");
+    let paned = Paned::new(Orientation::Horizontal);
+    let grid = Grid::new();
+    let notebook = Notebook::new();
+    paned.pack2(&notebook,true,true);
+    let notebook_ref = RefCell::new(notebook);
+    let choose = Label::new(Some("----|| searchig algorithm ||----"));
+    let info = Button::with_label("information");
+    
+    let combo =ComboBoxText::new();
+    combo.append_text("depth-first search");
     combo.append_text("breadth-first search");
     
     let edit_label =  Label::new(Some("----|| edit graph ||----"));       
@@ -34,7 +35,7 @@ pub fn get_d_paned() -> gtk::Paned
     let add_end_entry = Entry::new();
     add_end_entry.set_placeholder_text(Some("end"));
     add_end_entry.set_max_width_chars(5);
-															   
+
     let add_button = Button::with_label("add");
     
     let remove_edge_label= Label::new(Some("Remove:"));
@@ -55,11 +56,11 @@ pub fn get_d_paned() -> gtk::Paned
     let sort_button =  Button::with_label("search");
     let refresh_button= Button::with_label("refresh");
     let starting_point = Entry::new();
-	starting_point.set_placeholder_text(Some("starting vertice"));
+    starting_point.set_placeholder_text(Some("starting vertice"));
     
     let space_0  = Label::new(Some("                       "));
     let space_1  = Label::new(Some("                       "));
-    let space_2  = Label::new(Some("                       "));	
+    let space_2  = Label::new(Some("                       "));
     let space_3  = Label::new(Some("                       ")); 
     let space_4  = Label::new(Some("                       "));
     let space_5  = Label::new(Some("                       "));
@@ -92,8 +93,8 @@ pub fn get_d_paned() -> gtk::Paned
     grid.attach(&add_button        ,0,13,2,1);
 
     grid.attach(&space_6           ,0,14,2,1);
-	grid.attach(&remove_edge_label ,0,15,2,1);
-	grid.attach(&space_7           ,0,16,2,1);
+    grid.attach(&remove_edge_label ,0,15,2,1);
+    grid.attach(&space_7           ,0,16,2,1);
     
     grid.attach(&remove_start_entry,0,17,1,1);
     grid.attach(&remove_end_entry  ,1,17,1,1);
@@ -133,8 +134,6 @@ pub fn get_d_paned() -> gtk::Paned
             remove_edge(&remove_start_entry,&remove_end_entry,&mut notebook_mut);
         });
     } 
-    
-    
     {
         let notebook_ref_clone = notebook_ref.clone();
         add_v_button.connect_clicked(move |_| {
@@ -149,7 +148,7 @@ pub fn get_d_paned() -> gtk::Paned
             remove_vertice(&mut notebook_mut);
         });
     }
-	{
+    {
         let notebook_ref_clone = notebook_ref.clone();
         reset_button.connect_clicked(move |_| {
             let mut notebook_mut = notebook_ref_clone.borrow_mut();
@@ -180,392 +179,391 @@ pub fn get_d_paned() -> gtk::Paned
         });
     }
     
-	paned.pack1(&grid,false,false);
-	paned
-	
+    paned.pack1(&grid,false,false);
+    paned
+
 }
 
 fn add_vertice(notebook :&mut Notebook)
 {
-	unsafe 
-	{
-		if DIGRAPH ==None 
-		{
-			DIGRAPH = Some(diGraph::new(1));
-			paint_digraph("Add vertice",notebook,vec![2],vec![]);
-		}
-		else
-		{
-			let mut g = DIGRAPH.clone().unwrap();
-			g.order+=1;
-			g.adjlists.push(vec![]);
-			let mut colors = vec![0;g.order as usize];
-			colors[g.order as usize -1] = 2;
-			DIGRAPH = Some(g);
-			paint_digraph("Add vertice",notebook,colors,vec![]);
-		}
-
-	}
+    unsafe 
+    {
+        if DIGRAPH ==None 
+        {
+            DIGRAPH = Some(diGraph::new(1));
+            paint_digraph("Add vertice",notebook,vec![2],vec![]);
+        }
+        else
+        {
+            let mut g = DIGRAPH.clone().unwrap();
+            g.order+=1;
+            g.adjlists.push(vec![]);
+            let mut colors = vec![0;g.order as usize];
+            colors[g.order as usize -1] = 2;
+            DIGRAPH = Some(g);
+            paint_digraph("Add vertice",notebook,colors,vec![]);
+        }
+    }
 }
 
 fn reset(notebook :&mut Notebook)
 {
-	unsafe 
-	{
-		let n_pages = notebook.n_pages();
-		for _i in 0..n_pages
-		{
-			notebook.remove_page(Some(0));
-		}
-		DIGRAPH = None;
-		paint_digraph("Reset",notebook, vec![],vec![]);
-	}
+    unsafe 
+    {
+        let n_pages = notebook.n_pages();
+        for _i in 0..n_pages
+        {
+            notebook.remove_page(Some(0));
+        }
+        DIGRAPH = None;
+        paint_digraph("Reset",notebook, vec![],vec![]);
+    }
 }
 
 fn remove_vertice(notebook :&mut Notebook)
 {
-	 unsafe
-	 {
-		if DIGRAPH == None
-		{
-			message("not initialized","empty graph");
-			return 
-		}
-		let mut g = DIGRAPH.clone().unwrap();
-		if g.order == 0
-		{
-			message("no vertice","no vertices left");
-			return
-		} 
-		g.order-=1;
-		let order = g.order as usize ;
-		g.adjlists.remove(g.order as usize);
-		for i in 0..(g.order as usize)
-		{
-			for j in 0..(g.adjlists[i].len())
-			{
-				if g.adjlists[i][j]==g.order
-				{
-					g.adjlists[i].remove(j);
-				}
-			}
-		}  
-		DIGRAPH = Some(g);                 
-		paint_digraph("remove vertice",notebook, vec![0 ; order],vec![]);
-	 }
+    unsafe
+    {
+        if DIGRAPH == None
+        {
+            message("not initialized","empty graph");
+            return 
+        }
+        let mut g = DIGRAPH.clone().unwrap();
+        if g.order == 0
+        {
+            message("no vertice","no vertices left");
+            return
+        } 
+        g.order-=1;
+        let order = g.order as usize ;
+        g.adjlists.remove(g.order as usize);
+        for i in 0..(g.order as usize)
+        {
+            for j in 0..(g.adjlists[i].len())
+            {
+                if g.adjlists[i][j]==g.order
+                {
+                    g.adjlists[i].remove(j);
+                }
+            }
+        }  
+        DIGRAPH = Some(g);                 
+        paint_digraph("remove vertice",notebook, vec![0 ; order],vec![]);
+    }
 }
 
 fn add_edge(start: &Entry, end: &Entry,notebook :&mut Notebook)
 {
-	unsafe
-	{
-		if DIGRAPH == None
-	    {
-			message("not initialized","empty graph");
-			start.set_text("");
-			end.set_text("");
-			return 
-		}
-		
-		let mut text = start.text().to_string(); 
-	    if text.is_empty() 
-	    {
-			message("no input","nothing typed");
-			end.set_text("");
-			return        
-	    }
-	    let number1 = parser(&text);
-	    start.set_text("");
-	    if number1 == i32::MAX
-	    {
-			end.set_text("");
-			return
-		}
-	    
-		text = end.text().to_string(); 
-	    if text.is_empty() {
-			message("no input","nothing typed");
-			return        
-	    }
-	    
-	    let number = parser(&text);
-	    end.set_text("");
-	    if number1 == i32::MAX
-	    {
-			return
-		}
-
-	    let mut g = DIGRAPH.clone().unwrap();
-	    g.push(number1,number);
-	    if number1 >=0 && number1< g.order && number >=0 && number< g.order
-		{
-			let mut colors = vec![0 ; g.order as usize];
-			colors[number as usize] = 2;
-			colors[number1 as usize] = 2;
-			DIGRAPH = Some(g);
-			paint_digraph("add edge",notebook,colors,vec![(number1,number)]);
-		}
-	}
+    unsafe
+    {
+        if DIGRAPH == None
+        {
+            message("not initialized","empty graph");
+            start.set_text("");
+            end.set_text("");
+            return 
+        }
+        
+        let mut text = start.text().to_string(); 
+        if text.is_empty() 
+        {
+            message("no input","nothing typed");
+            end.set_text("");
+            return        
+        }
+        let number1 = parser(&text);
+        start.set_text("");
+        if number1 == i32::MAX
+        {
+            end.set_text("");
+            return
+        }
+        
+        text = end.text().to_string(); 
+        if text.is_empty() {
+            message("no input","nothing typed");
+            return        
+        }
+        
+        let number = parser(&text);
+        end.set_text("");
+        if number1 == i32::MAX
+        {
+            return
+        }
+    
+        let mut g = DIGRAPH.clone().unwrap();
+        g.push(number1,number);
+        if number1 >=0 && number1< g.order && number >=0 && number< g.order
+        {
+            let mut colors = vec![0 ; g.order as usize];
+            colors[number as usize] = 2;
+            colors[number1 as usize] = 2;
+            DIGRAPH = Some(g);
+            paint_digraph("add edge",notebook,colors,vec![(number1,number)]);
+        }
+    }
 }
 
-fn remove_edge(start : &Entry,end : &Entry,notebook :&mut Notebook )
+fn remove_edge(start: &Entry, end: &Entry, notebook :&mut Notebook)
 {
-	unsafe 
-	{
-		if DIGRAPH == None
-		{
-			message("not initialized","empty graph");
-			start.set_text("");
-			end.set_text("");
-			return 
-		}
-		
-		let mut text = start.text().to_string(); 
-		start.set_text("");
-	    if text.is_empty() 
-	    {
-			message("no input","nothing typed");
-			end.set_text("");	
-			return        
-	    }
-	    let number1 = parser(&text);
-		if number1 == i32::MAX 
-		{
-			end.set_text("");
-			return
-		}
-
-		text = end.text().to_string();
-		end.set_text(""); 
-	    if text.is_empty() 
-	    {
-			message("no input","nothing typed");
-			return        
-	    }
-	    let number = parser(&text);
-	    end.set_text("");
-	    if number == i32::MAX 
-		{
-			return
-		}
-	    
-		if number == number1 
-		{
-			message("error","same number");
-			return
-		}
-		let mut g =DIGRAPH.clone().unwrap();
-		if number>= g.order ||number1 >= g.order ||number1 < 0 || number < 0 
-		{
-			message("not found", "not a vertex");
-			return
-		}
-		for i in 0..g.adjlists[number1 as usize].len()
-		{
-			if g.adjlists[number1 as usize][i] == number 
-			{
-				g.adjlists[number1 as usize].remove(i);
-			}
-		}
-		let order = g.order as usize;
-		DIGRAPH = Some(g);
-		paint_digraph("remove edge",notebook,vec![0;order],vec![]);
-	}
+    unsafe 
+    {
+        if DIGRAPH == None
+        {
+            message("not initialized","empty graph");
+            start.set_text("");
+            end.set_text("");
+            return 
+        }
+        
+        let mut text = start.text().to_string(); 
+        start.set_text("");
+        if text.is_empty() 
+        {
+            message("no input","nothing typed");
+            end.set_text("");   
+            return        
+        }
+        let number1 = parser(&text);
+        if number1 == i32::MAX 
+        {
+            end.set_text("");
+            return
+        }
+    
+        text = end.text().to_string();
+        end.set_text(""); 
+        if text.is_empty() 
+        {
+            message("no input","nothing typed");
+            return        
+        }
+        let number = parser(&text);
+        end.set_text("");
+        if number == i32::MAX 
+        {
+            return
+        }
+        
+        if number == number1 
+        {
+            message("error","same number");
+            return
+        }
+        let mut g =DIGRAPH.clone().unwrap();
+        if number>= g.order ||number1 >= g.order ||number1 < 0 || number < 0 
+        {
+            message("not found", "not a vertex");
+            return
+        }
+        for i in 0..g.adjlists[number1 as usize].len()
+        {
+            if g.adjlists[number1 as usize][i] == number 
+            {
+                g.adjlists[number1 as usize].remove(i);
+            }
+        }
+        let order = g.order as usize;
+        DIGRAPH = Some(g);
+        paint_digraph("remove edge",notebook,vec![0;order],vec![]);
+    }
 }
 
-fn dot(colors : Vec<i32>, edges:Vec<(i32,i32)>) -> String
+fn dot(colors: Vec<i32>, edges:Vec<(i32,i32)>) -> String
 {
-	let mut result = String::from("digraph dig {");
-	unsafe
-	{
-		if DIGRAPH != None
-		{
-			let g = DIGRAPH.clone().unwrap();
-			let order = g.order;
-			result.push_str(&format!(" // {}\n",order.to_string()));
-			for i in 0..(order)
-			{
-				for j in 0..(g.adjlists[i as usize].len())
-				{
-					let tmp = g.adjlists[i as usize ][j];
-					result.push('n');
-					result.push_str(&i.to_string());
-					result.push_str("->");
-					result.push_str("n");
-					result.push_str(&tmp.to_string());
-					for k in 0..edges.len()
-					{
-						if edges[k]==(i,tmp)
-						{
-							result.push_str(" [color = red]");
-							
-						}
-					}
-					result.push_str(&format!(" // {} {}\n",&i.to_string(),&tmp.to_string()));
-				}
-			}
-			
-			
-			for i in 0..order
-			{
-				result.push('n');
-				result.push_str(&i.to_string());
-				result.push_str(&format!(" [label=\"{}\"",&i.to_string()));
-				if colors[i as usize] == 2
-				{
-					result.push_str(", style = filled , color = green ]\n");
-				}
-				else if colors[i as usize] == 1 
-				{
-					result.push_str(", style = filled , color = red ]\n");
-				}
-				else
-				{
-					result.push_str("]\n");
-				}
-			}
-		}		
-	}
-	result.push_str("}");
-	result
+    let mut result = String::from("digraph dig {");
+    unsafe
+    {
+        if DIGRAPH != None
+        {
+            let g = DIGRAPH.clone().unwrap();
+            let order = g.order;
+            result.push_str(&format!(" // {}\n",order.to_string()));
+            for i in 0..(order)
+            {
+                for j in 0..(g.adjlists[i as usize].len())
+                {
+                    let tmp = g.adjlists[i as usize ][j];
+                    result.push('n');
+                    result.push_str(&i.to_string());
+                    result.push_str("->");
+                    result.push_str("n");
+                    result.push_str(&tmp.to_string());
+                    for k in 0..edges.len()
+                    {
+                        if edges[k]==(i,tmp)
+                        {
+                            result.push_str(" [color = red]");
+                            
+                        }
+                    }
+                    result.push_str(&format!(" // {} {}\n",&i.to_string(),&tmp.to_string()));
+                }
+            }
+            
+            
+            for i in 0..order
+            {
+                result.push('n');
+                result.push_str(&i.to_string());
+                result.push_str(&format!(" [label=\"{}\"",&i.to_string()));
+                if colors[i as usize] == 2
+                {
+                    result.push_str(", style = filled , color = green ]\n");
+                }
+                else if colors[i as usize] == 1 
+                {
+                    result.push_str(", style = filled , color = red ]\n");
+                }
+                else
+                {
+                    result.push_str("]\n");
+                }
+            }
+        }       
+    }
+    result.push_str("}");
+    result
 }
 
-pub fn paint_digraph(op :&str,notebook :&mut Notebook, colors : Vec<i32>, edges:Vec<(i32,i32)>)  
+pub fn paint_digraph(op: &str, notebook: &mut Notebook, colors: Vec<i32>, edges :Vec<(i32,i32)>)  
 {
-	let content = dot(colors,edges);
-	save_dot_tmp(content,"digraph");
-	save_png_tmp("digraph");
-	let output = &get_path("tmp","digraph.png");
-	let mut path_out = get_absolute("algorithm_visualizer");
-	path_out.push_str(output);
-	
-	let pixbuf = Pixbuf::from_file(path_out);
-	
-	let image = Image::from_pixbuf(Some(&pixbuf.unwrap())); 
-		
-	let boxe = Grid::new();
-
-	boxe.attach(&image,0,0,1,1);
-	notebook.append_page(&boxe,Some(&Label::new(Some(op))));
-	notebook.show_all();
-	notebook.set_current_page(Some(notebook.n_pages()-1));
-	drop(boxe);
-	notebook.queue_draw();
-	
-	gtk::main_iteration();
+    let content = dot(colors,edges);
+    save_dot_tmp(content,"digraph");
+    save_png_tmp("digraph");
+    let output = &get_path("tmp","digraph.png");
+    let mut path_out = get_absolute("algorithm_visualizer");
+    path_out.push_str(output);
+    
+    let pixbuf = Pixbuf::from_file(path_out);
+    
+    let image = Image::from_pixbuf(Some(&pixbuf.unwrap())); 
+        
+    let boxe = Grid::new();
+    
+    boxe.attach(&image,0,0,1,1);
+    notebook.append_page(&boxe,Some(&Label::new(Some(op))));
+    notebook.show_all();
+    notebook.set_current_page(Some(notebook.n_pages()-1));
+    drop(boxe);
+    notebook.queue_draw();
+    
+    gtk::main_iteration();
 }
 
 pub fn search(algo :&mut ComboBoxText , notebook : &mut Notebook, entry :&Entry)
 {
-	unsafe
-	{
-		if DIGRAPH ==None 
-		{
-			message("not initialized","empty graph");
-			entry.set_text("");
-			return
-		}
-		let raw =  (*algo).active_text();
-		let text = Some(raw);
-		let text2 = match text 
-		{
-			Some(Some(string)) => string.to_string(),
-			_ => String::new(), 
-		};
-		let text = entry.text().to_string(); 
-	    if text.is_empty() {
-			message("no input","nothing typed");
-			return        
-	    }
-	    let number1 = parser(&text);
-	    entry.set_text("");
-	    if number1 == i32::MAX
-	    {
-			return
-		}
-		if text2 ==""
-		{
-			message("no algorithm","no searching algorithm selected");
-			return
-		}
-		if text2 == "depth-first search"
-		{
-			let g = DIGRAPH.clone().unwrap();
-			let mut m = vec![false ; g.order as usize];
-			if number1>=g.order || number1 < 0
-			{
-				message("not found", "not a vertex");
-				return
-			}
-			clear(notebook);
-			let mut colors = vec![0;g.order as usize];
-			colors[number1 as usize] = 2;
-			paint_digraph("dfs",notebook,colors,vec![]);
-			dfs_digraph(number1,&mut m,true,notebook);
-		}
-		if text2 == "breadth-first search"
-		{
-			let g = DIGRAPH.clone().unwrap();
-			if number1>=g.order || number1 < 0
-			{
-				message("not found", "not a vertex");
-				return
-			}
-			clear(notebook);
-			bfs_digraph(number1,notebook);
-		}
-	}
+    unsafe
+    {
+        if DIGRAPH ==None 
+        {
+            message("not initialized","empty graph");
+            entry.set_text("");
+            return
+        }
+        let raw =  (*algo).active_text();
+        let text = Some(raw);
+        let text2 = match text 
+        {
+            Some(Some(string)) => string.to_string(),
+            _ => String::new(), 
+        };
+        let text = entry.text().to_string(); 
+        if text.is_empty() {
+            message("no input","nothing typed");
+            return        
+        }
+        let number1 = parser(&text);
+        entry.set_text("");
+        if number1 == i32::MAX
+        {
+            return
+        }
+        if text2 ==""
+        {
+            message("no algorithm","no searching algorithm selected");
+            return
+        }
+        if text2 == "depth-first search"
+        {
+            let g = DIGRAPH.clone().unwrap();
+            let mut m = vec![false ; g.order as usize];
+            if number1>=g.order || number1 < 0
+            {
+                message("not found", "not a vertex");
+                return
+            }
+            clear(notebook);
+            let mut colors = vec![0;g.order as usize];
+            colors[number1 as usize] = 2;
+            paint_digraph("dfs",notebook,colors,vec![]);
+            dfs_digraph(number1,&mut m,true,notebook);
+        }
+        if text2 == "breadth-first search"
+        {
+            let g = DIGRAPH.clone().unwrap();
+            if number1>=g.order || number1 < 0
+            {
+                message("not found", "not a vertex");
+                return
+            }
+            clear(notebook);
+            bfs_digraph(number1,notebook);
+        }
+    }
 }
 
 pub fn refresh(notebook :&mut Notebook)
 {
-	unsafe
-	{
-		if DIGRAPH != None 
-		{	
-			let n_pages = notebook.n_pages();
-			for _i in 0..n_pages
-			{
-				notebook.remove_page(Some(0));
-			}
-			let order = DIGRAPH.clone().unwrap().order as usize;
-			paint_digraph("refresh",notebook,vec![0;order],vec![]);
-		}
-	}
+    unsafe
+    {
+        if DIGRAPH != None 
+        {   
+            let n_pages = notebook.n_pages();
+            for _i in 0..n_pages
+            {
+                notebook.remove_page(Some(0));
+            }
+            let order = DIGRAPH.clone().unwrap().order as usize;
+            paint_digraph("refresh",notebook,vec![0;order],vec![]);
+        }
+    }
 }
 
 fn information(combo : &mut ComboBoxText)
 {
-	let raw = (*combo).active_text();
-	let text = Some(raw);
-	let text2 = match text 
-	{
-		Some(Some(string)) => string.to_string(),
-		_ => String::new(), 
-	};
-	let to_show;
-	let title;
-
-	match text2.as_str() 
-	{
-		"depth-first search"=> 
-		{
-			title ="DFS";
-			to_show = "depth-first search is a recusive searching algorithm that go into the root then in his smallest neighbor until every node in the component is reached once";
-		
-		
-		},
-		"breadth-first search" => 
-		{
-			title= "BFS";
-			to_show = "breadth-first search is a iterative algorithm that go through every vertices from the source and propagate in every direction";
-		},
-		_ => 
-		{
-			title = "error";
-			to_show = "no searching algorithm selected !";
-		},
-	}
-	message(title,to_show);
-	return
+    let raw = (*combo).active_text();
+    let text = Some(raw);
+    let text2 = match text 
+    {
+        Some(Some(string)) => string.to_string(),
+        _ => String::new(), 
+    };
+    let to_show;
+    let title;
+    
+    match text2.as_str() 
+    {
+        "depth-first search"=> 
+        {
+            title ="DFS";
+            to_show = "depth-first search is a recusive searching algorithm that go into the root then in his smallest neighbor until every node in the component is reached once";
+        
+        
+        },
+        "breadth-first search" => 
+        {
+            title= "BFS";
+            to_show = "breadth-first search is a iterative algorithm that go through every vertices from the source and propagate in every direction";
+        },
+        _ => 
+        {
+            title = "error";
+            to_show = "no searching algorithm selected !";
+        },
+    }
+    message(title,to_show);
+    return
 }

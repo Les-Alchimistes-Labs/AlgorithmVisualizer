@@ -3,11 +3,12 @@ use crate::GTK::file::*;
 use crate::GTK::edit::*;
 use crate::GTK::help::*;
 
+
 pub fn create_menu_bar() -> gtk::MenuBar 
 {
-	let menu_bar = gtk::MenuBar::new();
-	
-	let file_menu = file_menu_create();
+    let menu_bar = gtk::MenuBar::new();
+    
+    let file_menu = file_menu_create();
     let edition_menu = edition_menu_create();
     let help_menu = help_menu_create();
 
@@ -18,8 +19,8 @@ pub fn create_menu_bar() -> gtk::MenuBar
     menu_bar
 }
 
-
-fn file_menu_create() -> gtk::MenuItem {
+fn file_menu_create() -> gtk::MenuItem 
+{
     let result = gtk::MenuItem::with_label("File");
     let open = gtk::MenuItem::with_label("Open");
     let sub_open = gtk::Menu::new();
@@ -35,9 +36,9 @@ fn file_menu_create() -> gtk::MenuItem {
     let sub_graph = gtk::Menu::new();
 
     graph_open.set_submenu(Some(&sub_graph));
-	sub_graph.append(&with_cost);
-	sub_graph.append(&without_cost);
-	sub_graph.append(&with_cost1);
+    sub_graph.append(&with_cost);
+    sub_graph.append(&without_cost);
+    sub_graph.append(&with_cost1);
     sub_graph.append(&without_cost1);
     let menu_items = gtk::Menu::new();
 
@@ -98,9 +99,9 @@ fn edition_menu_create() -> gtk::MenuItem {
     let sub_graph = gtk::Menu::new();
 
     img_graph.set_submenu(Some(&sub_graph));
-	sub_graph.append(&with_cost);
-	sub_graph.append(&without_cost);
-	sub_graph.append(&with_cost1);
+    sub_graph.append(&with_cost);
+    sub_graph.append(&without_cost);
+    sub_graph.append(&with_cost1);
     sub_graph.append(&without_cost1);
     
     let with_cost2 = gtk::MenuItem::with_label("undirected with cost");
@@ -110,9 +111,9 @@ fn edition_menu_create() -> gtk::MenuItem {
     let sub_graph2 = gtk::Menu::new();
 
     txt_graph.set_submenu(Some(&sub_graph2));
-	sub_graph2.append(&with_cost2);
-	sub_graph2.append(&without_cost2);
-	sub_graph2.append(&with_cost12);
+    sub_graph2.append(&with_cost2);
+    sub_graph2.append(&without_cost2);
+    sub_graph2.append(&with_cost12);
     sub_graph2.append(&without_cost12);
     
     menu_txt.append(&txt_list);
@@ -126,8 +127,8 @@ fn edition_menu_create() -> gtk::MenuItem {
     menu_items.append(&as_text);
 
     result.set_submenu(Some(&menu_items));
-	
-	txt_list.connect_activate(|_| {
+    
+    txt_list.connect_activate(|_| {
        save_list_text();
     });
     
@@ -139,10 +140,10 @@ fn edition_menu_create() -> gtk::MenuItem {
        save_png("tree");
     });
     
-	with_cost.connect_activate(|_| {
+    with_cost.connect_activate(|_| {
        save_png("ucgraph");
     });
-	without_cost.connect_activate(|_| {
+    without_cost.connect_activate(|_| {
        save_png("ugraph");
     });
     with_cost1.connect_activate(|_| {
@@ -154,7 +155,7 @@ fn edition_menu_create() -> gtk::MenuItem {
     with_cost2.connect_activate(|_| {
        save_dot("ucgraph");
     });
-	without_cost2.connect_activate(|_| {
+    without_cost2.connect_activate(|_| {
        save_dot("ugraph");
     });
     with_cost12.connect_activate(|_| {
@@ -187,7 +188,7 @@ fn help_menu_create() -> gtk::MenuItem
 
     result.set_submenu(Some(&menu_items));
 
-	Hlist.connect_activate(|_| {
+    Hlist.connect_activate(|_| {
        list_info();
     });
     Htree.connect_activate(|_| {

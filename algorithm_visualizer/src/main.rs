@@ -1,6 +1,6 @@
 use std::env;
 use gtk::prelude::*;
-use gtk::{ Notebook, Orientation, Window, WindowType, Label, Button, Image, HeaderBar};
+use gtk::{Notebook, Orientation, Window, WindowType, Label, Button, Image, HeaderBar};
 
 #[allow(non_snake_case)]
 pub mod GTK;
@@ -33,21 +33,20 @@ impl Btree {
     }
 }
 
-static mut CURRENT_LIST :Vec<i64> = vec![];
-static mut BTREE :Option<Box<Btree>> = None;
+static mut CURRENT_LIST : Vec<i64> = vec![];
+static mut BTREE : Option<Box<Btree>> = None;
 static mut UGRAPH : Option<uGraph> = None;
 static mut UCGRAPH : Option<ucGraph> = None;
-static mut DIGRAPH :Option<diGraph> = None;
+static mut DIGRAPH : Option<diGraph> = None;
 static mut DICGRAPH : Option<dicGraph> = None;
 
 static mut BOGO_WARNED : bool = false;
 static OS :&str = env::consts::OS;
 
-fn main() 
+fn main()
 {
     gtk::init().expect("Failed to initialize GTK.");  
     
-    //=============gtk=============//
     
     let window = Window::new(WindowType::Toplevel);
     window.set_title("Algorithm Visualizer");
@@ -76,10 +75,9 @@ fn main()
     verti_box.pack_end(&notebook, true, true, 0);
     let close_image = Image::from_icon_name(Some("window-close"), gtk::IconSize::Button.into());
     
-    
-	let header_bar = HeaderBar::new();
-	let label = Label::new(Some("Algorithm Visualizer"));
-	header_bar.pack_start(&label);
+    let header_bar = HeaderBar::new();
+    let label = Label::new(Some("Algorithm Visualizer"));
+    header_bar.pack_start(&label);
     header_bar.set_show_close_button(false); 
     let close_button = Button::new();
     close_button.connect_clicked(|_| { gtk::main_quit(); });
@@ -96,23 +94,22 @@ fn main()
 
 pub fn create_directed_graph_tab() -> gtk::Notebook
 {
-	let notebook = Notebook::new() ;
-	let with_cost = get_d_paned_cost();
-	let no_cost = get_d_paned();
-	
-	notebook.append_page(&with_cost,Some(&Label::new(Some("with cost"))));
-	notebook.append_page(&no_cost,Some(&Label::new(Some("without cost"))));
-	notebook
+    let notebook = Notebook::new() ;
+    let with_cost = get_d_paned_cost();
+    let no_cost = get_d_paned();
+    
+    notebook.append_page(&with_cost,Some(&Label::new(Some("with cost"))));
+    notebook.append_page(&no_cost,Some(&Label::new(Some("without cost"))));
+    notebook
 }
 
 pub fn create_graph_tab() -> gtk::Notebook
 {
-	let notebook = Notebook::new() ;
-	let with_cost = get_paned_cost();
-	let no_cost = get_paned();
-	
-	notebook.append_page(&with_cost,Some(&Label::new(Some("with cost"))));
-	notebook.append_page(&no_cost,Some(&Label::new(Some("without cost"))));
-	notebook
+    let notebook = Notebook::new() ;
+    let with_cost = get_paned_cost();
+    let no_cost = get_paned();
+    
+    notebook.append_page(&with_cost,Some(&Label::new(Some("with cost"))));
+    notebook.append_page(&no_cost,Some(&Label::new(Some("without cost"))));
+    notebook
 }
-

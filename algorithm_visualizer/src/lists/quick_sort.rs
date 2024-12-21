@@ -15,22 +15,22 @@ pub fn quick_sort(notebook :&mut Notebook ,little: i32, big: i32)
 
 fn part(notebook :&mut Notebook,little: i32, big: i32) -> i32
 {
-	unsafe
-	{
-	    let piv = CURRENT_LIST[big as usize];
-	    let mut pos = little - 1;
-	    for i in little..big
-	    {
-	        if CURRENT_LIST[i as usize] <= piv
-	        {
-	            pos += 1;
-	            (CURRENT_LIST[pos as usize], CURRENT_LIST[i as usize]) = (CURRENT_LIST[i as usize], CURRENT_LIST[pos as usize]);
-	            paint_list(notebook,String::from("Quick sort"),i as usize,pos as usize);
-	        }
-	    }
-	    (CURRENT_LIST[pos as usize + 1], CURRENT_LIST[big as usize]) = (CURRENT_LIST[big as usize], CURRENT_LIST[pos as usize + 1]);
-	    paint_list(notebook,String::from("Quick sort"),big as usize , pos as usize +1 );
-	    return pos + 1;
-	}
+    unsafe
+    {
+        let piv = CURRENT_LIST[big as usize];
+        let mut pos = little - 1;
+        for i in little..big
+        {
+            if CURRENT_LIST[i as usize] <= piv
+            {
+                pos += 1;
+                (CURRENT_LIST[pos as usize], CURRENT_LIST[i as usize]) = (CURRENT_LIST[i as usize], CURRENT_LIST[pos as usize]);
+                paint_list(notebook,String::from("Quick sort"),i as usize,pos as usize);
+            }
+        }
+        (CURRENT_LIST[pos as usize + 1], CURRENT_LIST[big as usize]) = (CURRENT_LIST[big as usize], CURRENT_LIST[pos as usize + 1]);
+        paint_list(notebook,String::from("Quick sort"),big as usize , pos as usize +1 );
+        return pos + 1;
+    }
 }
 
